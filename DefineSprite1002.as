@@ -66,14 +66,6 @@ onEnterFrame = function()
 		 _root.Course.Char.yspeed = _root.Course.Char.yspeed / 2;
 		 _root.Course.Char._x = _X + _parent._x;
 		 _root.Course.Char._y = _Y + _parent._y + 20 * _root.coursescale / 100;
-		 if(_root.ILTimerUpdateMode == "ALWAYS")
-		 {
-			_root.Timer_stop();
-		 }
-		 else
-		 {
-			_root.Timer_update();
-		 }
 		 gotoAndStop("Gone");
 	  }
    }
