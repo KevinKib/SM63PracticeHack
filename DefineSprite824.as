@@ -101,42 +101,6 @@ enterCode = function()
       _root.ILTimerMenuDelay = MENU_OPEN_LENGTH;
    }
 };
-setStarCoins = function(bool)
-{
-   i = 1;
-   while(i <= 64)
-   {
-      _root.StarCoin[i] = bool;
-      i++;
-   }
-   _root.CalculateStarCoins();
-};
-setStars = function(bool)
-{
-   i = 1;
-   while(i <= 64)
-   {
-      _root.Star[i] = bool;
-      i++;
-   }
-   _root.CalculateStars();
-};
-setBowserKeys = function(bool)
-{
-   _root.BowserKey1 = bool;
-   _root.BowserKey2 = bool;
-   _root.BowserKey3 = bool;
-};
-setFludd = function(bool)
-{
-   _root.SaveFluddH = bool;
-   _root.SaveFluddR = bool;
-   _root.SaveFluddT = bool;
-};
-setFluddArray = function(bool)
-{
-   _root.FluddArray = ["",["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool],["",bool,bool,bool]];
-};
 gotoMenu = function(nbMenu)
 {
    if(nbMenu == 0)
@@ -149,142 +113,7 @@ gotoMenu = function(nbMenu)
    }
    _root.ILTimerCurrentMenu = nbMenu;
 };
-executeCode = function()
-{
-   switch(code)
-   {
-      case 101:
-         setStars(true);
-         setStarCoins(true);
-         setBowserKeys(true);
-         setFluddArray(true);
-         break;
-      case 102:
-         setStars(false);
-         setStarCoins(false);
-         setBowserKeys(true);
-         setFluddArray(false);
-         _root.Star[39] = true;
-         _root.Star[41] = true;
-         _root.Star[50] = true;
-         _root.Star[51] = true;
-         _root.CalculateStars();
-         break;
-      case 103:
-         setStars(false);
-         setStarCoins(false);
-         setBowserKeys(false);
-         setFluddArray(false);
-         break;
-      case 201:
-         saveState();
-         break;
-      case 211:
-         loadState();
-         break;
-      case 311:
-         setStars(true);
-         break;
-      case 312:
-         setStarCoins(true);
-         break;
-      case 313:
-         setBowserKeys(true);
-         break;
-      case 314:
-         setFluddArray(true);
-      case 321:
-         setStars(false);
-         break;
-      case 322:
-         setStarCoins(false);
-         break;
-      case 323:
-         setBowserKeys(false);
-         break;
-      case 324:
-         setFludd(false);
-         setFluddArray(false);
-         _root.RestartFludd();
-         _root.Fluddpow = "";
-         break;
-      case 401:
-         setFludd(true);
-         break;
-      case 411:
-         _root.SaveFluddH = !_root.SaveFluddH;
-         break;
-      case 412:
-         _root.SaveFluddR = !_root.SaveFluddH;
-         break;
-      case 413:
-         _root.SaveFluddT = !_root.SaveFluddH;
-         break;
-      case 501:
-         _root.changecourse("StarIn","8-E1-1",0,0,0,0,100);
-         break;
-      case 511:
-         _root.changecourse("StarIn","8-1",4128,-10,4128,-10);
-         break;
-      case 512:
-         _root.changecourse("StarIn","8-2",0,0,0,0);
-         break;
-      case 513:
-         _root.changecourse("downtransition2","8-10",500,-1450,500,-1450);
-         break;
-      case 514:
-         _root.changecourse("uptransition2","8-10-b",500,-10,500,-10);
-         break;
-      case 521:
-         _root.changecourse("StarIn","8-13",0,0,0,0,true);
-         break;
-      case 522:
-         _root.changecourse("uptransition2","8-14",0,0,0,0);
-         break;
-      case 523:
-         _root.changecourse("uptransition2","8-15",0,0,0,0);
-         break;
-      case 531:
-         _root.changecourse("lefttransition2","BC-1",0,0,0,0);
-         break;
-      case 532:
-         _root.changecourse("lefttransition2","BC-2",0,0,0,0);
-         break;
-      case 533:
-         _root.changecourse("lefttransition2","BC-3",0,0,0,0);
-         break;
-      case 541:
-         break;
-      case 542:
-         break;
-      case 543:
-         break;
-      case 601:
-         _root.CharLives = 99;
-         break;
-      case 602:
-         _root.CharLives = 0;
-         break;
-      case 701:
-         _root.WaterAmount = _root.TotalWater;
-         break;
-      case 702:
-         _root.CharHP = 8;
-         break;
-      case 901:
-         if(_root.CurrentPlayer == "Mario")
-         {
-            _root.CurrentPlayer = "Luigi";
-            break;
-         }
-         _root.CurrentPlayer = "Mario";
-         break;
-   }
-   _root.LatestCode = code;
-   code = 0;
-   codeValidated = false;
-   gotoMenu(0);
-};
+
 saveState = function()
 {
    i = 1;
@@ -329,18 +158,287 @@ loadState = function()
       i++;
    }
 };
+
+
+class CodeManager {
+	
+	private var codeList;
+	
+	// Constructor.
+	public function CodeManager() {
+		this.codeList = new Array();
+	}
+	
+	// Adds a new code to the code list.
+	public function add(code) {
+		this.codeList.push(code);
+	}
+	
+	// Executes a specific code.
+	public function execute(code) {
+		for (var i = 0; i < this.codeList.length; i++) {
+			this.codeList[i].execute(code);
+		}
+	}
+	
+}
+
+class Code {
+	
+	// Identifier of the code
+	private var index;
+	
+	// Function sent as a callback that will be executed
+	private var func;
+	
+	// Constructor
+	public function Code(index, func) {
+		this.index = index;
+		this.func = func;
+	}
+	
+	
+	// Executes the code, if the index is valid.
+	public function execute(i) {
+		if (this.index == i) {
+			this.func();
+		}
+	}
+	
+	// Executes the code, no matter what.
+	private function executeImmediate() {
+		this.func();
+	}
+
+}
+
+class Utils {
+	
+	// Sets the state of every star coin.
+	public static function setStarCoins(bool)
+	{
+	   i = 1;
+	   while(i <= 64)
+	   {
+		  _root.StarCoin[i] = bool;
+		  i++;
+	   }
+	   _root.CalculateStarCoins();
+	}
+	
+	// Sets the state of every star.
+	public static function setStars(bool)
+	{
+	   i = 1;
+	   while(i <= 64)
+	   {
+		  _root.Star[i] = bool;
+		  i++;
+	   }
+	   _root.CalculateStars();
+	}
+	
+	// Sets the state of every bowser key.
+	public static function setBowserKeys(bool)
+	{
+	   _root.BowserKey1 = bool;
+	   _root.BowserKey2 = bool;
+	   _root.BowserKey3 = bool;
+	}
+	
+	// Sets the state of one specific bowser key.
+	public static function setBowserKey(number, bool) {
+		switch(number) {
+			case 1:
+				_root.BowserKey1 = bool;
+				break;
+			case 2:
+				_root.BowserKey2 = bool;
+				break;
+			case 3:
+				_root.BowserKey3 = bool;
+				break;
+		
+		}
+	}
+	
+	// Sets the state of the current saved fludd nozzles.
+	public static function setSaveFludd(bool)
+	{
+	   _root.SaveFluddH = bool;
+	   _root.SaveFluddR = bool;
+	   _root.SaveFluddT = bool;
+	}
+	
+	// Sets the state of every fludd stored in levels.
+	public static function setFluddArray(bool)
+	{
+		_root.FluddArray = ["",
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["",bool,bool,bool]];
+	}
+	
+	// Sets the state of the fludd in one specific playing level.
+	public static function setFludd(playingLevel, bool) {
+		
+		if (playingLevel < 1) playingLevel = 1;
+		if (playingLevel > 11) playingLevel = 11;
+		
+		_root.FluddArray[playingLevel][1] = bool;
+		_root.FluddArray[playingLevel][2] = bool;
+		_root.FluddArray[playingLevel][3] = bool;
+	}
+	
+	
+	
+	
+}
+
+var codeManager = new CodeManager();
+codeManager.add(new Code(101, function() {
+	Utils.setStars(true);
+	Utils.setStarCoins(true);
+	Utils.setBowserKeys(true);
+	Utils.setFluddArray(true);
+}));
+
+codeManager.add(new Code(102, function() {
+	Utils.setStars(false);
+	Utils.setStarCoins(false);
+	Utils.setBowserKeys(true);
+	Utils.setFluddArray(false);
+	_root.Star[39] = true;
+	_root.Star[41] = true;
+	_root.Star[50] = true;
+	_root.Star[51] = true;
+	_root.CalculateStars();
+}));
+
+codeManager.add(new Code(103, function() {
+	Utils.setStars(false);
+	Utils.setStarCoins(false);
+	Utils.setBowserKeys(false);
+	Utils.setFluddArray(false);
+}));
+
+codeManager.add(new Code(201, function() {
+	//Utils.saveState();
+}));
+
+codeManager.add(new Code(211, function() {
+	//Utils.loadState();
+}));
+
+codeManager.add(new Code(311, function() {
+	Utils.setStars(true);
+}));
+
+codeManager.add(new Code(312, function() {
+	Utils.setStarCoins(true);
+}));
+
+codeManager.add(new Code(313, function() {
+	Utils.setBowserKeys(true);
+}));
+
+codeManager.add(new Code(314, function() {
+	Utils.setSaveFluddArray(true);
+}));
+
+codeManager.add(new Code(321, function() {
+	Utils.setStars(false);
+}));
+
+codeManager.add(new Code(322, function() {
+	Utils.setStarCoins(false);
+}));
+
+codeManager.add(new Code(323, function() {
+	Utils.setBowserKeys(false);
+}));
+
+codeManager.add(new Code(324, function() {
+	Utils.setSaveFludd(false);
+	Utils.setFluddArray(false);
+	_root.RestartFludd();
+	_root.Fluddpow = "";
+}));
+
+codeManager.add(new Code(401, function() {
+	Utils.setSaveFludd(true);
+}));
+
+codeManager.add(new Code(411, function() {
+	_root.SaveFluddH = !_root.SaveFluddH;
+}));
+
+codeManager.add(new Code(412, function() {
+	_root.SaveFluddR = !_root.SaveFluddR;
+}));
+
+codeManager.add(new Code(413, function() {
+	_root.SaveFluddT = !_root.SaveFluddT;
+}));
+
+codeManager.add(new Code(601, function() {
+	_root.CharLives = 99;
+}));
+
+codeManager.add(new Code(602, function() {
+	_root.CharLives = 0;
+}));
+
+codeManager.add(new Code(701, function() {
+	_root.WaterAmount = _root.TotalWater;
+}));
+
+codeManager.add(new Code(711, function() {
+	_root.CharHP = 8;
+}));
+
+codeManager.add(new Code(712, function() {
+	_root.CharHP = 1;
+}));
+
+codeManager.add(new Code(901, function() {
+	if(_root.CurrentPlayer == "Mario")
+	{
+		_root.CurrentPlayer = "Luigi";
+	}
+	else {
+		_root.CurrentPlayer = "Mario";
+	}
+}));
+
+executeCode = function()
+{
+   _root.LatestCode = code;
+   code = 0;
+   codeValidated = false;
+   gotoMenu(0);
+};
+
 stop();
 onEnterFrame = function()
 {
-   _root.Timer.loop();
-   _root.Timer.update();
-   _root.TextHint = _root.Timer.getDisplay();
-   if(_root.KeySlash())
-   {
-      _root.koopashellInput = true;
-   }
-   _root.tickCpu();
-   setCollision();
+	_root.Timer.loop();
+	_root.Timer.update();
+	_root.TextHint = _root.Timer.getDisplay();
+	if(_root.KeySlash())
+	{
+		_root.koopashellInput = true;
+	}
+	_root.tickCpu();
+	setCollision();
 };
 
 
