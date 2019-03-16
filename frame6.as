@@ -391,6 +391,7 @@ class CodeManager {
 		Key.addListener(keyListener);
 	}
 	
+	// Creates the codes and adds them to the code list.
 	public function initCodes() {
 		this.add(new Code(101, function() {
 			Utils.setStars(true);
@@ -477,12 +478,8 @@ class CodeManager {
 			_root.SaveFluddT = !_root.SaveFluddT;
 		}));
 
-		this.add(new Code(601, function() {
-			_root.CharLives = 99;
-		}));
-
-		this.add(new Code(602, function() {
-			_root.CharLives = 0;
+		this.add(new Code('lives', function(command) {
+			_root.CharLives = command[1];
 		}));
 
 		this.add(new Code(701, function() {
@@ -497,14 +494,27 @@ class CodeManager {
 			_root.CharHP = 1;
 		}));
 
-		this.add(new Code(901, function() {
-			if(_root.CurrentPlayer == "Mario")
-			{
-				_root.CurrentPlayer = "Luigi";
+		this.add(new Code('char', function(command) {
+			
+			switch(command[1]) {
+				case 'mario' :
+					_root.CurrentPlayer = 'Mario';
+					break;
+				case 'luigi' :
+					_root.CurrentPlayer = 'Luigi';
+					break;
+				case 'toggle' :
+					if(_root.CurrentPlayer == "Mario")
+					{
+						_root.CurrentPlayer = "Luigi";
+					}
+					else {
+						_root.CurrentPlayer = "Mario";
+					}
+					break;
 			}
-			else {
-				_root.CurrentPlayer = "Mario";
-			}
+			
+			
 		}));
 
 	}
