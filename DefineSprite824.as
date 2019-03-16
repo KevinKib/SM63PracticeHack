@@ -1,3 +1,16 @@
+// OG Code
+if((_root._quality == "BEST" || _root._quality == "HIGH") && _root.AutoQuality == true)
+{
+   _root.Qualitynum--;
+}
+qn = _root.Qualitynum;
+qn2 = 0;
+_root._quality = _root.QualityArray[qn];
+time = getTimer();
+
+
+// Seka code
+
 // Class that manages a time counter.
 class TimeCounter {
 	
@@ -166,14 +179,7 @@ class Timer {
 
 var timer:Timer = new Timer();
 
-if((_root._quality == "BEST" || _root._quality == "HIGH") && _root.AutoQuality == true)
-{
-   _root.Qualitynum--;
-}
-qn = _root.Qualitynum;
-qn2 = 0;
-_root._quality = _root.QualityArray[qn];
-time = getTimer();
+
 count = 0;
 minutes = 0;
 seconds = 0;
@@ -682,6 +688,10 @@ onEnterFrame = function()
    _root.tickCpu();
    setCollision();
 };
+
+
+
+// Jhyn code
 setCollision = function()
 {
    _root.Course.BackGFX._visible = _root.collision.back;
