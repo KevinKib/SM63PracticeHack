@@ -1,4 +1,131 @@
 // Variable definitions
+class Utils {
+	
+	// Sets the state of every star coin.
+	public static function setStarCoins(bool)
+	{
+	   i = 1;
+	   while(i <= 64)
+	   {
+		  _root.StarCoin[i] = bool;
+		  i++;
+	   }
+	   _root.CalculateStarCoins();
+	}
+	
+	// Sets the state of every star.
+	public static function setStars(bool)
+	{
+	   i = 1;
+	   while(i <= 64)
+	   {
+		  _root.Star[i] = bool;
+		  i++;
+	   }
+	   _root.CalculateStars();
+	}
+	
+	// Sets the state of every bowser key.
+	public static function setBowserKeys(bool)
+	{
+	   _root.BowserKey1 = bool;
+	   _root.BowserKey2 = bool;
+	   _root.BowserKey3 = bool;
+	}
+	
+	// Sets the state of one specific bowser key.
+	public static function setBowserKey(number, bool) {
+		switch(number) {
+			case 1:
+				_root.BowserKey1 = bool;
+				break;
+			case 2:
+				_root.BowserKey2 = bool;
+				break;
+			case 3:
+				_root.BowserKey3 = bool;
+				break;
+		
+		}
+	}
+	
+	// Sets the state of the current saved fludd nozzles.
+	public static function setSaveFludd(bool)
+	{
+	   _root.SaveFluddH = bool;
+	   _root.SaveFluddR = bool;
+	   _root.SaveFluddT = bool;
+	}
+	
+	// Sets the state of every fludd stored in levels.
+	public static function setFluddArray(bool)
+	{
+		_root.FluddArray = ["",
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["", bool, bool, bool],
+		["",bool,bool,bool]];
+	}
+	
+	// Sets the state of the fludd in one specific playing level.
+	public static function setFludd(playingLevel, bool) {
+		
+		if (playingLevel < 1) playingLevel = 1;
+		if (playingLevel > 11) playingLevel = 11;
+		
+		_root.FluddArray[playingLevel][1] = bool;
+		_root.FluddArray[playingLevel][2] = bool;
+		_root.FluddArray[playingLevel][3] = bool;
+	}
+	
+}
+
+// Class that manages everything related to displayed text.
+class TextManager {
+	
+	private var row1;
+	private var row2;
+	private var row3;
+	private var row4;
+	private var row5;
+	private var row6;
+
+	public function TextManager() {
+		this.row1 = "";
+		this.row2 = "";
+		this.row3 = ""; 
+		this.row4 = "";
+		this.row5 = "";
+		this.row6 = "";
+	}
+	
+	public function write(row, text) {
+		switch(row) {
+			case 1: this.row1 = text; break;
+			case 2: this.row2 = text; break;
+			case 3: this.row3 = text; break;
+			case 4: this.row4 = text; break;
+			case 5: this.row5 = text; break;
+			case 6: this.row6 = text; break;
+		}
+		
+		_root.TextHint = this.row1 + "\n"
+						+ this.row2 + "\n"
+						+ this.row3 + "\n"
+						+ this.row4 + "\n"
+						+ this.row5 + "\n" 
+						+ this.row6;
+	}
+	
+}
+
 // Class that manages a time counter.
 class TimeCounter {
 	
@@ -165,43 +292,34 @@ class Timer {
 	
 }
 
-// Class that manages everything related to displayed text.
-class TextManager {
+class Code {
 	
-	private var row1;
-	private var row2;
-	private var row3;
-	private var row4;
-	private var row5;
-	private var row6;
-
-	public function TextManager() {
-		this.row1 = "";
-		this.row2 = "";
-		this.row3 = ""; 
-		this.row4 = "";
-		this.row5 = "";
-		this.row6 = "";
+	// Identifier of the code
+	private var index;
+	
+	// Function sent as a callback that will be executed
+	private var func;
+	
+	// Constructor
+	public function Code(index, func) {
+		this.index = index;
+		this.func = func;
 	}
 	
-	public function write(row, text) {
-		switch(row) {
-			case 1: this.row1 = text; break;
-			case 2: this.row2 = text; break;
-			case 3: this.row3 = text; break;
-			case 4: this.row4 = text; break;
-			case 5: this.row5 = text; break;
-			case 6: this.row6 = text; break;
+	// Executes the code, if the index is valid.
+	public function execute(i) {
+		trace('Trying ' + this.index + ' with ' + i + ' ...');
+		if (this.index == i) {
+			trace('Worked !');
+			this.func();
 		}
-		
-		_root.TextHint = this.row1 + "\n"
-						+ this.row2 + "\n"
-						+ this.row3 + "\n"
-						+ this.row4 + "\n"
-						+ this.row5 + "\n" 
-						+ this.row6;
 	}
 	
+	// Executes the code, no matter what.
+	private function executeImmediate() {
+		this.func();
+	}
+
 }
 
 class CodeManager {
@@ -244,7 +362,9 @@ class CodeManager {
 							  _root.codeManager.setCurrentCode(_root.codeManager.getCurrentCode().substring(0,_root.codeManager.getCurrentCode().length - 1));
 							  break;
 						   case 13:
-							  this.execute(_root.codeManager.getCurrentCode());
+							   trace('Execution attempt');
+							   trace("Current code : "+_root.codeManager.getCurrentCode());
+							  _root.codeManager.execute(_root.codeManager.getCurrentCode());
 							  _root.codeManager.setCurrentCode("");
 							  break;
 						   case 27:
@@ -254,7 +374,7 @@ class CodeManager {
 							  _root.codeManager.setCurrentCode("");
 							  break;
 						   case 35:
-							  trace(_root.codeManager.getCurrentCode());
+							  trace("Current code : "+_root.codeManager.getCurrentCode());
 						}
 					}
 				}
@@ -392,7 +512,10 @@ class CodeManager {
 	
 	// Executes a specific code.
 	public function execute(code) {
-		for (var i = 0; i < this.codeList.length; i++) {
+		var i = 0;
+		trace('Entered execute code');
+		for (i = 0; i < this.codeList.length; i = i + 1) {
+			trace('In loop with i = ' + i);
 			this.codeList[i].execute(code);
 		}
 	}
@@ -400,7 +523,6 @@ class CodeManager {
 
 	// Defines the code that happens on each frame.
 	public function loop() {
-		trace("lol : "+this.currentCode);
 		_root.textManager.write(2, this.currentCode);
 	}
 	
@@ -429,125 +551,6 @@ class CodeManager {
 		if (this.delay < 0) this.delay = 0;
 	}
 }
-
-class Code {
-	
-	// Identifier of the code
-	private var index;
-	
-	// Function sent as a callback that will be executed
-	private var func;
-	
-	// Constructor
-	public function Code(index, func) {
-		this.index = index;
-		this.func = func;
-	}
-	
-	
-	// Executes the code, if the index is valid.
-	public function execute(i) {
-		if (this.index == i) {
-			this.func();
-		}
-	}
-	
-	
-	// Executes the code, no matter what.
-	private function executeImmediate() {
-		this.func();
-	}
-
-}
-
-class Utils {
-	
-	// Sets the state of every star coin.
-	public static function setStarCoins(bool)
-	{
-	   i = 1;
-	   while(i <= 64)
-	   {
-		  _root.StarCoin[i] = bool;
-		  i++;
-	   }
-	   _root.CalculateStarCoins();
-	}
-	
-	// Sets the state of every star.
-	public static function setStars(bool)
-	{
-	   i = 1;
-	   while(i <= 64)
-	   {
-		  _root.Star[i] = bool;
-		  i++;
-	   }
-	   _root.CalculateStars();
-	}
-	
-	// Sets the state of every bowser key.
-	public static function setBowserKeys(bool)
-	{
-	   _root.BowserKey1 = bool;
-	   _root.BowserKey2 = bool;
-	   _root.BowserKey3 = bool;
-	}
-	
-	// Sets the state of one specific bowser key.
-	public static function setBowserKey(number, bool) {
-		switch(number) {
-			case 1:
-				_root.BowserKey1 = bool;
-				break;
-			case 2:
-				_root.BowserKey2 = bool;
-				break;
-			case 3:
-				_root.BowserKey3 = bool;
-				break;
-		
-		}
-	}
-	
-	// Sets the state of the current saved fludd nozzles.
-	public static function setSaveFludd(bool)
-	{
-	   _root.SaveFluddH = bool;
-	   _root.SaveFluddR = bool;
-	   _root.SaveFluddT = bool;
-	}
-	
-	// Sets the state of every fludd stored in levels.
-	public static function setFluddArray(bool)
-	{
-		_root.FluddArray = ["",
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["",bool,bool,bool]];
-	}
-	
-	// Sets the state of the fludd in one specific playing level.
-	public static function setFludd(playingLevel, bool) {
-		
-		if (playingLevel < 1) playingLevel = 1;
-		if (playingLevel > 11) playingLevel = 11;
-		
-		_root.FluddArray[playingLevel][1] = bool;
-		_root.FluddArray[playingLevel][2] = bool;
-		_root.FluddArray[playingLevel][3] = bool;
-	}
-	
-}
-
 
 
 
