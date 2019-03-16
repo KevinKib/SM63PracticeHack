@@ -47,16 +47,34 @@ Manages the current nozzles that the player has access to.
 
 **none**: Removes every nozzle of the player.
 
+* ### star [number] [boolean]
+
+Manages the state of a specific star.
+
+**number**: Identifier of the star, between 1 and 64.
+
+**boolean**: Either true or false, to set the state of the star, or nothing to toggle its state.
+
+* ### starcoin [number] [boolean]
+
+Manages the state of a specific star coin.
+
+**number**: Identifier of the star coin, between 1 and 64.
+
+**boolean**: Either true or false, to set the state of the star coin, or nothing to toggle its state.
+
+* ### bowserkey [number] [boolean]
+
+Manages the state of a specific bowser key.
+
+**number**: Identifier of the bowser key, between 1 and 3.
+
+**boolean**: Either true or false, to set the state of the bowser key, or nothing to toggle its state.
+
+(Does not work)
+
+
 * ### warp [name]
-[Not implemented]
-
-* ### star [number]
-[Not implemented]
-
-* ### starcoin [number]
-[Not implemented]
-
-* ### bowserkey [number]
 [Not implemented]
 
 
