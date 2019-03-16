@@ -249,7 +249,7 @@ class TimeCounter {
 class Timer {
 	
 	// Defines if the timer is going or not.
-	private var start;
+	private var started;
 	
 	// Tracks the real time, as it's going.
 	private var realTime:TimeCounter;
@@ -260,19 +260,24 @@ class Timer {
 	
 	// Constructor
 	public function Timer() {
-		this.start = false;
+		this.reset();
+	}
+	
+	// Resets the timer.
+	public function reset() {
+		this.started = false;
 		this.realTime = new TimeCounter();
 		this.lastUpdatedTime = new TimeCounter();
 	}
 	
 	// Starts the timer.
 	public function start() {
-		this.start = true;
+		this.started = true;
 	}
 	
 	// Stops the timer.
 	public function stop() {
-		this.start = false;
+		this.started = false;
 	}
 	
 	// Updates the timer.
@@ -282,7 +287,9 @@ class Timer {
 	
 	
 	public function loop() {
-		this.realTime.addFrame();
+		if (this.started == true) {
+			this.realTime.addFrame();
+		}
 	}
 	
 	// Returns a string displaying the current time.
@@ -307,11 +314,12 @@ class Code {
 	}
 	
 	// Executes the code, if the index is valid.
-	public function execute(i) {
-		trace('Trying ' + this.index + ' with ' + i + ' ...');
-		if (this.index == i) {
-			trace('Worked !');
-			this.func();
+	public function execute(code) {
+		
+		var command = code.split(' ');
+		
+		if (this.index == command[0]) {
+			this.func(command);
 		}
 	}
 	
@@ -361,9 +369,7 @@ class CodeManager {
 						   case 8:
 							  _root.codeManager.setCurrentCode(_root.codeManager.getCurrentCode().substring(0,_root.codeManager.getCurrentCode().length - 1));
 							  break;
-						   case 13:
-							   trace('Execution attempt');
-							   trace("Current code : "+_root.codeManager.getCurrentCode());
+						   case 13: // Enter
 							  _root.codeManager.execute(_root.codeManager.getCurrentCode());
 							  _root.codeManager.setCurrentCode("");
 							  break;
@@ -374,7 +380,6 @@ class CodeManager {
 							  _root.codeManager.setCurrentCode("");
 							  break;
 						   case 35:
-							  trace("Current code : "+_root.codeManager.getCurrentCode());
 						}
 					}
 				}
@@ -513,9 +518,7 @@ class CodeManager {
 	// Executes a specific code.
 	public function execute(code) {
 		var i = 0;
-		trace('Entered execute code');
 		for (i = 0; i < this.codeList.length; i = i + 1) {
-			trace('In loop with i = ' + i);
 			this.codeList[i].execute(code);
 		}
 	}
@@ -564,5 +567,6 @@ _root.Save_StarCoin = new Array();
 _root.Save_FluddArray = new Array();
 
 _root.timer = new Timer();
+_root.timer.start();
 _root.textManager = new TextManager();
 _root.codeManager = new CodeManager();
