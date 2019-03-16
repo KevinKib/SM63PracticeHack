@@ -29,7 +29,7 @@ class TimeCounter {
 		this.seconds = 0;
 		this.minutes = 0;
 		
-		this.FRAMES_PER_SECOND = 0;
+		this.FRAMES_PER_SECOND = 32;
 	}
 	
 	// Static manual constructor
@@ -44,10 +44,11 @@ class TimeCounter {
 	// Adds a frame to the timer, and manages everything that happens next.
 	public function addFrame() {
 		this.frames++;
+		this.milliseconds = Math.floor((this.frames / this.FRAMES_PER_SECOND) * 1000);
 		
 		if (this.frames >= this.FRAMES_PER_SECOND) {
 			this.frames = 0;
-			this.milliseconds = Math.floor((this.frames / this.FRAMES_PER_SECOND) * 1000);
+			this.milliseconds = 0;
 			this.addSecond();
 		}
 	}
@@ -499,7 +500,8 @@ loadState = function()
 stop();
 onEnterFrame = function()
 {
-   
+   timer.loop();
+   _root.TextHint = timer.getDisplay();
    if(_root.KeySlash())
    {
       _root.koopashellInput = true;
