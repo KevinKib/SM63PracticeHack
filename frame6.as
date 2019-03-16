@@ -70,7 +70,6 @@ class TimeCounter {
 		var txtMilliseconds = this.milliseconds;
 		if (this.milliseconds < 10) txtMilliseconds = "0" + txtMilliseconds;
 		if (this.milliseconds < 100) txtMilliseconds = "0" + txtMilliseconds;
-		trace(this.milliseconds);
 		
 		var txtSeconds = this.seconds;
 		if (this.seconds < 10) txtSeconds = "0" + txtSeconds;
@@ -166,6 +165,47 @@ class Timer {
 	
 }
 
+// Class that manages everything related to displayed text.
+class TextManager {
+	
+	private var row1;
+	private var row2;
+	private var row3;
+	private var row4;
+	private var row5;
+	private var row6;
+
+	public function TextManager() {
+		this.row1 = "";
+		this.row2 = "";
+		this.row3 = ""; 
+		this.row4 = "";
+		this.row5 = "";
+		this.row6 = "";
+	}
+	
+	public function write(row, text) {
+		switch(row) {
+			case 1: this.row1 = text; break;
+			case 2: this.row2 = text; break;
+			case 3: this.row3 = text; break;
+			case 4: this.row4 = text; break;
+			case 5: this.row5 = text; break;
+			case 6: this.row6 = text; break;
+		}
+		
+		_root.TextHint = this.row1 + "\n"
+						+ this.row2 + "\n"
+						+ this.row3 + "\n"
+						+ this.row4 + "\n"
+						+ this.row5 + "\n" 
+						+ this.row6;
+	}
+	
+}
+
+
+
 NewgroundsAPI.connectMovie(8160);
 _root.ILTimerCurrentMenu = 0;
 _root.ILTimerMenuDelay = 0;
@@ -175,4 +215,5 @@ _root.Save_Star = new Array();
 _root.Save_StarCoin = new Array();
 _root.Save_FluddArray = new Array();
 
-_root.Timer = new Timer();
+_root.timer = new Timer();
+_root.textManager = new TextManager();
