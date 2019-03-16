@@ -299,6 +299,7 @@ class Timer {
 	
 }
 
+// Class that defines a code and its effects.
 class Code {
 	
 	// Identifier of the code
@@ -330,6 +331,7 @@ class Code {
 
 }
 
+// Class that manages how codes behave overall.
 class CodeManager {
 	
 	private var codeList;
@@ -466,16 +468,30 @@ class CodeManager {
 			Utils.setSaveFludd(true);
 		}));
 
-		this.add(new Code(411, function() {
-			_root.SaveFluddH = !_root.SaveFluddH;
-		}));
-
-		this.add(new Code(412, function() {
-			_root.SaveFluddR = !_root.SaveFluddR;
-		}));
-
-		this.add(new Code(413, function() {
-			_root.SaveFluddT = !_root.SaveFluddT;
+		this.add(new Code('fludd', function(command) {
+			
+			switch(command[1]) {
+				case 'all':
+					_root.SaveFluddH = true;
+					_root.SaveFluddR = true;
+					_root.SaveFluddT = true;
+					break;
+				case 'H':
+					_root.SaveFluddH = !_root.SaveFluddH;
+					break;
+				case 'R':
+					_root.SaveFluddR = !_root.SaveFluddR;
+					break;
+				case 'T':
+					_root.SaveFluddT = !_root.SaveFluddT;
+					break;
+				case 'none':
+					_root.SaveFluddH = false;
+					_root.SaveFluddR = false;
+					_root.SaveFluddT = false;
+					_root.Fluddpow = "";
+					break;
+			}
 		}));
 
 		this.add(new Code('lives', function(command) {
@@ -542,7 +558,6 @@ class CodeManager {
 		this.codeList.push(code);
 	}
 	
-	
 	// Executes a specific code.
 	public function execute(code) {
 		var i = 0;
@@ -551,11 +566,13 @@ class CodeManager {
 		}
 	}
 	
-
 	// Defines the code that happens on each frame.
 	public function loop() {
 		_root.textManager.write(2, this.currentCode);
 	}
+	
+	
+	// Getters & setters
 	
 	public function getCurrentCode() {
 		return this.currentCode;
