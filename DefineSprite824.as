@@ -178,16 +178,9 @@ class Timer {
 }
 
 var timer:Timer = new Timer();
-
-
-count = 0;
-minutes = 0;
-seconds = 0;
-milliseconds = 0;
 frtxt = timer.getDisplay();
-txtMinutes = "";
-txtSeconds = "";
-txtMilliseconds = "";
+
+
 i = 1;
 code = 0;
 input = 0;
