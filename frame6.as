@@ -482,16 +482,34 @@ class CodeManager {
 			_root.CharLives = command[1];
 		}));
 
-		this.add(new Code(701, function() {
-			_root.WaterAmount = _root.TotalWater;
+		this.add(new Code('water', function(command) {
+			if (command[1] == 'refill') {
+				_root.WaterAmount = _root.TotalWater;
+			}
+			else if (command[1] == 'half') {
+				_root.WaterAmount = 5000;
+			}
+			else if (command[1] == 'empty') {
+				_root.WaterAmount = 0;
+			}
+			else {
+				_root.WaterAmount = command[1];
+			}
 		}));
 
-		this.add(new Code(711, function() {
-			_root.CharHP = 8;
-		}));
-
-		this.add(new Code(712, function() {
-			_root.CharHP = 1;
+		this.add(new Code('health', function(command) {
+			if (command[1] == 'refill') {
+				_root.CharHP = 8;
+			}
+			else if (command[1] == 'empty') {
+				_root.CharHP = 1;
+			}
+			else if (command[1] == 'death') {
+				_root.CharHP = 0;
+			}
+			else {
+				_root.CharHP = command[1];
+			}
 		}));
 
 		this.add(new Code('char', function(command) {
