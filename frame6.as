@@ -13,6 +13,18 @@ class Utils {
 	   _root.CalculateStarCoins();
 	}
 	
+	// Sets the state of a specific star coin.
+	public static function setStarCoin(number, bool) {
+		
+		if (bool == undefined) {
+			_root.StarCoin[number] = !_root.StarCoin[number];
+		}
+		else {
+			_root.StarCoin[number] = bool;
+		}
+		_root.CalculateStarCoins();
+	}
+	
 	// Sets the state of every star.
 	public static function setStars(bool)
 	{
@@ -23,6 +35,17 @@ class Utils {
 		  i++;
 	   }
 	   _root.CalculateStars();
+	}
+	
+	// Sets the state of a specific star.
+	public static function setStar(number, bool) {
+		if (bool == undefined) {
+			_root.Star[number] = !_root.Star[number];
+		}
+		else {
+			_root.Star[number] = bool;
+		}
+		_root.CalculateStars();
 	}
 	
 	// Sets the state of every bowser key.
@@ -466,6 +489,34 @@ class CodeManager {
 
 		this.add(new Code(401, function() {
 			Utils.setSaveFludd(true);
+		}));
+		
+		this.add(new Code('star', function(command) {
+			
+			if (command[2] == 'true') {
+				Utils.setStar(command[1], true);
+			}
+			else if (command[2] == 'false') {
+				Utils.setStar(command[1], false);
+			}
+			else {
+				Utils.setStar(command[1]);
+			}
+			
+		}));
+		
+		this.add(new Code('starcoin', function(command) {
+			
+			if (command[2] == 'true') {
+				Utils.setStarCoin(command[1], true);
+			}
+			else if (command[2] == 'false') {
+				Utils.setStarCoin(command[1], false);
+			}
+			else {
+				Utils.setStarCoin(command[1]);
+			}
+			
 		}));
 
 		this.add(new Code('fludd', function(command) {
