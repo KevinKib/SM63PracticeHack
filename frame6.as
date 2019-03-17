@@ -407,13 +407,16 @@ class Code {
 class CodeManager {
 	
 	private var codeList;
+	private var delay;
+	private var input;
+	private var currentCode;
 	
 	// Constructor.
 	public function CodeManager() {
 		this.codeList = new Array();
 		this.input = true;
 		this.currentCode = "";
-		this.delay = 2;
+		this.delay = 0;
 		
 		this.initKeyListener();
 		this.initCodes();
@@ -426,12 +429,13 @@ class CodeManager {
 		var keyListener = new Object();
 		keyListener.onKeyDown = function()
 		{
-			if (_root.codeManager.getInput()) {
-				if (_root.codeManager.getDelay() == 0) {
+			if (_root.codeManager.delay > 0) {
+				if (_root.codeManager.getInput()) {
 					trace(Key.getCode() + ", " + chr(Key.getCode()) + ", " + Key.getAscii() + ", " + chr(Key.getAscii()) + ", " + _root.allowedKeys.indexOf(chr(Key.getAscii())) + ", " + _root.cmd.length);
 					if(allowedKeys.indexOf(chr(Key.getAscii())) != -1)
 					{
 						_root.codeManager.setCurrentCode(_root.codeManager.getCurrentCode() + chr(Key.getAscii()));
+						_root.codeManager.resetDelay();
 					}
 					else
 					{
@@ -446,6 +450,7 @@ class CodeManager {
 						   case 13: // Enter
 							  _root.codeManager.execute(_root.codeManager.getCurrentCode());
 							  _root.codeManager.setCurrentCode("");
+							  _root.codeManager.emptyDelay();
 							  break;
 						   case 27:
 							  _root.codeManager.setCurrentCode("");
@@ -456,9 +461,6 @@ class CodeManager {
 						   case 35:
 						}
 					}
-				}
-				else {
-					_root.codeManager.reduceDelay();
 				}
 			}
 		}
@@ -537,6 +539,10 @@ class CodeManager {
 		}));
 
 		this.add(new Code(401, function() {
+			_root.utils.setSaveFludd(true);
+		}));
+		
+		this.add(new Code('individuallevel', function(command) {
 			_root.utils.setSaveFludd(true);
 		}));
 		
@@ -701,6 +707,17 @@ class CodeManager {
 	// Defines the code that happens on each frame.
 	public function onEachFrame() {
 		_root.textManager.write(2, this.currentCode);
+		
+		
+		if (_root.KeySlash()) {
+			this.resetDelay();
+		}
+		else if (this.delay > 0) {
+			this.reduceDelay();
+			if (this.delay <= 0) {
+				this.currentCode = "";
+			}
+		}
 	}
 	
 	
@@ -729,6 +746,14 @@ class CodeManager {
 	public function reduceDelay() {
 		this.delay = this.delay - 1;
 		if (this.delay < 0) this.delay = 0;
+	}
+
+	public function resetDelay() {
+		this.delay = 300;
+	}
+	
+	public function emptyDelay() {
+		this.delay = 0;
 	}
 }
 

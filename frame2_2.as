@@ -291,6 +291,14 @@ _root.KeyStar = function()
    }
    return false;
 };
+_root.KeySlash = function()
+{
+   if(Key.isDown(111))
+   {
+	  return true;
+   }
+   return false;
+};
 _root.Key1 = function()
 {
    if(Key.isDown(49))
