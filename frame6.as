@@ -470,30 +470,18 @@ class CodeManager {
 	// Creates the codes and adds them to the code list.
 	public function initCodes() {
 		this.add(new Code(101, function() {
-			_root.utils.setStars(true);
-			_root.utils.setStarCoins(true);
-			_root.utils.setBowserKeys(true);
-			_root.utils.setFluddArray(true);
+			
 		}));
 
 		this.add(new Code(102, function() {
-			_root.utils.setStars(false);
-			_root.utils.setStarCoins(false);
-			_root.utils.setBowserKeys(true);
-			_root.utils.setFluddArray(false);
-			_root.Star[39] = true;
-			_root.Star[41] = true;
-			_root.Star[50] = true;
-			_root.Star[51] = true;
-			_root.CalculateStars();
+			
 		}));
 
 		this.add(new Code(103, function() {
-			_root.utils.setStars(false);
-			_root.utils.setStarCoins(false);
-			_root.utils.setBowserKeys(false);
-			_root.utils.setFluddArray(false);
+			
 		}));
+		
+		
 
 		this.add(new Code(201, function() {
 			//_root.utils.saveState();
@@ -544,6 +532,37 @@ class CodeManager {
 		
 		this.add(new Code('individuallevel', function(command) {
 			_root.utils.setSaveFludd(true);
+		}));
+		
+		this.add(new Code('file', function(command) {
+			
+			switch(command[1]) {
+				case 'complete':
+					_root.utils.setStars(true);
+					_root.utils.setStarCoins(true);
+					_root.utils.setBowserKeys(true);
+					_root.utils.setFluddArray(true);
+					break;
+				case 'essentials':
+					_root.utils.setStars(false);
+					_root.utils.setStarCoins(false);
+					_root.utils.setBowserKeys(true);
+					_root.utils.setFluddArray(false);
+					_root.Star[39] = true;
+					_root.Star[41] = true;
+					_root.Star[50] = true;
+					_root.Star[51] = true;
+					_root.Star[36] = true;
+					_root.CalculateStars();
+					break;
+				case 'empty':
+					_root.utils.setStars(false);
+					_root.utils.setStarCoins(false);
+					_root.utils.setBowserKeys(false);
+					_root.utils.setFluddArray(false);
+					break;
+			}
+			
 		}));
 		
 		this.add(new Code('timer', function(command) {
