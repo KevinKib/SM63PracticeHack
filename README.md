@@ -73,6 +73,16 @@ Manages the state of a specific bowser key.
 
 (Does not work)
 
+* ### timer [start|stop|reset]
+
+Manages the state of the timer.
+
+**start**: Starts the timer.
+
+**stop**: Stops the timer.
+
+**reset**: Resets the timer; makes it automatically start on the next loading zone.
+
 
 * ### warp [name]
 [Not implemented]
@@ -82,5 +92,3 @@ Manages the state of a specific bowser key.
 * ### individuallevel [world]
 [Not implemented]
 
-* ### timer [start|stop]
-[Not implemented]
