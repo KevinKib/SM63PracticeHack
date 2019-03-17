@@ -83,10 +83,19 @@ Manages the state of the timer.
 
 **reset**: Resets the timer; makes it automatically start on the next loading zone.
 
+* ### file [complete|essentials|empty]
+
+Setups a file setting.
+
+**complete**: Setups a 100% file.
+
+**essentials**: Setups a "race" file, which is a file with all storyline stars obtained. Can be used to do 100% ILs.
+
+**empty**: Setups an empty file.
+
 
 * ### warp [name]
 [Not implemented]
-
 
 
 * ### individuallevel [world]
