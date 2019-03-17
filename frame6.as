@@ -534,6 +534,25 @@ class CodeManager {
 			_root.utils.setSaveFludd(true);
 		}));
 		
+		this.add(new Code('warp', function(command) {
+			
+			var level = command[1];
+			var param_1 = command[2];
+			var param_2 = command[3];
+			var param_3 = command[4];
+			var param_4 = command[5];
+			
+			if (level != undefined) {
+				if (param_1 == undefined) param_1 = 0;
+				if (param_2 == undefined) param_2 = 0;
+				if (param_3 == undefined) param_3 = 0;
+				if (param_4 == undefined) param_4 = 0;
+				
+				_root.changecourse("downtransition2",command[1],param_1,param_2,param_3,param_4);
+			}
+			
+		}));
+		
 		this.add(new Code('file', function(command) {
 			
 			switch(command[1]) {
