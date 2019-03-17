@@ -163,6 +163,19 @@ class TextManager {
 	
 }
 
+// Class that manages the code that happens on certain occurences.
+class Event {
+	
+	public function onLoadingZone() {
+		
+	}
+	
+	public function onStarCollected() {
+		
+	}
+	
+}
+
 // Class that manages a time counter.
 class TimeCounter {
 	
@@ -287,6 +300,8 @@ class Timer {
 	
 	// Defines if the timer is going or not.
 	private var started;
+	
+	
 	
 	// Tracks the real time, as it's going.
 	private var realTime:TimeCounter;
@@ -505,7 +520,25 @@ class CodeManager {
 			_root.utils.setSaveFludd(true);
 		}));
 		
+		this.add(new Code('timer', function(command) {
+
+			switch(command[1]) {
+				case 'start':
+					_root.timer.start();
+					break;
+				case 'stop':
+					_root.timer.stop();
+					break;
+				case 'reset':
+					_root.timer.reset();
+					break;
+			}
+			
+		}));
+		
 		this.add(new Code('bowserkey', function(command) {
+			
+			trace('BowserKey command detected with arg ' + command[1] + '.');
 			
 			if (command[2] == 'true') {
 				_root.utils.setBowserKey(command[1], true);
@@ -678,6 +711,8 @@ class CodeManager {
 		if (this.delay < 0) this.delay = 0;
 	}
 }
+
+
 
 
 
