@@ -60,15 +60,29 @@ class Utils {
 	public static function setBowserKey(number, bool) {
 		switch(number) {
 			case 1:
-				_root.BowserKey1 = bool;
+				if (bool == undefined) {
+					_root.BowserKey1 = !_root.BowserKey1;
+				}
+				else {
+					_root.BowserKey1 = bool;
+				}
 				break;
 			case 2:
-				_root.BowserKey2 = bool;
+				if (bool == undefined) {
+					_root.BowserKey2 = !_root.BowserKey2;
+				}
+				else {
+					_root.BowserKey2 = bool;
+				}
 				break;
 			case 3:
-				_root.BowserKey3 = bool;
+				if (bool == undefined) {
+					_root.BowserKey3 = !_root.BowserKey3;
+				}
+				else {
+					_root.BowserKey3 = bool;
+				}
 				break;
-		
 		}
 	}
 	
@@ -489,6 +503,20 @@ class CodeManager {
 
 		this.add(new Code(401, function() {
 			Utils.setSaveFludd(true);
+		}));
+		
+		this.add(new Code('bowserkey', function(command) {
+			
+			if (command[2] == 'true') {
+				Utils.setBowserKey(command[1], true);
+			}
+			else if (command[2] == 'false') {
+				Utils.setBowserKey(command[1], false);
+			}
+			else {
+				Utils.setBowserKey(command[1]);
+			}
+			
 		}));
 		
 		this.add(new Code('star', function(command) {
