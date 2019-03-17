@@ -166,8 +166,17 @@ class TextManager {
 // Class that manages the code that happens on certain occurences.
 class Event {
 	
+	// Triggers code that happens on each frame.
+	public function onEachFrame() {
+		_root.timer.loop();
+		_root.timer.update();
+		_root.codeManager.loop();
+		_root.textManager.write(1,_root.timer.getDisplay());
+	}
+	
+	// Triggers code that happens on every loading zone.
 	public function onLoadingZone() {
-		
+		_root.textManager.write(4, _root.timer.getDisplay());
 	}
 	
 	public function onStarCollected() {
@@ -730,3 +739,4 @@ _root.timer.start();
 _root.utils = new Utils();
 _root.textManager = new TextManager();
 _root.codeManager = new CodeManager();
+_root.event = new Event();

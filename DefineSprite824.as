@@ -10,11 +10,9 @@ time = getTimer();
 
 // Seka code
 
+_root.event.onLoadingZone();
+
 frtxt = "fps: unknown";
-_root.textManager.write(4, _root.timer.getDisplay());
-
-
-
 i = 1;
 code = 0;
 input = 0;
@@ -181,10 +179,8 @@ executeCode = function()
 stop();
 onEnterFrame = function()
 {
-	_root.timer.loop();
-	_root.timer.update();
-	_root.codeManager.loop();
-	_root.textManager.write(1,_root.timer.getDisplay());
+	// Triggers events that happen on each frame
+	_root.event.onEachFrame();
 	
 	// FPS update
 	if(_root.PauseGame == false)
