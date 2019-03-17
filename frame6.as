@@ -181,7 +181,7 @@ class Event {
 	}
 	
 	public function onStarCollected() {
-		
+		_root.timer.stop();
 	}
 	
 }
