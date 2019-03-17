@@ -2,7 +2,7 @@
 class Utils {
 	
 	// Sets the state of every star coin.
-	public static function setStarCoins(bool)
+	public function setStarCoins(bool)
 	{
 	   i = 1;
 	   while(i <= 64)
@@ -14,7 +14,7 @@ class Utils {
 	}
 	
 	// Sets the state of a specific star coin.
-	public static function setStarCoin(number, bool) {
+	public function setStarCoin(number, bool) {
 		
 		if (bool == undefined) {
 			_root.StarCoin[number] = !_root.StarCoin[number];
@@ -26,7 +26,7 @@ class Utils {
 	}
 	
 	// Sets the state of every star.
-	public static function setStars(bool)
+	public function setStars(bool)
 	{
 	   i = 1;
 	   while(i <= 64)
@@ -38,7 +38,7 @@ class Utils {
 	}
 	
 	// Sets the state of a specific star.
-	public static function setStar(number, bool) {
+	public function setStar(number, bool) {
 		if (bool == undefined) {
 			_root.Star[number] = !_root.Star[number];
 		}
@@ -49,7 +49,7 @@ class Utils {
 	}
 	
 	// Sets the state of every bowser key.
-	public static function setBowserKeys(bool)
+	public function setBowserKeys(bool)
 	{
 	   _root.BowserKey1 = bool;
 	   _root.BowserKey2 = bool;
@@ -57,7 +57,7 @@ class Utils {
 	}
 	
 	// Sets the state of one specific bowser key.
-	public static function setBowserKey(number, bool) {
+	public function setBowserKey(number, bool) {
 		switch(number) {
 			case 1:
 				if (bool == undefined) {
@@ -87,7 +87,7 @@ class Utils {
 	}
 	
 	// Sets the state of the current saved fludd nozzles.
-	public static function setSaveFludd(bool)
+	public function setSaveFludd(bool)
 	{
 	   _root.SaveFluddH = bool;
 	   _root.SaveFluddR = bool;
@@ -95,7 +95,7 @@ class Utils {
 	}
 	
 	// Sets the state of every fludd stored in levels.
-	public static function setFluddArray(bool)
+	public function setFluddArray(bool)
 	{
 		_root.FluddArray = ["",
 		["", bool, bool, bool],
@@ -112,7 +112,7 @@ class Utils {
 	}
 	
 	// Sets the state of the fludd in one specific playing level.
-	public static function setFludd(playingLevel, bool) {
+	public function setFludd(playingLevel, bool) {
 		
 		if (playingLevel < 1) playingLevel = 1;
 		if (playingLevel > 11) playingLevel = 11;
@@ -433,17 +433,17 @@ class CodeManager {
 	// Creates the codes and adds them to the code list.
 	public function initCodes() {
 		this.add(new Code(101, function() {
-			Utils.setStars(true);
-			Utils.setStarCoins(true);
-			Utils.setBowserKeys(true);
-			Utils.setFluddArray(true);
+			_root.utils.setStars(true);
+			_root.utils.setStarCoins(true);
+			_root.utils.setBowserKeys(true);
+			_root.utils.setFluddArray(true);
 		}));
 
 		this.add(new Code(102, function() {
-			Utils.setStars(false);
-			Utils.setStarCoins(false);
-			Utils.setBowserKeys(true);
-			Utils.setFluddArray(false);
+			_root.utils.setStars(false);
+			_root.utils.setStarCoins(false);
+			_root.utils.setBowserKeys(true);
+			_root.utils.setFluddArray(false);
 			_root.Star[39] = true;
 			_root.Star[41] = true;
 			_root.Star[50] = true;
@@ -452,69 +452,69 @@ class CodeManager {
 		}));
 
 		this.add(new Code(103, function() {
-			Utils.setStars(false);
-			Utils.setStarCoins(false);
-			Utils.setBowserKeys(false);
-			Utils.setFluddArray(false);
+			_root.utils.setStars(false);
+			_root.utils.setStarCoins(false);
+			_root.utils.setBowserKeys(false);
+			_root.utils.setFluddArray(false);
 		}));
 
 		this.add(new Code(201, function() {
-			//Utils.saveState();
+			//_root.utils.saveState();
 		}));
 
 		this.add(new Code(211, function() {
-			//Utils.loadState();
+			//_root.utils.loadState();
 		}));
 
 		this.add(new Code(311, function() {
-			Utils.setStars(true);
+			_root.utils.setStars(true);
 		}));
 
 		this.add(new Code(312, function() {
-			Utils.setStarCoins(true);
+			_root.utils.setStarCoins(true);
 		}));
 
 		this.add(new Code(313, function() {
-			Utils.setBowserKeys(true);
+			_root.utils.setBowserKeys(true);
 		}));
 
 		this.add(new Code(314, function() {
-			Utils.setSaveFluddArray(true);
+			_root.utils.setSaveFluddArray(true);
 		}));
 
 		this.add(new Code(321, function() {
-			Utils.setStars(false);
+			_root.utils.setStars(false);
 		}));
 
 		this.add(new Code(322, function() {
-			Utils.setStarCoins(false);
+			_root.utils.setStarCoins(false);
 		}));
 
 		this.add(new Code(323, function() {
-			Utils.setBowserKeys(false);
+			_root.utils.setBowserKeys(false);
 		}));
 
 		this.add(new Code(324, function() {
-			Utils.setSaveFludd(false);
-			Utils.setFluddArray(false);
+			_root.utils.setSaveFludd(false);
+			_root.utils.setFluddArray(false);
 			_root.RestartFludd();
 			_root.Fluddpow = "";
 		}));
 
 		this.add(new Code(401, function() {
-			Utils.setSaveFludd(true);
+			_root.utils.setSaveFludd(true);
 		}));
 		
 		this.add(new Code('bowserkey', function(command) {
 			
 			if (command[2] == 'true') {
-				Utils.setBowserKey(command[1], true);
+				_root.utils.setBowserKey(command[1], true);
 			}
 			else if (command[2] == 'false') {
-				Utils.setBowserKey(command[1], false);
+				_root.utils.setBowserKey(command[1], false);
 			}
 			else {
-				Utils.setBowserKey(command[1]);
+				_root.utils.setBowserKey(command[1]);
 			}
 			
 		}));
@@ -522,13 +522,13 @@ class CodeManager {
 		this.add(new Code('star', function(command) {
 			
 			if (command[2] == 'true') {
-				Utils.setStar(command[1], true);
+				_root.utils.setStar(command[1], true);
 			}
 			else if (command[2] == 'false') {
-				Utils.setStar(command[1], false);
+				_root.utils.setStar(command[1], false);
 			}
 			else {
-				Utils.setStar(command[1]);
+				_root.utils.setStar(command[1]);
 			}
 			
 		}));
@@ -536,13 +536,13 @@ class CodeManager {
 		this.add(new Code('starcoin', function(command) {
 			
 			if (command[2] == 'true') {
-				Utils.setStarCoin(command[1], true);
+				_root.utils.setStarCoin(command[1], true);
 			}
 			else if (command[2] == 'false') {
-				Utils.setStarCoin(command[1], false);
+				_root.utils.setStarCoin(command[1], false);
 			}
 			else {
-				Utils.setStarCoin(command[1]);
+				_root.utils.setStarCoin(command[1]);
 			}
 			
 		}));
@@ -692,5 +692,6 @@ _root.Save_FluddArray = new Array();
 
 _root.timer = new Timer();
 _root.timer.start();
+_root.utils = new Utils();
 _root.textManager = new TextManager();
 _root.codeManager = new CodeManager();
