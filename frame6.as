@@ -168,14 +168,15 @@ class Event {
 	
 	// Triggers code that happens on each frame.
 	public function onEachFrame() {
-		_root.timer.loop();
+		_root.timer.onEachFrame();
 		_root.timer.update();
-		_root.codeManager.loop();
+		_root.codeManager.onEachFrame();
 		_root.textManager.write(1,_root.timer.getDisplay());
 	}
 	
 	// Triggers code that happens on every loading zone.
 	public function onLoadingZone() {
+		_root.timer.onLoadingZone();
 		_root.textManager.write(4, _root.timer.getDisplay());
 	}
 	
@@ -310,7 +311,8 @@ class Timer {
 	// Defines if the timer is going or not.
 	private var started;
 	
-	
+	// Defines if the timer will start on the next loading zone.
+	private var startOnLoadingZone;
 	
 	// Tracks the real time, as it's going.
 	private var realTime:TimeCounter;
@@ -329,6 +331,7 @@ class Timer {
 		this.started = false;
 		this.realTime = new TimeCounter();
 		this.lastUpdatedTime = new TimeCounter();
+		this.startOnLoadingZone = true;
 	}
 	
 	// Starts the timer.
@@ -346,10 +349,18 @@ class Timer {
 		this.lastUpdatedTime = this.realTime.clone();
 	}
 	
-	
-	public function loop() {
+	// Manages the code that happens on each frame.
+	public function onEachFrame() {
 		if (this.started == true) {
 			this.realTime.addFrame();
+		}
+	}
+	
+	// Manages the code that happens when entering a loading zone.
+	public function onLoadingZone() {
+		if (this.startOnLoadingZone) {
+			this.start();
+			this.startOnLoadingZone = false;
 		}
 	}
 	
@@ -688,7 +699,7 @@ class CodeManager {
 	}
 	
 	// Defines the code that happens on each frame.
-	public function loop() {
+	public function onEachFrame() {
 		_root.textManager.write(2, this.currentCode);
 	}
 	
