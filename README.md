@@ -105,3 +105,7 @@ Warps the player to a specific section.
 * ### individuallevel [world]
 [Not implemented]
 
+* ### koopashell
+
+Sends to the KoopaShell console written by Jhynjhiruu. Allows to modify pretty much every variable of the game. Documentation of the KoopaShell module will get here soon.
+
