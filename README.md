@@ -94,9 +94,13 @@ Setups a file setting.
 **empty**: Setups an empty file.
 
 
-* ### warp [name]
-[Not implemented]
+* ### warp [name] [coordinates]
 
+Warps the player to a specific section.
+
+**name**: Name of that specific section. A list of the sections available will be added soon.
+
+**coordinates** Coordinates of the starting location of the player (4 parameters). Exact signification of those parameters is unknown yet (some might refer to the camera x and y position).
 
 * ### individuallevel [world]
 [Not implemented]
