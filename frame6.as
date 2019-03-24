@@ -605,13 +605,13 @@ class CodeManager {
 			trace('BowserKey command detected with arg ' + command[1] + '.');
 			
 			if (command[2] == 'true') {
-				_root.utils.setBowserKey(command[1], true);
+				_root.utils.setBowserKey(int(command[1]), true);
 			}
 			else if (command[2] == 'false') {
-				_root.utils.setBowserKey(command[1], false);
+				_root.utils.setBowserKey(int(command[1]), false);
 			}
 			else {
-				_root.utils.setBowserKey(command[1]);
+				_root.utils.setBowserKey(int(command[1]));
 			}
 			
 		}));
