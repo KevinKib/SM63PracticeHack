@@ -293,7 +293,7 @@ _root.KeyStar = function()
 };
 _root.KeySlash = function()
 {
-   if(Key.isDown(111))
+   if(Key.isDown(111) || Key.isDown(191))
    {
 	  return true;
    }

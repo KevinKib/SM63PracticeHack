@@ -121,11 +121,23 @@ class Utils {
 		_root.FluddArray[playingLevel][2] = bool;
 		_root.FluddArray[playingLevel][3] = bool;
 	}
+
+	// Returns the state of a star.
+	public function getStar(index) {
+		return _root.Star[index];
+	}
+	
+	// Returns the state of a star coin.
+	public function getStarCoin() {
+		return _root.StarCoin[index];
+	}
 	
 }
 
 // Class that manages everything related to displayed text.
 class TextManager {
+	
+	// Could be coded significantly better using an array.
 	
 	private var row1;
 	private var row2;
@@ -180,8 +192,12 @@ class Event {
 		_root.textManager.write(4, _root.timer.getDisplay());
 	}
 	
+	// Triggers code that happens when the star is collected.
 	public function onStarCollected() {
-		_root.timer.stop();
+		if (_root.codeManager.getIL()) {
+			_root.timer.stop();
+			_root.codeManager.setIL(false);
+		}
 	}
 	
 }
@@ -375,28 +391,34 @@ class Timer {
 class Code {
 	
 	// Identifier of the code
-	private var index;
+	private var indexList;
 	
 	// Function sent as a callback that will be executed
 	private var func;
 	
 	// Constructor
 	public function Code(index, func) {
-		this.index = index;
+		this.indexList = index.split(' ');
 		this.func = func;
 	}
 	
 	// Executes the code, if the index is valid.
 	public function execute(code) {
 		
+		var i = 0;
 		var command = code.split(' ');
 		
-		if (this.index == command[0]) {
-			this.func(command);
+		_root.textManager.write(4, this.indexList.length);
+		for (i = 0; i < this.indexList.length; i++) {
+			if (this.indexList[i] == command[0]) {
+				this.func(command);
+				break;
+			}
 		}
 	}
 	
 	// Executes the code, no matter what.
+	// (Should not be working)
 	private function executeImmediate() {
 		this.func();
 	}
@@ -411,16 +433,18 @@ class CodeManager {
 	private var input;
 	private var currentCode;
 	
+	private var il;
+	
 	// Constructor.
 	public function CodeManager() {
 		this.codeList = new Array();
 		this.input = true;
 		this.currentCode = "";
 		this.delay = 0;
+		this.il = false;
 		
 		this.initKeyListener();
 		this.initCodes();
-		
 	}
 	
 	// Creates the key listener.
@@ -469,28 +493,7 @@ class CodeManager {
 	
 	// Creates the codes and adds them to the code list.
 	public function initCodes() {
-		this.add(new Code(101, function() {
-			
-		}));
-
-		this.add(new Code(102, function() {
-			
-		}));
-
-		this.add(new Code(103, function() {
-			
-		}));
 		
-		
-
-		this.add(new Code(201, function() {
-			//_root.utils.saveState();
-		}));
-
-		this.add(new Code(211, function() {
-			//_root.utils.loadState();
-		}));
-
 		this.add(new Code(311, function() {
 			_root.utils.setStars(true);
 		}));
@@ -530,8 +533,46 @@ class CodeManager {
 			_root.utils.setSaveFludd(true);
 		}));
 		
-		this.add(new Code('individuallevel', function(command) {
-			_root.utils.setSaveFludd(true);
+		this.add(new Code('individuallevel il', function(command) {
+			_root.codeManager.setIL(true);
+			
+			var level = command[1];
+			var requiredStars = new Array();
+			var requiredStarCoins = new Array();
+			
+			switch(level) {
+				case 'bob':
+					requiredStars.push(1, 2, 3, 4, 5);
+					break;
+				case 'sl':
+					requiredStars.push(6, 7, 8, 9, 10);
+					break;
+				case 'hmc':
+					requiredStars.push(11, 12, 13, 14, 15);
+					break;
+				case 'bm':
+					requiredStars.push(16, 17, 18, 19, 20);
+					break;
+				case 'lll':
+					requiredStars.push(21, 22, 23, 24, 25);
+					break;
+				case 'ttm':
+					requiredStars.push(26, 27, 28, 29, 30);
+					break;
+				case 'rr':
+					requiredStars.push(31, 32, 33, 34, 35);
+					break;
+				case 'ssl':
+					requiredStars.push(55, 56, 57);
+					break;
+				case 'wdw':
+					requiredStars.push(58, 59, 60);
+					break;
+				case 'ttc':
+					requiredStars.push(61, 62, 63);
+					break;
+				
+			}
 		}));
 		
 		this.add(new Code('warp', function(command) {
@@ -584,7 +625,7 @@ class CodeManager {
 			
 		}));
 		
-		this.add(new Code('timer', function(command) {
+		this.add(new Code('timer t', function(command) {
 
 			switch(command[1]) {
 				case 'start':
@@ -601,8 +642,6 @@ class CodeManager {
 		}));
 		
 		this.add(new Code('bowserkey', function(command) {
-			
-			trace('BowserKey command detected with arg ' + command[1] + '.');
 			
 			if (command[2] == 'true') {
 				_root.utils.setBowserKey(int(command[1]), true);
@@ -793,9 +832,57 @@ class CodeManager {
 	public function emptyDelay() {
 		this.delay = 0;
 	}
+	
+	public function getIL() {
+		return this.il;
+	}
+	
+	public function setIL(bool) {
+		this.il = bool;
+	}
 }
 
-
+// Class that manages the start and end of individual levels.
+class IndividualLevel {
+	
+	// Not tested
+	
+	private var level;
+	private var requiredStars;
+	private var requiredStarCoins;
+	
+	public function IndividualLevel() {
+		this.stop();
+		this.requiredStars = new Array();
+		this.requiredStarCoins = new Array();
+	}
+	
+	public function check() {
+		var bool = true;
+		var i = 0;
+		
+		for (i = 0; i < this.requiredStars.length; i++) {
+			var index = this.requiredStars[i];
+			bool = bool && _root.utils.getStar[index];
+		}
+		
+		for (i = 0; i < this.requiredStarCoins.length; i++) {
+			var index = this.requiredStars[i];
+			bool = bool && _root.utils.getStar[index];
+		}
+		
+		return bool;
+	}
+	
+	public function stop() {
+		this.level = 'none';
+	}
+	
+	public function isGoing() {
+		return (this.level == 'none');
+	}
+	
+}
 
 
 
