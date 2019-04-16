@@ -194,9 +194,8 @@ class Event {
 	
 	// Triggers code that happens when the star is collected.
 	public function onStarCollected() {
-		if (_root.codeManager.getIL()) {
-			_root.timer.stop();
-			_root.codeManager.setIL(false);
+		if (_root.codeManager.getIL().isGoing() === true) {
+			_root.codeManager.getIL().onStarCollected();
 		}
 	}
 	
@@ -408,7 +407,6 @@ class Code {
 		var i = 0;
 		var command = code.split(' ');
 		
-		_root.textManager.write(4, this.indexList.length);
 		for (i = 0; i < this.indexList.length; i++) {
 			if (this.indexList[i] == command[0]) {
 				this.func(command);
@@ -441,7 +439,7 @@ class CodeManager {
 		this.input = true;
 		this.currentCode = "";
 		this.delay = 0;
-		this.il = false;
+		this.il = new IndividualLevel();
 		
 		this.initKeyListener();
 		this.initCodes();
@@ -534,6 +532,8 @@ class CodeManager {
 		}));
 		
 		this.add(new Code('individuallevel il', function(command) {
+			// Would be easier to maintain with OOP for worlds
+			
 			_root.codeManager.setIL(true);
 			
 			var level = command[1];
@@ -573,6 +573,11 @@ class CodeManager {
 					break;
 				
 			}
+			
+			_root.codeManager.getIL().start(level);
+			_root.codeManager.getIL().setRequiredStars(requiredStars);
+			_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
+			
 		}));
 		
 		this.add(new Code('warp', function(command) {
@@ -785,7 +790,6 @@ class CodeManager {
 	public function onEachFrame() {
 		_root.textManager.write(2, this.currentCode);
 		
-		
 		if (_root.KeySlash()) {
 			this.resetDelay();
 		}
@@ -836,10 +840,6 @@ class CodeManager {
 	public function getIL() {
 		return this.il;
 	}
-	
-	public function setIL(bool) {
-		this.il = bool;
-	}
 }
 
 // Class that manages the start and end of individual levels.
@@ -857,29 +857,62 @@ class IndividualLevel {
 		this.requiredStarCoins = new Array();
 	}
 	
+	// Getter for the required stars.
+	public function isRequiredStar(index) {
+		return (this.requiredStars.indexOf(index) != -1);
+	}
+	
+	// Getter for the required star coins.
+	public function isRequiredStarCoins(index) {
+		return (this.requiredStarCoins.indexOf(index) != -1);
+	}
+	
+	// Setter for the required stars.
+	public function setRequiredStars(array) {
+		this.requiredStars = array.slice();
+	}
+	
+	// Setter for the required star coins.
+	public function setRequiredStarCoins(array) {
+		this.requiredStarCoins = array.slice();
+	}
+	
 	public function check() {
 		var bool = true;
 		var i = 0;
 		
 		for (i = 0; i < this.requiredStars.length; i++) {
 			var index = this.requiredStars[i];
-			bool = bool && _root.utils.getStar[index];
+			bool = bool && (_root.utils.getStar(index));
 		}
 		
 		for (i = 0; i < this.requiredStarCoins.length; i++) {
-			var index = this.requiredStars[i];
-			bool = bool && _root.utils.getStar[index];
+			var index = this.requiredStarCoins[i];
+			bool = bool && (_root.utils.getStarCoin(index));
 		}
 		
 		return bool;
 	}
 	
+	public function onStarCollected() {
+		if (this.check()) {
+			this.stop();
+		}
+	}
+	
+	public function start(level) {
+		this.level = level;
+		_root.timer.reset();
+		_root.textManager.write(5, 'Current level : '+level);
+	}
+	
 	public function stop() {
 		this.level = 'none';
+		_root.timer.stop();
 	}
 	
 	public function isGoing() {
-		return (this.level == 'none');
+		return (this.level != 'none');
 	}
 	
 }
