@@ -543,35 +543,80 @@ class CodeManager {
 			switch(level) {
 				case 'bob':
 					requiredStars.push(1, 2, 3, 4, 5);
+					requiredStarCoins.push(1, 2, 3, 4, 5, 6);
 					break;
 				case 'sl':
 					requiredStars.push(6, 7, 8, 9, 10);
+					requiredStarCoins.push(7, 8, 6, 10, 11, 12);
 					break;
 				case 'hmc':
 					requiredStars.push(11, 12, 13, 14, 15);
+					requiredStarCoins.push(13, 14, 15, 16, 17, 18);
 					break;
 				case 'bm':
 					requiredStars.push(16, 17, 18, 19, 20);
+					requiredStarCoins.push(19, 20, 21, 22, 23, 24);
 					break;
 				case 'lll':
 					requiredStars.push(21, 22, 23, 24, 25);
+					requiredStarCoins.push(25, 26, 27, 28, 29, 30);
 					break;
 				case 'ttm':
 					requiredStars.push(26, 27, 28, 29, 30);
+					requiredStarCoins.push(31, 32, 33, 34, 35, 36);
 					break;
 				case 'rr':
 					requiredStars.push(31, 32, 33, 34, 35);
+					requiredStarCoins.push(37, 38, 39, 40, 41, 42);
 					break;
 				case 'ssl':
 					requiredStars.push(55, 56, 57);
+					requiredStarCoins.push(43, 44, 45);
 					break;
 				case 'wdw':
 					requiredStars.push(58, 59, 60);
+					requiredStarCoins.push(46, 47, 48);
 					break;
 				case 'ttc':
 					requiredStars.push(61, 62, 63);
+					requiredStarCoins.push(49, 50, 51);
 					break;
-				
+				case 'sotm':
+					requiredStars.push(44);
+					requiredStarCoins.push(59);
+					break;
+				case 'tidal':
+					requiredStars.push(45);
+					requiredStarCoins.push(60);
+					break;
+				case 'jrb':
+					requiredStars.push(46);
+					break;
+				case 'thwc':
+					requiredStars.push(47);
+					break;
+				case 'ff':
+					requiredStars.push(48);
+					requiredStarCoins.push(63);
+					break;
+				case 'sots':
+					requiredStars.push(49);
+					requiredStarCoins.push(58);
+					break;
+				case 'mm':
+					requiredStars.push(52);
+					requiredStarCoins.push(55);
+					break;
+				case 'coe':
+					requiredStars.push(53);
+					break;
+				case 'gos':
+					requiredStars.push(54);
+					break;
+				case 'etomk':
+					requiredStars.push(64);
+					requiredStarCoins.push(64);
+					break;
 			}
 			
 			_root.codeManager.getIL().start(level);
@@ -646,7 +691,7 @@ class CodeManager {
 			
 		}));
 		
-		this.add(new Code('bowserkey', function(command) {
+		this.add(new Code('bowserkey bk', function(command) {
 			
 			if (command[2] == 'true') {
 				_root.utils.setBowserKey(int(command[1]), true);
@@ -660,7 +705,7 @@ class CodeManager {
 			
 		}));
 		
-		this.add(new Code('star', function(command) {
+		this.add(new Code('star s', function(command) {
 			
 			if (command[2] == 'true') {
 				_root.utils.setStar(command[1], true);
@@ -674,7 +719,7 @@ class CodeManager {
 			
 		}));
 		
-		this.add(new Code('starcoin', function(command) {
+		this.add(new Code('starcoin sc', function(command) {
 			
 			if (command[2] == 'true') {
 				_root.utils.setStarCoin(command[1], true);
