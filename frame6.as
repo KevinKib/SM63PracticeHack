@@ -619,10 +619,21 @@ class CodeManager {
 					break;
 			}
 			
+			var type = command[2];
 			_root.codeManager.getIL().start(level);
-			_root.codeManager.getIL().setRequiredStars(requiredStars);
-			_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
 			
+			switch(type) {
+				case 'all':
+					_root.codeManager.getIL().setRequiredStars(requiredStars);
+					_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
+					break;
+				case 'stars':
+					_root.codeManager.getIL().setRequiredStars(requiredStars);
+					break;
+				case 'starcoins':
+					_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
+					break;
+			}
 		}));
 		
 		this.add(new Code('warp', function(command) {
