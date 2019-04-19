@@ -199,6 +199,13 @@ class Event {
 		}
 	}
 	
+	// Triggers code that happens when the star coin is collected.
+	public function onStarCoinCollected() {
+		if (_root.codeManager.getIL().isGoing() === true) {
+			_root.codeManager.getIL().onStarCollected();
+		}
+	}
+	
 }
 
 // Class that manages a time counter.
