@@ -1,6 +1,10 @@
 // Variable definitions
 class Utils {
 	
+	public function warp(title, a, b, c, d) {
+		_root.changecourse("downtransition2",title,a,b,c,d);
+	}
+	
 	// Sets the state of every star coin.
 	public function setStarCoins(bool)
 	{
@@ -130,6 +134,10 @@ class Utils {
 	// Returns the state of a star coin.
 	public function getStarCoin(index) {
 		return _root.StarCoin[index];
+	}
+	
+	public function getLevelName() {
+		return _root.playingcourse;
 	}
 	
 }
@@ -534,16 +542,25 @@ class CodeManager {
 			_root.Fluddpow = "";
 		}));
 
-		this.add(new Code(401, function() {
-			_root.utils.setSaveFludd(true);
+		this.add(new Code('levelname ln', function() {
+			_root.textManager.write(5, _root.utils.getLevelName() );
 		}));
 		
 		this.add(new Code('individuallevel il', function(command) {
 			// Would be easier to maintain with OOP for worlds
 			
+			var level = command[1];
+			var type = command[2];
+			var levelTitle = '';
+			var startingLevel = '';
+			
+			if (type != 'all' && type != 'stars' && type != 'starcoins') {
+				_root.textManager.write(5, 'Invalid IL command.');
+				return;
+			}
+			
 			_root.codeManager.setIL(true);
 			
-			var level = command[1];
 			var requiredStars = new Array();
 			var requiredStarCoins = new Array();
 			var emptyArray = new Array();
@@ -552,82 +569,122 @@ class CodeManager {
 				case 'bob':
 					requiredStars.push(1, 2, 3, 4, 5);
 					requiredStarCoins.push(1, 2, 3, 4, 5, 6);
+					levelTitle = 'Bom-Omb Battlefield';
+					startingLevel = "C-2";
 					break;
 				case 'sl':
 					requiredStars.push(6, 7, 8, 9, 10);
 					requiredStarCoins.push(7, 8, 6, 10, 11, 12);
+					levelTitle = "Snowman's Land";
+					startingLevel = "C-2-2";
 					break;
 				case 'hmc':
 					requiredStars.push(11, 12, 13, 14, 15);
 					requiredStarCoins.push(13, 14, 15, 16, 17, 18);
+					levelTitle = "Hazy Maze Cave";
+					startingLevel = "C-7";
 					break;
 				case 'bm':
 					requiredStars.push(16, 17, 18, 19, 20);
 					requiredStarCoins.push(19, 20, 21, 22, 23, 24);
+					levelTitle = "Boo's Mansion";
+					startingLevel = "C-8";
 					break;
 				case 'lll':
 					requiredStars.push(21, 22, 23, 24, 25);
 					requiredStarCoins.push(25, 26, 27, 28, 29, 30);
+					levelTitle = "Lethal Lava Land";
+					startingLevel = "C-10";
 					break;
 				case 'ttm':
 					requiredStars.push(26, 27, 28, 29, 30);
 					requiredStarCoins.push(31, 32, 33, 34, 35, 36);
+					levelTitle = "Tall Tall Mountain";
+					startingLevel = "C-10";
 					break;
 				case 'rr':
 					requiredStars.push(31, 32, 33, 34, 35);
 					requiredStarCoins.push(37, 38, 39, 40, 41, 42);
+					levelTitle = "Rainbow Ride";
+					startingLevel = "C-12";
 					break;
 				case 'ssl':
 					requiredStars.push(55, 56, 57);
 					requiredStarCoins.push(43, 44, 45);
+					levelTitle = "Shifting Sand Land";
+					startingLevel = "C-3";
 					break;
 				case 'wdw':
 					requiredStars.push(58, 59, 60);
 					requiredStarCoins.push(46, 47, 48);
+					levelTitle = "Wet Dry World";
+					startingLevel = "C-8";
 					break;
 				case 'ttc':
 					requiredStars.push(61, 62, 63);
 					requiredStarCoins.push(49, 50, 51);
+					levelTitle = "Tick Tock Clock";
+					startingLevel = "C-12";
 					break;
 				case 'sotm':
 					requiredStars.push(44);
 					requiredStarCoins.push(59);
+					levelTitle = "Secret of the Mushroom";
+					startingLevel = "C-1";
 					break;
 				case 'tidal':
 					requiredStars.push(45);
 					requiredStarCoins.push(60);
+					levelTitle = "Tidal Isles";
+					startingLevel = "C-3-2";
 					break;
 				case 'jrb':
 					requiredStars.push(46);
+					levelTitle = "Jolly Roger Bay";
+					startingLevel = "C-4H";
 					break;
 				case 'thwc':
 					requiredStars.push(47);
+					levelTitle = "Thwomp's Castle";
+					startingLevel = "C-8";
 					break;
 				case 'ff':
 					requiredStars.push(48);
 					requiredStarCoins.push(63);
+					levelTitle = "Frosty Fludd";
+					startingLevel = "C-7";
 					break;
 				case 'sots':
 					requiredStars.push(49);
 					requiredStarCoins.push(58);
+					levelTitle = "Secret of the Sky";
+					startingLevel = "C-7";
 					break;
 				case 'mm':
 					requiredStars.push(52);
 					requiredStarCoins.push(55);
+					levelTitle = "Magma Maze";
+					startingLevel = "C-10";
 					break;
 				case 'coe':
 					requiredStars.push(53);
+					levelTitle = "Cave of Empuzzlement";
+					startingLevel = "C-10";
 					break;
 				case 'gos':
 					requiredStars.push(54);
+					levelTitle = "Galaxy of Stars";
+					startingLevel = "C-12";
 					break;
-				case 'etomk':
+				case 'eotmk':
 					requiredStars.push(64);
 					requiredStarCoins.push(64);
+					levelTitle = "Edge of the Mushroom Kingdom";
+					startingLevel = "Castle";
 					break;
 			}
 			
-			var type = command[2];
+			_root.utils.warp(startingLevel, 0, 0, 0, 0);
 			_root.codeManager.getIL().start(level);
 			
 			var mode = 'none';
@@ -636,22 +693,22 @@ class CodeManager {
 				case 'all':
 					_root.codeManager.getIL().setRequiredStars(requiredStars);
 					_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
-					mode = 'all';
+					mode = 'All';
 					break;
 				case 'stars':
 					_root.codeManager.getIL().setRequiredStars(requiredStars);
 					_root.codeManager.getIL().setRequiredStarCoins(emptyArray);
-					mode = 'stars';
+					mode = 'Stars';
 					break;
 				case 'starcoins':
 					_root.codeManager.getIL().setRequiredStars(emptyArray);
 					_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
-					mode = 'starcoins';
+					mode = 'Star Coins';
 					break;
 				default:
-					mode = 'none';
+					mode = 'None';
 			}
-			_root.textManager.write(5, 'Current level : '+level+' '+mode);
+			_root.textManager.write(5, 'Current IL : '+levelTitle+' | '+mode);
 		}));
 		
 		this.add(new Code('warp', function(command) {
@@ -668,7 +725,7 @@ class CodeManager {
 				if (param_3 == undefined) param_3 = 0;
 				if (param_4 == undefined) param_4 = 0;
 				
-				_root.changecourse("downtransition2",command[1],param_1,param_2,param_3,param_4);
+				_root.utils.warp(command[1],param_1,param_2,param_3,param_4);
 			}
 			
 		}));
@@ -951,6 +1008,7 @@ class IndividualLevel {
 		this.requiredStarCoins = array.slice();
 	}
 	
+	
 	public function check() {
 		var bool = true;
 		var i = 0;		
@@ -958,20 +1016,15 @@ class IndividualLevel {
 		
 		for (i = 0; i < this.requiredStars.length; i++) {
 			var index = this.requiredStars[i];
-			
 			if (_root.utils.getStar(index) === false) {
-				_root.textManager.write(3, 'Star check failed.');
 				bool = false;
 				break;
 			}
 		}
 		
 		for (j = 0; j < this.requiredStarCoins.length; j++) {
-			
 			var index = this.requiredStarCoins[j];
-			_root.textManager.write(5, 'Index ' + index + ' : ' + _root.utils.getStarCoin(index));
 			if (_root.utils.getStarCoin(index) === false) {
-				_root.textManager.write(3, 'Star coin check failed.');
 				bool = false;
 				break;
 			}
