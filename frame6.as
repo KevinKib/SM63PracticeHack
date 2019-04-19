@@ -128,7 +128,7 @@ class Utils {
 	}
 	
 	// Returns the state of a star coin.
-	public function getStarCoin() {
+	public function getStarCoin(index) {
 		return _root.StarCoin[index];
 	}
 	
@@ -539,6 +539,7 @@ class CodeManager {
 			var level = command[1];
 			var requiredStars = new Array();
 			var requiredStarCoins = new Array();
+			var emptyArray = new Array();
 			
 			switch(level) {
 				case 'bob':
@@ -622,18 +623,28 @@ class CodeManager {
 			var type = command[2];
 			_root.codeManager.getIL().start(level);
 			
+			var mode = 'none';
+			
 			switch(type) {
 				case 'all':
 					_root.codeManager.getIL().setRequiredStars(requiredStars);
 					_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
+					mode = 'all';
 					break;
 				case 'stars':
 					_root.codeManager.getIL().setRequiredStars(requiredStars);
+					_root.codeManager.getIL().setRequiredStarCoins(emptyArray);
+					mode = 'stars';
 					break;
 				case 'starcoins':
+					_root.codeManager.getIL().setRequiredStars(emptyArray);
 					_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
+					mode = 'starcoins';
 					break;
+				default:
+					mode = 'none';
 			}
+			_root.textManager.write(5, 'Current level : '+level+' '+mode);
 		}));
 		
 		this.add(new Code('warp', function(command) {
@@ -655,7 +666,7 @@ class CodeManager {
 			
 		}));
 		
-		this.add(new Code('file', function(command) {
+		this.add(new Code('file f', function(command) {
 			
 			switch(command[1]) {
 				case 'complete':
@@ -935,23 +946,35 @@ class IndividualLevel {
 	
 	public function check() {
 		var bool = true;
-		var i = 0;
+		var i = 0;		
+		var j = 0;
 		
 		for (i = 0; i < this.requiredStars.length; i++) {
 			var index = this.requiredStars[i];
-			bool = bool && (_root.utils.getStar(index));
+			
+			if (_root.utils.getStar(index) === false) {
+				_root.textManager.write(3, 'Star check failed.');
+				bool = false;
+				break;
+			}
 		}
 		
-		for (i = 0; i < this.requiredStarCoins.length; i++) {
-			var index = this.requiredStarCoins[i];
-			bool = bool && (_root.utils.getStarCoin(index));
+		for (j = 0; j < this.requiredStarCoins.length; j++) {
+			
+			var index = this.requiredStarCoins[j];
+			_root.textManager.write(5, 'Index ' + index + ' : ' + _root.utils.getStarCoin(index));
+			if (_root.utils.getStarCoin(index) === false) {
+				_root.textManager.write(3, 'Star coin check failed.');
+				bool = false;
+				break;
+			}
 		}
 		
 		return bool;
 	}
 	
 	public function onStarCollected() {
-		if (this.check()) {
+		if (this.check() === true) {
 			this.stop();
 		}
 	}
@@ -959,7 +982,6 @@ class IndividualLevel {
 	public function start(level) {
 		this.level = level;
 		_root.timer.reset();
-		_root.textManager.write(5, 'Current level : '+level);
 	}
 	
 	public function stop() {
