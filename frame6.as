@@ -584,8 +584,18 @@ class CodeManager {
 		this.add(new Code('individuallevel il', function(command) {
 			// Would be easier to maintain with OOP for worlds
 			
+			var IL = _root.codeManager.getIL();
+			
 			var level = command[1];
 			var type = command[2];
+			//var starnum = command[3];
+			var starnum = parseInt(command[3]);
+			
+			if (type != 'all' && type != 'stars' && type != 'star' && type != 'starcoins') {
+				_root.textManager.write(5, 'Invalid IL command.');
+				return;
+			}
+			
 			var levelTitle = '';
 			var startingLevel = '';
 			var posA = 0;
@@ -593,14 +603,11 @@ class CodeManager {
 			var posC = 0;
 			var posD = 0;
 			
-			if (type != 'all' && type != 'stars' && type != 'starcoins') {
-				_root.textManager.write(5, 'Invalid IL command.');
-				return;
-			}
-			
 			var requiredStars = new Array();
 			var requiredStarCoins = new Array();
 			var emptyArray = new Array();
+						
+			var mode = 'none';
 			
 			switch(level) {
 				case 'bob':
@@ -800,31 +807,36 @@ class CodeManager {
 					posD = 0;
 					break;
 			}
-			
-			var mode = 'none';
-			
+
 			switch(type) {
 				case 'all':
-					_root.codeManager.getIL().setRequiredStars(requiredStars);
-					_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
+					IL.setRequiredStars(requiredStars);
+					IL.setRequiredStarCoins(requiredStarCoins);
 					mode = 'All';
 					break;
-				case 'stars':
-					_root.codeManager.getIL().setRequiredStars(requiredStars);
-					_root.codeManager.getIL().setRequiredStarCoins(emptyArray);
-					mode = 'Stars';
+				case 'stars': case 'star':
+					IL.setRequiredStarCoins(emptyArray);
+					if (!isNaN(starnum) && (starnum >= 1 && starnum <= 5)) {
+						IL.setRequiredStars(requiredStars[starnum - 1]);
+						mode = 'Star '+starnum;
+					}
+					else {
+						IL.setRequiredStars(requiredStars);
+						mode = 'Stars';
+					}
 					break;
 				case 'starcoins':
-					_root.codeManager.getIL().setRequiredStars(emptyArray);
-					_root.codeManager.getIL().setRequiredStarCoins(requiredStarCoins);
+					IL.setRequiredStars(emptyArray);
+					IL.setRequiredStarCoins(requiredStarCoins);
 					mode = 'Star Coins';
 					break;
 				default:
 					mode = 'None';
 			}
+			
 			_root.textManager.write(5, 'Current IL : ' + levelTitle+' | ' + mode);
 			//_root.utils.warp(startingLevel, posA, posB, posC, posD);
-			_root.codeManager.getIL().start(level);
+			IL.start(level);
 		}));
 		
 		this.add(new Code('warp w', function(command) {
