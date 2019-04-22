@@ -1,13 +1,54 @@
 // Variable definitions
 class Utils {
 	
-	public function warp(title, a, b, c, d) {
-		_root.changecourse("downtransition2",title,a,b,c,d);
+	private var latestWarpPosition;
+	
+	// Constructor of the Utils class.
+	public function constructor() {
+		this.latestWarpPosition = [0, 0, 0, 0];
+	}
+	
+	// Warps the player to a certain course.
+	public function warp(title, playerX, playerY, cameraX, cameraY) {
+		_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, true);
+	}
+	
+	public function warpDoor(title) {
+		_root.DoorTrasition(title);
+	}
+	
+	// Sets the latest warp position variables.
+	public function setLatestWarpPosition(b, c, d, e) {
+		var lwp = new Array();
+		lwp.push(b, c, d, e);
+		this.latestWarpPosition = lwp.slice();
+	}
+	
+	// Returns Mario's current position.
+	public function getPosition() {
+		var pos = new Array();
+		pos.push(_root.Course.Char._x - _root.Course.FrontGFX._x);
+		pos.push(_root.Course.Char._y - _root.Course.FrontGFX._y);
+		return pos;
+	}
+	
+	// Returns Mario's current position, with a string.
+	public function getPositionString() {
+		return this.getPosition()[0] + ' ' + this.getPosition()[1];
+	}
+	
+	// Returns the latest warp position.
+	public function getLatestWarpPosition() {
+		return this.latestWarpPosition;
+	}
+	
+	// Returns the latest warp position.
+	public function getLatestWarpPositionString() {
+		return this.latestWarpPosition[0] +  ' ' + this.latestWarpPosition[1] +  ' ' + this.latestWarpPosition[2] +  ' ' + this.latestWarpPosition[3];
 	}
 	
 	// Sets the state of every star coin.
-	public function setStarCoins(bool)
-	{
+	public function setStarCoins(bool) {
 	   i = 1;
 	   while(i <= 64)
 	   {
@@ -30,8 +71,7 @@ class Utils {
 	}
 	
 	// Sets the state of every star.
-	public function setStars(bool)
-	{
+	public function setStars(bool) {
 	   i = 1;
 	   while(i <= 64)
 	   {
@@ -53,8 +93,7 @@ class Utils {
 	}
 	
 	// Sets the state of every bowser key.
-	public function setBowserKeys(bool)
-	{
+	public function setBowserKeys(bool) {
 	   _root.BowserKey1 = bool;
 	   _root.BowserKey2 = bool;
 	   _root.BowserKey3 = bool;
@@ -91,16 +130,14 @@ class Utils {
 	}
 	
 	// Sets the state of the current saved fludd nozzles.
-	public function setSaveFludd(bool)
-	{
+	public function setSaveFludd(bool) {
 	   _root.SaveFluddH = bool;
 	   _root.SaveFluddR = bool;
 	   _root.SaveFluddT = bool;
 	}
 	
 	// Sets the state of every fludd stored in levels.
-	public function setFluddArray(bool)
-	{
+	public function setFluddArray(bool) {
 		_root.FluddArray = ["",
 		["", bool, bool, bool],
 		["", bool, bool, bool],
@@ -136,6 +173,7 @@ class Utils {
 		return _root.StarCoin[index];
 	}
 	
+	// Returns the current level name/ID.
 	public function getLevelName() {
 		return _root.playingcourse;
 	}
@@ -527,22 +565,19 @@ class CodeManager {
 			_root.utils.setStars(false);
 		}));
 
-		this.add(new Code(322, function() {
-			_root.utils.setStarCoins(false);
+		this.add(new Code('doorwarp', function(command) {
+			_root.utils.warpDoor(command[1]);
 		}));
 
-		this.add(new Code(323, function() {
-			_root.utils.setBowserKeys(false);
+		this.add(new Code('position pos', function(command) {
+			_root.textManager.write(5, _root.utils.getPositionString() + ' | | '  + _root.Course.Char._x + ' ' + _root.Course.Char._y + ' | ' + _root.Course.FrontGFX._x + ' ' + _root.Course.FrontGFX._y + ' | ' +_root.Course.Char._X + ' ' + _root.Course.Char._Y);
 		}));
 
-		this.add(new Code(324, function() {
-			_root.utils.setSaveFludd(false);
-			_root.utils.setFluddArray(false);
-			_root.RestartFludd();
-			_root.Fluddpow = "";
+		this.add(new Code('latestwarpposition lwp', function(command) {
+			_root.textManager.write(5, _root.utils.getLevelName() + ' ' + _root.utils.getLatestWarpPositionString());
 		}));
 
-		this.add(new Code('levelname ln', function() {
+		this.add(new Code('levelname ln', function(command) {
 			_root.textManager.write(5, _root.utils.getLevelName() );
 		}));
 		
@@ -553,13 +588,15 @@ class CodeManager {
 			var type = command[2];
 			var levelTitle = '';
 			var startingLevel = '';
+			var posA = 0;
+			var posB = 0;
+			var posC = 0;
+			var posD = 0;
 			
 			if (type != 'all' && type != 'stars' && type != 'starcoins') {
 				_root.textManager.write(5, 'Invalid IL command.');
 				return;
 			}
-			
-			_root.codeManager.setIL(true);
 			
 			var requiredStars = new Array();
 			var requiredStarCoins = new Array();
@@ -571,121 +608,198 @@ class CodeManager {
 					requiredStarCoins.push(1, 2, 3, 4, 5, 6);
 					levelTitle = 'Bom-Omb Battlefield';
 					startingLevel = "C-2";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'sl':
 					requiredStars.push(6, 7, 8, 9, 10);
 					requiredStarCoins.push(7, 8, 6, 10, 11, 12);
 					levelTitle = "Snowman's Land";
 					startingLevel = "C-2-2";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'hmc':
 					requiredStars.push(11, 12, 13, 14, 15);
 					requiredStarCoins.push(13, 14, 15, 16, 17, 18);
 					levelTitle = "Hazy Maze Cave";
 					startingLevel = "C-7";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'bm':
 					requiredStars.push(16, 17, 18, 19, 20);
 					requiredStarCoins.push(19, 20, 21, 22, 23, 24);
 					levelTitle = "Boo's Mansion";
 					startingLevel = "C-8";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'lll':
 					requiredStars.push(21, 22, 23, 24, 25);
 					requiredStarCoins.push(25, 26, 27, 28, 29, 30);
 					levelTitle = "Lethal Lava Land";
 					startingLevel = "C-10";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'ttm':
 					requiredStars.push(26, 27, 28, 29, 30);
 					requiredStarCoins.push(31, 32, 33, 34, 35, 36);
 					levelTitle = "Tall Tall Mountain";
 					startingLevel = "C-10";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'rr':
 					requiredStars.push(31, 32, 33, 34, 35);
 					requiredStarCoins.push(37, 38, 39, 40, 41, 42);
 					levelTitle = "Rainbow Ride";
 					startingLevel = "C-12";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'ssl':
 					requiredStars.push(55, 56, 57);
 					requiredStarCoins.push(43, 44, 45);
 					levelTitle = "Shifting Sand Land";
 					startingLevel = "C-3";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'wdw':
 					requiredStars.push(58, 59, 60);
 					requiredStarCoins.push(46, 47, 48);
 					levelTitle = "Wet Dry World";
 					startingLevel = "C-8";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'ttc':
 					requiredStars.push(61, 62, 63);
 					requiredStarCoins.push(49, 50, 51);
 					levelTitle = "Tick Tock Clock";
 					startingLevel = "C-12";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'sotm':
 					requiredStars.push(44);
 					requiredStarCoins.push(59);
 					levelTitle = "Secret of the Mushroom";
 					startingLevel = "C-1";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'tidal':
 					requiredStars.push(45);
 					requiredStarCoins.push(60);
 					levelTitle = "Tidal Isles";
 					startingLevel = "C-3-2";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'jrb':
 					requiredStars.push(46);
 					levelTitle = "Jolly Roger Bay";
 					startingLevel = "C-4H";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'thwc':
 					requiredStars.push(47);
 					levelTitle = "Thwomp's Castle";
 					startingLevel = "C-8";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'ff':
 					requiredStars.push(48);
 					requiredStarCoins.push(63);
 					levelTitle = "Frosty Fludd";
 					startingLevel = "C-7";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'sots':
 					requiredStars.push(49);
 					requiredStarCoins.push(58);
 					levelTitle = "Secret of the Sky";
 					startingLevel = "C-7";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'mm':
 					requiredStars.push(52);
 					requiredStarCoins.push(55);
 					levelTitle = "Magma Maze";
 					startingLevel = "C-10";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'coe':
 					requiredStars.push(53);
 					levelTitle = "Cave of Empuzzlement";
 					startingLevel = "C-10";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'gos':
 					requiredStars.push(54);
 					levelTitle = "Galaxy of Stars";
 					startingLevel = "C-12";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 				case 'eotmk':
 					requiredStars.push(64);
 					requiredStarCoins.push(64);
 					levelTitle = "Edge of the Mushroom Kingdom";
 					startingLevel = "Castle";
+					posA = 0;
+					posB = 0;
+					posC = 0;
+					posD = 0;
 					break;
 			}
-			
-			_root.utils.warp(startingLevel, 0, 0, 0, 0);
-			_root.codeManager.getIL().start(level);
 			
 			var mode = 'none';
 			
@@ -708,10 +822,12 @@ class CodeManager {
 				default:
 					mode = 'None';
 			}
-			_root.textManager.write(5, 'Current IL : '+levelTitle+' | '+mode);
+			_root.textManager.write(5, 'Current IL : ' + levelTitle+' | ' + mode);
+			//_root.utils.warp(startingLevel, posA, posB, posC, posD);
+			_root.codeManager.getIL().start(level);
 		}));
 		
-		this.add(new Code('warp', function(command) {
+		this.add(new Code('warp w', function(command) {
 			
 			var level = command[1];
 			var param_1 = command[2];
@@ -1033,21 +1149,25 @@ class IndividualLevel {
 		return bool;
 	}
 	
+	
 	public function onStarCollected() {
 		if (this.check() === true) {
 			this.stop();
 		}
 	}
 	
+	
 	public function start(level) {
 		this.level = level;
 		_root.timer.reset();
 	}
 	
+	
 	public function stop() {
 		this.level = 'none';
 		_root.timer.stop();
 	}
+	
 	
 	public function isGoing() {
 		return (this.level != 'none');

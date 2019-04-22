@@ -67,6 +67,7 @@ onEnterFrame = function()
 		 _root.Course.Char._x = _X + _parent._x;
 		 _root.Course.Char._y = _Y + _parent._y + 20 * _root.coursescale / 100;
 		 
+		 // Additional code when a star is collected
 		 _root.event.onStarCollected();
 		 
 		 gotoAndStop("Gone");

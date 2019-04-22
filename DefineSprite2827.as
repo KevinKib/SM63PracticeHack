@@ -11,7 +11,10 @@ if(_root.StarCoin[StarCoinNum] == false)
          {
             _root.StarCoin[StarCoinNum] = true;
             _root.CalculateStarCoins();
+			
+			// Additional code when a star coin is collected
 			_root.event.onStarCoinCollected();
+			
             _root.attachMovie("StarcoinMessage","StarcoinMessage",_root.getNextHighestDepth(),{_x:225,_y:150});
             _root.PauseGame = true;
             gotoAndPlay(3);
