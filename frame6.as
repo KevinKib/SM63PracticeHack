@@ -1,11 +1,134 @@
 // Variable definitions
+class World {
+	
+	private var index;
+	private var name;
+	private var fullName;
+	private var startingLevel;
+	private var stars;
+	private var starCoins;
+
+	public function World(index, name, fullName, startingLevel, stars, starCoins) {
+		this.index = index;
+		this.name = name;
+		this.fullName = fullName;
+		this.startingLevel = startingLevel;
+		this.stars = stars.slice();
+		this.starCoins = starCoins.slice();
+	}
+	
+	public function getIndex() {
+		return this.index;
+	}
+	
+	public function getName() {
+		return this.name;
+	}
+	
+	public function getFullName() {
+		return this.fullName;
+	}
+	
+	public function getStars() {
+		return this.stars.slice();
+	}
+	
+	public function getStarCoins() {
+		return this.starCoins.slice();
+	}
+	
+	public function getStartingLevel() {
+		return this.startingLevel;
+	}
+}
+
 class Utils {
 	
 	private var latestWarpPosition;
+	private var worldList;
 	
 	// Constructor of the Utils class.
-	public function constructor() {
+	public function Utils() {
+		this.worldList = new Array();
 		this.latestWarpPosition = [0, 0, 0, 0];
+		this.worldList.push(new World(1, 'bob', 'Bom-Omb Battlefield', "C-2",
+							[1, 2, 3, 4, 5],
+							[1, 2, 3, 4, 5, 6]),
+							new World(2, 'sl', "Snowman's Land", "C-2-2",
+							[6, 7, 8, 9, 10],
+							[7, 8, 9, 10, 11, 12]),
+							new World(3, 'hmc', "Hazy Maze Cave", "C-7",
+							[11, 12, 13, 14, 15],
+							[13, 14, 15, 16, 17, 18]),
+							new World(4, 'bm', "Boo's Mansion", "C-8",
+							[16, 17, 18, 19, 20],
+							[19, 20, 21, 22, 23, 24]),
+							new World(5, 'lll', "Lethal Lava Land", "C-10",
+							[21, 22, 23, 24, 25],
+							[25, 26, 27, 28, 29, 30]),
+							new World(6, 'ttm', "Tall Tall Mountain", "C-10",
+							[26, 27, 28, 29, 30],
+							[31, 32, 33, 34, 35, 36]),
+							new World(7, 'rr', "Rainbow Ride", "C-12",
+							[31, 32, 33, 34, 35],
+							[37, 38, 39, 40, 41, 42]),
+							new World(8, 'bt3', "Bowser Trap 3", "C-1",
+							[],
+							[]),
+							new World(9, 'ssl', "Shifting Sand Land", "C-3",
+							[55, 56, 57],
+							[43, 44, 45]),
+							new World(10, 'wdw', "Wet Dry World", "C-8",
+							[58, 59, 60],
+							[46, 47, 48]),
+							new World(11, 'ttc', "Tick Tock Clock", "C-12",
+							[61, 62, 63],
+							[49, 50, 51]),
+							new World(0, 'sotm', "Secret of the Mushroom", "C-1",
+							[44],
+							[59]),
+							new World(0, 'jrb', "Jolly Roger Bay", "C-4H",
+							[46],
+							[]),
+							new World(0, 'tidal', "Tidal Isles", "C-3-2",
+							[45],
+							[60]),
+							new World(0, 'sots', "Secret of the Sky", "C-7",
+							[49],
+							[58]),
+							new World(0, 'ff', "Frosty Fludd", "C-7",
+							[48],
+							[63]),
+							new World(0, 'thwc', "Thwomp's Castle", "C-8",
+							[47],
+							[]),
+							new World(0, 'coe', "Cave of Empuzzlement", "C-10",
+							[53],
+							[]),
+							new World(0, 'mm', "Magma Maze", "C-10",
+							[52],
+							[55]),
+							new World(0, 'gos', "Galaxy of Stars", "C-12",
+							[54],
+							[]),
+							new World(0, 'eotmk', "Edge of the Mushroom Kingdom", "Castle",
+							[64],
+							[64])
+							);
+		
+	}
+	
+	// Returns a specific world using its name.
+	public function getWorld(name) {
+		var world;
+		var i = 0;
+		for (i = 0; i < _root.utils.worldList.length; i++) {
+			if (this.worldList[i].getName() == name) {
+				world = this.worldList[i];
+				break;
+			}
+		}
+		return world;
 	}
 	
 	// Warps the player to a certain course.
@@ -153,6 +276,7 @@ class Utils {
 		["",bool,bool,bool]];
 	}
 	
+	// Sets the saved nozzles for a chosen world.
 	public function setWorldNozzle(world, nozzle, boolText) {
 		
 		var worldNb = 0;
@@ -166,25 +290,14 @@ class Utils {
 		var nozzles = new Array();
 		nozzles.push('h', 'r', 't');
 		
-		// World order has to be checked
-		switch(world) {
-			case 'bob': worldNb = 1; break;
-			case 'sl':  worldNb = 2; break;
-			case 'hmc': worldNb = 3; break;
-			case 'bm':  worldNb = 4; break;
-			case 'lll': worldNb = 5; break;
-			case 'ttm': worldNb = 6; break;
-			case 'rr':  worldNb = 7; break;
-			case 'bt3': worldNb = 8; break;
-			case 'ssl': worldNb = 9; break;
-			case 'wdw': worldNb = 10; break;
-			case 'ttc': worldNb = 11; break;
-			case 'all': 
-				var i = 0;
-				for (i = 0; i < 10; i++) {
-					_root.utils.setWorldNozzle(worlds[i], nozzle, boolText);
-				}
-				break;
+		if (world == 'all') {
+			var i = 0;
+			for (i = 0; i < 11; i++) {
+				_root.utils.setWorldNozzle(worlds[i], nozzle, boolText);
+			}
+		}
+		else {
+			worldNb = _root.utils.getWorld(world).getIndex();
 		}
 		
 		switch(nozzle) {
@@ -567,7 +680,6 @@ class CodeManager {
 		{
 			if (_root.codeManager.delay > 0) {
 				if (_root.codeManager.getInput()) {
-					trace(Key.getCode() + ", " + chr(Key.getCode()) + ", " + Key.getAscii() + ", " + chr(Key.getAscii()) + ", " + _root.allowedKeys.indexOf(chr(Key.getAscii())) + ", " + _root.cmd.length);
 					if(allowedKeys.indexOf(chr(Key.getAscii())) != -1)
 					{
 						_root.codeManager.setCurrentCode(_root.codeManager.getCurrentCode() + chr(Key.getAscii()));
@@ -664,220 +776,35 @@ class CodeManager {
 				return;
 			}
 			
-			var levelTitle = '';
-			var startingLevel = '';
 			var posA = 0;
 			var posB = 0;
 			var posC = 0;
 			var posD = 0;
-			
-			var requiredStars = new Array();
-			var requiredStarCoins = new Array();
 			var emptyArray = new Array();
 						
 			var mode = 'none';
 			
-			switch(level) {
-				case 'bob':
-					requiredStars.push(1, 2, 3, 4, 5);
-					requiredStarCoins.push(1, 2, 3, 4, 5, 6);
-					levelTitle = 'Bom-Omb Battlefield';
-					startingLevel = "C-2";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'sl':
-					requiredStars.push(6, 7, 8, 9, 10);
-					requiredStarCoins.push(7, 8, 6, 10, 11, 12);
-					levelTitle = "Snowman's Land";
-					startingLevel = "C-2-2";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'hmc':
-					requiredStars.push(11, 12, 13, 14, 15);
-					requiredStarCoins.push(13, 14, 15, 16, 17, 18);
-					levelTitle = "Hazy Maze Cave";
-					startingLevel = "C-7";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'bm':
-					requiredStars.push(16, 17, 18, 19, 20);
-					requiredStarCoins.push(19, 20, 21, 22, 23, 24);
-					levelTitle = "Boo's Mansion";
-					startingLevel = "C-8";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'lll':
-					requiredStars.push(21, 22, 23, 24, 25);
-					requiredStarCoins.push(25, 26, 27, 28, 29, 30);
-					levelTitle = "Lethal Lava Land";
-					startingLevel = "C-10";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'ttm':
-					requiredStars.push(26, 27, 28, 29, 30);
-					requiredStarCoins.push(31, 32, 33, 34, 35, 36);
-					levelTitle = "Tall Tall Mountain";
-					startingLevel = "C-10";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'rr':
-					requiredStars.push(31, 32, 33, 34, 35);
-					requiredStarCoins.push(37, 38, 39, 40, 41, 42);
-					levelTitle = "Rainbow Ride";
-					startingLevel = "C-12";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'ssl':
-					requiredStars.push(55, 56, 57);
-					requiredStarCoins.push(43, 44, 45);
-					levelTitle = "Shifting Sand Land";
-					startingLevel = "C-3";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'wdw':
-					requiredStars.push(58, 59, 60);
-					requiredStarCoins.push(46, 47, 48);
-					levelTitle = "Wet Dry World";
-					startingLevel = "C-8";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'ttc':
-					requiredStars.push(61, 62, 63);
-					requiredStarCoins.push(49, 50, 51);
-					levelTitle = "Tick Tock Clock";
-					startingLevel = "C-12";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'sotm':
-					requiredStars.push(44);
-					requiredStarCoins.push(59);
-					levelTitle = "Secret of the Mushroom";
-					startingLevel = "C-1";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'tidal':
-					requiredStars.push(45);
-					requiredStarCoins.push(60);
-					levelTitle = "Tidal Isles";
-					startingLevel = "C-3-2";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'jrb':
-					requiredStars.push(46);
-					levelTitle = "Jolly Roger Bay";
-					startingLevel = "C-4H";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'thwc':
-					requiredStars.push(47);
-					levelTitle = "Thwomp's Castle";
-					startingLevel = "C-8";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'ff':
-					requiredStars.push(48);
-					requiredStarCoins.push(63);
-					levelTitle = "Frosty Fludd";
-					startingLevel = "C-7";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'sots':
-					requiredStars.push(49);
-					requiredStarCoins.push(58);
-					levelTitle = "Secret of the Sky";
-					startingLevel = "C-7";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'mm':
-					requiredStars.push(52);
-					requiredStarCoins.push(55);
-					levelTitle = "Magma Maze";
-					startingLevel = "C-10";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'coe':
-					requiredStars.push(53);
-					levelTitle = "Cave of Empuzzlement";
-					startingLevel = "C-10";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'gos':
-					requiredStars.push(54);
-					levelTitle = "Galaxy of Stars";
-					startingLevel = "C-12";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-				case 'eotmk':
-					requiredStars.push(64);
-					requiredStarCoins.push(64);
-					levelTitle = "Edge of the Mushroom Kingdom";
-					startingLevel = "Castle";
-					posA = 0;
-					posB = 0;
-					posC = 0;
-					posD = 0;
-					break;
-			}
+			// World info
+			
+			var selectedWorld = _root.utils.getWorld(level);
+			var levelTitle = selectedWorld.getName();
+			var startingLevel = selectedWorld.getStartingLevel();
+			var requiredStars = selectedWorld.getStars();
+			var requiredStarCoins = selectedWorld.getStarCoins();
 
 			switch(type) {
-				case 'all': case '100':
+				case '100':
+					_root.utils.setWorldNozzle(level, 'all', 'false');
+					IL.setRequiredStars(requiredStars);
+					IL.setRequiredStarCoins(requiredStarCoins);
+					mode = '100%';
+				case 'allstars':
+					_root.utils.setWorldNozzle(level, 'all', 'true');
+					IL.setRequiredStars(requiredStars);
+					IL.setRequiredStarCoins(emptyArray);
+					mode = 'All Stars with Fludd';
+					break;
+				case 'all':
 					IL.setRequiredStars(requiredStars);
 					IL.setRequiredStarCoins(requiredStarCoins);
 					mode = 'All';
@@ -1268,7 +1195,9 @@ _root.Save_FluddArray = new Array();
 
 _root.timer = new Timer();
 _root.timer.start();
-_root.utils = new Utils();
 _root.textManager = new TextManager();
+trace("UTILS : CONSTRUCTOR PREBEGIN");
+_root.utils = new Utils();
+trace("UTILS : CONSTRUCTOR VERYEND");
 _root.codeManager = new CodeManager();
 _root.event = new Event();
