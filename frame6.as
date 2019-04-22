@@ -13,6 +13,7 @@ class Utils {
 		_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, true);
 	}
 	
+	// Warps the player to a certain course using the door transition function.
 	public function warpDoor(title) {
 		_root.DoorTrasition(title);
 	}
@@ -150,6 +151,66 @@ class Utils {
 		["", bool, bool, bool],
 		["", bool, bool, bool],
 		["",bool,bool,bool]];
+	}
+	
+	public function setWorldNozzle(world, nozzle, boolText) {
+		
+		var worldNb = 0;
+		var nozzleNb = 3;
+		
+		var setAllWorlds = false;
+		var setAllNozzles = false;
+		
+		var worlds = new Array();
+		worlds.push('bob', 'sl', 'hmc', 'bm', 'lll', 'ttm', 'rr', 'bt3', 'ssl', 'wdw', 'ttc');
+		var nozzles = new Array();
+		nozzles.push('h', 'r', 't');
+		
+		// World order has to be checked
+		switch(world) {
+			case 'bob': worldNb = 1; break;
+			case 'sl':  worldNb = 2; break;
+			case 'hmc': worldNb = 3; break;
+			case 'bm':  worldNb = 4; break;
+			case 'lll': worldNb = 5; break;
+			case 'ttm': worldNb = 6; break;
+			case 'rr':  worldNb = 7; break;
+			case 'bt3': worldNb = 8; break;
+			case 'ssl': worldNb = 9; break;
+			case 'wdw': worldNb = 10; break;
+			case 'ttc': worldNb = 11; break;
+			case 'all': 
+				var i = 0;
+				for (i = 0; i < 10; i++) {
+					_root.utils.setWorldNozzle(worlds[i], nozzle, boolText);
+				}
+				break;
+		}
+		
+		switch(nozzle) {
+			case 'all':
+				var j = 0;
+				for (j = 0; j < 2; j++) {
+					_root.utils.setWorldNozzle(world, nozzles[j], boolText);
+				}
+				break;
+			case 'h': case 'H': nozzleNb = 1; break;
+			case 'r': case 'R': nozzleNb = 2; break;
+			case 't': case 'T': nozzleNb = 3; break;
+		}
+		
+		switch(boolText) {
+			case 'true':
+				_root.FluddArray[worldNb][nozzleNb] = true;
+				break;
+			case 'false':
+				_root.FluddArray[worldNb][nozzleNb] = false;
+				break;
+			case 'toggle':
+				_root.FluddArray[worldNb][nozzleNb] = !_root.FluddArray[worldNb][nozzleNb];
+				break;
+		}
+		
 	}
 	
 	// Sets the state of the fludd in one specific playing level.
@@ -561,8 +622,15 @@ class CodeManager {
 			_root.utils.setSaveFluddArray(true);
 		}));
 
-		this.add(new Code(321, function() {
-			_root.utils.setStars(false);
+		this.add(new Code('nozzle', function(command) {
+			var world = command[1];
+			var nozzle = command[2];
+			var bool = command[3];
+			if (world === undefined || nozzle === undefined || bool === undefined) {
+				_root.textManager.write(5, 'Invalid syntax.');
+				return;
+			}
+			_root.utils.setWorldNozzle(world, nozzle, bool);
 		}));
 
 		this.add(new Code('doorwarp', function(command) {
@@ -591,7 +659,7 @@ class CodeManager {
 			//var starnum = command[3];
 			var starnum = parseInt(command[3]);
 			
-			if (type != 'all' && type != 'stars' && type != 'star' && type != 'starcoins') {
+			if (type != 'all' && type != '100' && type != 'stars' && type != 'star' && type != 'starcoins') {
 				_root.textManager.write(5, 'Invalid IL command.');
 				return;
 			}
@@ -809,7 +877,7 @@ class CodeManager {
 			}
 
 			switch(type) {
-				case 'all':
+				case 'all': case '100':
 					IL.setRequiredStars(requiredStars);
 					IL.setRequiredStarCoins(requiredStarCoins);
 					mode = 'All';
@@ -955,13 +1023,13 @@ class CodeManager {
 					_root.SaveFluddR = true;
 					_root.SaveFluddT = true;
 					break;
-				case 'H':
+				case 'H': case 'h':
 					_root.SaveFluddH = !_root.SaveFluddH;
 					break;
-				case 'R':
+				case 'R': case 'r':
 					_root.SaveFluddR = !_root.SaveFluddR;
 					break;
-				case 'T':
+				case 'T': case 't':
 					_root.SaveFluddT = !_root.SaveFluddT;
 					break;
 				case 'none':
