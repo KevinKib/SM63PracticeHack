@@ -47,7 +47,7 @@ Manages the current nozzles that the player has access to.
 
 **none**: Removes every nozzle of the player.
 
-* ### star [number] [boolean]
+* ### star / s [number] [boolean]
 
 Manages the state of a specific star.
 
@@ -55,7 +55,7 @@ Manages the state of a specific star.
 
 **boolean**: Either true or false, to set the state of the star, or nothing to toggle its state.
 
-* ### starcoin [number] [boolean]
+* ### starcoin / sc [number] [boolean]
 
 Manages the state of a specific star coin.
 
@@ -63,7 +63,7 @@ Manages the state of a specific star coin.
 
 **boolean**: Either true or false, to set the state of the star coin, or nothing to toggle its state.
 
-* ### bowserkey [number] [boolean]
+* ### bowserkey / bk [number] [boolean]
 
 Manages the state of a specific bowser key.
 
@@ -71,9 +71,7 @@ Manages the state of a specific bowser key.
 
 **boolean**: Either true or false, to set the state of the bowser key, or nothing to toggle its state.
 
-(Does not work)
-
-* ### timer [start|stop|reset]
+* ### timer / t [start|stop|reset]
 
 Manages the state of the timer.
 
@@ -83,7 +81,7 @@ Manages the state of the timer.
 
 **reset**: Resets the timer; makes it automatically start on the next loading zone.
 
-* ### file [complete|essentials|empty]
+* ### file / f [complete|essentials|empty]
 
 Setups a file setting.
 
@@ -93,19 +91,62 @@ Setups a file setting.
 
 **empty**: Setups an empty file.
 
-
-* ### warp [name] [coordinates]
+* ### warp / w [name] [playerX] [playerY] [cameraX] [cameraY]
 
 Warps the player to a specific section.
 
 **name**: Name of that specific section. A list of the sections available will be added soon.
 
-**coordinates**: Coordinates of the starting location of the player (4 parameters). Exact signification of those parameters is unknown yet (some might refer to the camera x and y position).
+**coordinates**: Coordinates of the starting location of the player (4 parameters).
 
-* ### individuallevel [world]
-[Not implemented]
+* ### individuallevel / il [world] [type]
 
-* ### koopashell
+Starts an individual level.
+
+**world**: Name of the world in which the individual level will be played. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
+
+**type**: The type of individual level that will be performed.
+Can be either:
+- **100 / all** : Starts a world from scratch. Collect every star and star coin from the world.
+- **allstars** : Starts a world with every nozzle. Collect every star from the world.
+- **stars / star** : From scratch. Collect every star from the world.
+- **starcoins / starcoin** : From scratch. Collect every star coin from the world.
+
+* ### levelname / ln
+
+Returns the identifier of the current level the player is standing in.
+
+* ### nozzle [world] [nozzle] [bool]
+
+Sets the saved nozzles in a specific world.
+
+**world**: Name of the world. Can be chosen between these : all - bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
+
+**nozzle**: Name of the nozzle that will be changed. Can be either : all, h, r, t, none.
+
+**bool**: Future state of the chosen nozzles. Can be either true or false.
+
+* ### worldstar ws [world] [bool] [number]
+
+Sets the state of the stars in a specific world.
+
+**world**: Name of the world. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
+
+**bool**: Future state of the chosen stars. Can be either true or false.
+
+**number** (Falcultative) Number of one specific star that can be chosen. For example, "ws bob true 1" gives the first star of BoB, which is the king bob-omb star.
+
+* ### worldstarcoin wsc
+
+Sets the state of the star coins in a specific world.
+
+**world**: Name of the world. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
+
+**bool**: Future state of the chosen star coins. Can be either true or false.
+
+**number** (Falcultative) Number of one specific star coin that can be chosen. Refer to worldstar to see an example of use.
+
+* ### koopashell / ks
 
 Sends to the KoopaShell console written by Jhynjhiruu. Allows to modify pretty much every variable of the game. Documentation of the KoopaShell module will get here soon.
 
