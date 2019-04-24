@@ -7,14 +7,16 @@ class World {
 	private var startingLevel;
 	private var stars;
 	private var starCoins;
+	private var flags;
 
-	public function World(index, name, fullName, startingLevel, stars, starCoins) {
+	public function World(index, name, fullName, startingLevel, stars, starCoins, flags) {
 		this.index = index;
 		this.name = name;
 		this.fullName = fullName;
 		this.startingLevel = startingLevel;
 		this.stars = stars.slice();
 		this.starCoins = starCoins.slice();
+		this.flags = flags.slice();
 	}
 	
 	public function getIndex() {
@@ -37,6 +39,10 @@ class World {
 		return this.starCoins.slice();
 	}
 	
+	public function getFlags() {
+		return this.flags.slice();
+	}
+	
 	public function getStartingLevel() {
 		return this.startingLevel;
 	}
@@ -47,74 +53,102 @@ class Utils {
 	
 	private var latestWarpPosition;
 	private var worldList;
+	private var flags;
 	
 	// Constructor of the Utils class.
 	public function Utils() {
 		this.worldList = new Array();
+		this.flags = new Array();
+		this.flags.push(false, false);
 		this.latestWarpPosition = [0, 0, 0, 0];
 		this.worldList.push(new World(1, 'bob', 'Bom-Omb Battlefield', "C-2",
 							[1, 2, 3, 4, 5],
-							[1, 2, 3, 4, 5, 6]),
+							[1, 2, 3, 4, 5, 6],
+							[]),
 							new World(2, 'sl', "Snowman's Land", "C-2-2",
 							[6, 7, 8, 9, 10],
-							[7, 8, 9, 10, 11, 12]),
+							[7, 8, 9, 10, 11, 12],
+							[]),
 							new World(3, 'hmc', "Hazy Maze Cave", "C-7",
 							[11, 12, 13, 14, 15],
-							[13, 14, 15, 16, 17, 18]),
+							[13, 14, 15, 16, 17, 18],
+							[]),
 							new World(4, 'bm', "Boo's Mansion", "C-8",
 							[16, 17, 18, 19, 20],
-							[19, 20, 21, 22, 23, 24]),
+							[19, 20, 21, 22, 23, 24],
+							[]),
 							new World(5, 'lll', "Lethal Lava Land", "C-10",
 							[21, 22, 23, 24, 25],
-							[25, 26, 27, 28, 29, 30]),
+							[25, 26, 27, 28, 29, 30],
+							[]),
 							new World(6, 'ttm', "Tall Tall Mountain", "C-10",
 							[26, 27, 28, 29, 30],
-							[31, 32, 33, 34, 35, 36]),
+							[31, 32, 33, 34, 35, 36],
+							[]),
 							new World(7, 'rr', "Rainbow Ride", "C-12",
 							[31, 32, 33, 34, 35],
-							[37, 38, 39, 40, 41, 42]),
+							[37, 38, 39, 40, 41, 42],
+							[]),
 							new World(8, 'bt3', "Bowser Trap 3", "C-1",
 							[],
-							[]),
+							[],
+							['bt3']),
 							new World(9, 'ssl', "Shifting Sand Land", "C-3",
 							[55, 56, 57],
-							[43, 44, 45]),
+							[43, 44, 45],
+							[]),
 							new World(10, 'wdw', "Wet Dry World", "C-8",
 							[58, 59, 60],
-							[46, 47, 48]),
+							[46, 47, 48],
+							[]),
 							new World(11, 'ttc', "Tick Tock Clock", "C-12",
 							[61, 62, 63],
-							[49, 50, 51]),
+							[49, 50, 51],
+							[]),
 							new World(0, 'sotm', "Secret of the Mushroom", "C-1",
 							[44],
-							[59]),
+							[59],
+							[]),
 							new World(0, 'jrb', "Jolly Roger Bay", "C-4H",
 							[46],
+							[],
 							[]),
 							new World(0, 'tidal', "Tidal Isles", "C-3-2",
 							[45],
-							[60]),
+							[60],
+							[]),
 							new World(0, 'sots', "Secret of the Sky", "C-7",
 							[49],
-							[58]),
+							[58],
+							[]),
 							new World(0, 'ff', "Frosty Fludd", "C-7",
 							[48],
-							[63]),
+							[63],
+							[]),
 							new World(0, 'thwc', "Thwomp's Castle", "C-8",
 							[47],
+							[],
 							[]),
 							new World(0, 'coe', "Cave of Empuzzlement", "C-10",
 							[53],
+							[],
 							[]),
 							new World(0, 'mm', "Magma Maze", "C-10",
 							[52],
-							[55]),
+							[55],
+							[]),
 							new World(0, 'gos', "Galaxy of Stars", "C-12",
 							[54],
+							[],
 							[]),
+							new World(0, 'space', "Space", "8-12",
+							[],
+							[],
+							['space']),
 							new World(0, 'eotmk', "Edge of the Mushroom Kingdom", "Castle",
 							[64],
-							[64])
+							[64],
+							[])
 							);
 		
 	}
@@ -156,7 +190,16 @@ class Utils {
 			}
 		}
 		else {
-			this.setStar(selectedWorld[number-1], bool);
+			this.setStarCoin(selectedWorld.getStarCoins()[number-1], bool);
+		}
+	}
+	
+	// Sets the flags of a certain world in a certain state.
+	public function setWorldFlags(name, bool) {
+		var selectedWorld = this.getWorld(name);
+		var i = 0;
+		for (i = 0; i < selectedWorld.getFlags().length; i++) {
+			this.setFlag(selectedWorld.getFlags()[i], false);
 		}
 	}
 	
@@ -280,6 +323,32 @@ class Utils {
 				}
 				break;
 		}
+	}
+	
+	// Sets the state of a flag, used for IL timings.
+	public function setFlag(name, bool) {
+		switch(name) {
+			case 'bt3':
+				this.flags[0] = bool;
+				break;
+			case 'space':
+				this.flags[1] = bool;
+				break;
+		}
+	}
+	
+	// Returns the state of a flag, used for IL timings.
+	public function getFlag(name, bool) {
+		var flag;
+		switch(name) {
+			case 'bt3':
+				flag = this.flags[0];
+				break;
+			case 'space':
+				flag = this.flags[1];
+				break;
+		}
+		return flag;
 	}
 	
 	// Sets the state of the current saved fludd nozzles.
@@ -451,6 +520,14 @@ class Event {
 	// Triggers code that happens when the star coin is collected.
 	public function onStarCoinCollected() {
 		if (_root.codeManager.getIL().isGoing() === true) {
+			_root.codeManager.getIL().onStarCollected();
+		}
+	}
+	
+	//
+	public function onFakeBowserStart() {
+		if (_root.codeManager.getIL().isGoing() === true) {
+			_root.utils.setFlag('bt3', true);
 			_root.codeManager.getIL().onStarCollected();
 		}
 	}
@@ -831,9 +908,11 @@ class CodeManager {
 			var startingLevel = selectedWorld.getStartingLevel();
 			var requiredStars = selectedWorld.getStars();
 			var requiredStarCoins = selectedWorld.getStarCoins();
+			var requiredFlags = selectedWorld.getFlags();
 			
 			_root.utils.setWorldStars(level, false);
 			_root.utils.setWorldStarCoins(level, false);
+			_root.utils.setWorldFlags(level, false);
 			
 			// Clean this code pls
 
@@ -842,6 +921,7 @@ class CodeManager {
 					_root.utils.setWorldNozzle(level, 'all', 'false');
 					IL.setRequiredStars(requiredStars);
 					IL.setRequiredStarCoins(requiredStarCoins);
+					IL.setRequiredFlags(requiredFlags);
 					mode = '100%';
 					break;
 				case 'starsfludd': case 'sf':
@@ -1157,11 +1237,10 @@ class CodeManager {
 // Class that manages the start and end of individual levels.
 class IndividualLevel {
 	
-	// Not tested
-	
 	private var level;
 	private var requiredStars;
 	private var requiredStarCoins;
+	private var requiredFlags;
 	
 	public function IndividualLevel() {
 		this.stop();
@@ -1187,6 +1266,11 @@ class IndividualLevel {
 	// Setter for the required star coins.
 	public function setRequiredStarCoins(array) {
 		this.requiredStarCoins = array.slice();
+	}
+	
+	// Setter for the required flags.
+	public function setRequiredFlags(array) {
+		this.requiredFlags = array.slice();
 	}
 	
 	
