@@ -1,4 +1,4 @@
-// Variable definitions
+// Defines the informations from a world
 class World {
 	
 	private var index;
@@ -42,6 +42,7 @@ class World {
 	}
 }
 
+// Class that communicates with the IG variables
 class Utils {
 	
 	private var latestWarpPosition;
@@ -129,6 +130,34 @@ class Utils {
 			}
 		}
 		return world;
+	}
+	
+	// Sets stars of a certain world in a certain state.
+	public function setWorldStars(name, bool, number) {
+		var selectedWorld = this.getWorld(name);
+		var i = 0;
+		if (number === undefined) {
+			for (i = 0; i < selectedWorld.getStars().length; i++) {
+				this.setStar(selectedWorld.getStars()[i], bool);
+			}
+		}
+		else {
+			this.setStar(selectedWorld[number-1], bool);
+		}
+	}
+	
+	// Sets star coins of a certain world in a certain state.
+	public function setWorldStarCoins(name, bool, number) {
+		var selectedWorld = this.getWorld(name);
+		var i = 0;
+		if (number === undefined) {
+			for (i = 0; i < selectedWorld.getStarCoins().length; i++) {
+				this.setStarCoin(selectedWorld.getStarCoins()[i], bool);
+			}
+		}
+		else {
+			this.setStar(selectedWorld[number-1], bool);
+		}
 	}
 	
 	// Warps the player to a certain course.
@@ -718,20 +747,28 @@ class CodeManager {
 	// Creates the codes and adds them to the code list.
 	public function initCodes() {
 		
-		this.add(new Code(311, function() {
-			_root.utils.setStars(true);
+		this.add(new Code('worldstar ws', function(command) {
+			var level = command[1];
+			var bool = command[2];
+			var number = command[3];
+			switch(bool) {
+				case 'true':  
+					_root.utils.setWorldStars(level, true, number); 
+					break;
+				case 'false': 
+					_root.utils.setWorldStars(level, false, number); 
+					break;
+			}
 		}));
-
-		this.add(new Code(312, function() {
-			_root.utils.setStarCoins(true);
-		}));
-
-		this.add(new Code(313, function() {
-			_root.utils.setBowserKeys(true);
-		}));
-
-		this.add(new Code(314, function() {
-			_root.utils.setSaveFluddArray(true);
+		
+		this.add(new Code('worldstarcoin wsc', function(command) {
+			var level = command[1];
+			var bool = command[2];
+			var number = command[3];
+			switch(bool) {
+				case 'true':  _root.utils.setWorldStarCoins(level, true, number); break;
+				case 'false': _root.utils.setWorldStarCoins(level, false, number); break;
+			}
 		}));
 
 		this.add(new Code('nozzle', function(command) {
@@ -771,7 +808,10 @@ class CodeManager {
 			//var starnum = command[3];
 			var starnum = parseInt(command[3]);
 			
-			if (type != 'all' && type != '100' && type != 'stars' && type != 'star' && type != 'starcoins') {
+			var existingTypes = new Array();
+			existingTypes.push('all', '100', 'starsfludd', 'stars', 'starfludd', 'star', 'starcoins', 'starcoin');
+			
+			if (existingTypes.indexOf(type) == -1) {
 				_root.textManager.write(5, 'Invalid IL command.');
 				return;
 			}
@@ -791,36 +831,54 @@ class CodeManager {
 			var startingLevel = selectedWorld.getStartingLevel();
 			var requiredStars = selectedWorld.getStars();
 			var requiredStarCoins = selectedWorld.getStarCoins();
+			
+			_root.utils.setWorldStars(level, false);
+			_root.utils.setWorldStarCoins(level, false);
+			
+			// Clean this code pls
 
 			switch(type) {
-				case '100':
+				case '100': case 'all':
 					_root.utils.setWorldNozzle(level, 'all', 'false');
 					IL.setRequiredStars(requiredStars);
 					IL.setRequiredStarCoins(requiredStarCoins);
 					mode = '100%';
-				case 'allstars':
+					break;
+				case 'starsfludd': case 'sf':
 					_root.utils.setWorldNozzle(level, 'all', 'true');
 					IL.setRequiredStars(requiredStars);
 					IL.setRequiredStarCoins(emptyArray);
 					mode = 'All Stars with Fludd';
 					break;
-				case 'all':
+				case 'stars':
+					_root.utils.setWorldNozzle(level, 'all', 'false');
 					IL.setRequiredStars(requiredStars);
-					IL.setRequiredStarCoins(requiredStarCoins);
-					mode = 'All';
-					break;
-				case 'stars': case 'star':
 					IL.setRequiredStarCoins(emptyArray);
+					mode = 'Stars';
+					break;
+				case 'starfludd':
 					if (!isNaN(starnum) && (starnum >= 1 && starnum <= 5)) {
-						IL.setRequiredStars(requiredStars[starnum - 1]);
+						_root.utils.setWorldNozzle(level, 'all', 'true');
+						
+						var arr = new Array();
+						arr.push(requiredStars[starnum - 1]);
+						IL.setRequiredStars(arr);
+						IL.setRequiredStarCoins(emptyArray);
+						mode = 'Star '+starnum+' with Fludd';
+					}
+					break;
+				case 'star':
+					if (!isNaN(starnum) && (starnum >= 1 && starnum <= 5)) {
+						_root.utils.setWorldNozzle(level, 'all', 'false');
+						var arr = new Array();
+						arr.push(requiredStars[starnum - 1]);
+						IL.setRequiredStars(arr);
+						IL.setRequiredStarCoins(emptyArray);
 						mode = 'Star '+starnum;
 					}
-					else {
-						IL.setRequiredStars(requiredStars);
-						mode = 'Stars';
-					}
 					break;
-				case 'starcoins':
+				case 'starcoins': case 'starcoin':
+					_root.utils.setWorldNozzle(level, 'all', 'false');
 					IL.setRequiredStars(emptyArray);
 					IL.setRequiredStarCoins(requiredStarCoins);
 					mode = 'Star Coins';
@@ -829,7 +887,7 @@ class CodeManager {
 					mode = 'None';
 			}
 			
-			_root.textManager.write(5, 'Current IL : ' + levelTitle+' | ' + mode);
+			_root.textManager.write(5, 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
 			//_root.utils.warp(startingLevel, posA, posB, posC, posD);
 			IL.start(level);
 		}));
@@ -1182,8 +1240,6 @@ class IndividualLevel {
 	
 }
 
-
-
 NewgroundsAPI.connectMovie(8160);
 _root.ILTimerCurrentMenu = 0;
 _root.ILTimerMenuDelay = 0;
@@ -1196,8 +1252,8 @@ _root.Save_FluddArray = new Array();
 _root.timer = new Timer();
 _root.timer.start();
 _root.textManager = new TextManager();
-trace("UTILS : CONSTRUCTOR PREBEGIN");
 _root.utils = new Utils();
-trace("UTILS : CONSTRUCTOR VERYEND");
 _root.codeManager = new CodeManager();
 _root.event = new Event();
+
+var lol = new File("records.txt");
