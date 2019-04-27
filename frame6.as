@@ -5,15 +5,17 @@ class World {
 	private var name;
 	private var fullName;
 	private var startingLevel;
+	private var coordinates;
 	private var stars;
 	private var starCoins;
 	private var flags;
 
-	public function World(index, name, fullName, startingLevel, stars, starCoins, flags) {
+	public function World(index, name, fullName, startingLevel, coordinates, stars, starCoins, flags) {
 		this.index = index;
 		this.name = name;
 		this.fullName = fullName;
 		this.startingLevel = startingLevel;
+		this.coordinates = coordinates;
 		this.stars = stars.slice();
 		this.starCoins = starCoins.slice();
 		this.flags = flags.slice();
@@ -39,6 +41,10 @@ class World {
 		return this.starCoins.slice();
 	}
 	
+	public function getCoordinates() {
+		return this.coordinates.slice();
+	}
+	
 	public function getFlags() {
 		return this.flags.slice();
 	}
@@ -62,90 +68,112 @@ class Utils {
 		this.flags.push(false, false);
 		this.latestWarpPosition = [0, 0, 0, 0];
 		this.worldList.push(new World(1, 'bob', 'Bom-Omb Battlefield', "C-2",
+							[-174.1, 9.35],
 							[1, 2, 3, 4, 5],
 							[1, 2, 3, 4, 5, 6],
 							[]),
 							new World(2, 'sl', "Snowman's Land", "C-2-2",
+							[-265, 58.05],
 							[6, 7, 8, 9, 10],
 							[7, 8, 9, 10, 11, 12],
 							[]),
 							new World(3, 'hmc', "Hazy Maze Cave", "C-7",
+							[-434.45, 58.3],
 							[11, 12, 13, 14, 15],
 							[13, 14, 15, 16, 17, 18],
 							[]),
 							new World(4, 'bm', "Boo's Mansion", "C-8",
+							[332.05, -0.15],
 							[16, 17, 18, 19, 20],
 							[19, 20, 21, 22, 23, 24],
 							[]),
 							new World(5, 'lll', "Lethal Lava Land", "C-10",
+							[-339.65, 8.15],
 							[21, 22, 23, 24, 25],
 							[25, 26, 27, 28, 29, 30],
 							[]),
 							new World(6, 'ttm', "Tall Tall Mountain", "C-10",
+							[136.05, 6.75],
 							[26, 27, 28, 29, 30],
 							[31, 32, 33, 34, 35, 36],
 							[]),
 							new World(7, 'rr', "Rainbow Ride", "C-12",
+							[-675.45, -74.9],
 							[31, 32, 33, 34, 35],
 							[37, 38, 39, 40, 41, 42],
 							[]),
-							new World(8, 'bt3', "Bowser Trap 3", "C-1",
+							new World(8, 'bt3', "Bowser Trap 3", "C-13",
+							[1123.9, -159.05],
 							[],
 							[52, 53],
 							['bt3']),
 							new World(9, 'ssl', "Shifting Sand Land", "C-3",
+							[155.3, 9.35],
 							[55, 56, 57],
 							[43, 44, 45],
 							[]),
 							new World(10, 'wdw', "Wet Dry World", "C-8",
+							[551.6, -10.3],
 							[58, 59, 60],
 							[46, 47, 48],
 							[]),
 							new World(11, 'ttc', "Tick Tock Clock", "C-12",
+							[149.5, 0.65 ],
 							[61, 62, 63],
 							[49, 50, 51],
 							[]),
 							new World(0, 'sotm', "Secret of the Mushroom", "C-1",
+							[0, -232],
 							[44],
 							[59],
 							[]),
 							new World(0, 'jrb', "Jolly Roger Bay", "C-4H",
+							[-633.6, -429.9],
 							[46],
 							[],
 							[]),
 							new World(0, 'tidal', "Tidal Isles", "C-3-2",
+							[128.2, 10.15],
 							[45],
 							[60],
 							[]),
 							new World(0, 'sots', "Secret of the Sky", "C-7",
-							[49],
+							[-623, 58.5],
+							[48],
 							[58],
 							[]),
 							new World(0, 'ff', "Frosty Fludd", "C-7",
-							[48],
+							[277.45, 58.45],
+							[47],
 							[63],
 							[]),
 							new World(0, 'thwc', "Thwomp's Castle", "C-8",
-							[47],
+							[939.05, -373.75],
+							[49],
 							[],
 							[]),
 							new World(0, 'coe', "Cave of Empuzzlement", "C-10",
+							[311.05, 7.35],
 							[53],
 							[],
 							[]),
 							new World(0, 'mm', "Magma Maze", "C-10",
+							[-442.55, -724.45],
 							[52],
 							[55],
 							[]),
 							new World(0, 'gos', "Galaxy of Stars", "C-12",
+							[481.3, -74.45],
 							[54],
 							[],
 							[]),
 							new World(0, 'space', "Space", "8-12",
+							[0, 0],
 							[],
 							[],
 							['space']),
 							new World(0, 'eotmk', "Edge of the Mushroom Kingdom", "Castle",
+							[2163.9, -233.25],
 							[64],
 							[64],
 							[])
@@ -205,7 +233,16 @@ class Utils {
 	
 	// Warps the player to a certain course.
 	public function warp(title, playerX, playerY, cameraX, cameraY) {
-		_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, true);
+		
+		/* This command used to glitch when executed instantly.
+		To fix this problem, a timeout of 100 ms was added to execute the command.
+		It, for some reason, fixed the problem. No one has any idea why it did fix it.
+		First problems have been detected with a timeout of 10ms, so the default has been
+		set to 100ms for now.*/
+		setTimeout(function() {
+			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, false);
+		}, 100);
+		
 	}
 	
 	// Warps the player to a certain course using the door transition function.
@@ -911,10 +948,7 @@ class CodeManager {
 				return;
 			}
 			
-			var posA = 0;
-			var posB = 0;
-			var posC = 0;
-			var posD = 0;
+
 			var emptyArray = new Array();
 						
 			var mode = 'none';
@@ -927,6 +961,8 @@ class CodeManager {
 			var requiredStars = selectedWorld.getStars();
 			var requiredStarCoins = selectedWorld.getStarCoins();
 			var requiredFlags = selectedWorld.getFlags();
+			var posX = selectedWorld.getCoordinates()[0];
+			var posY = selectedWorld.getCoordinates()[1];
 			
 			_root.utils.setWorldStars(level, false);
 			_root.utils.setWorldStarCoins(level, false);
@@ -986,7 +1022,7 @@ class CodeManager {
 			}
 			
 			_root.textManager.write(5, 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
-			//_root.utils.warp(startingLevel, posA, posB, posC, posD);
+			_root.utils.warp(startingLevel, posX, posY, posX, posY);
 			IL.start(level);
 		}));
 		
@@ -1190,11 +1226,11 @@ class CodeManager {
 		this.add(new Code('char', function(command) {
 			
 			switch(command[1]) {
-				case 'mario' :
+				case 'mario' : case 'Mario':
 					_root.CurrentPlayer = 'Mario';
 					_root.textManager.write(5, 'Character switched to Mario.');
 					break;
-				case 'luigi' :
+				case 'luigi' : case 'Luigi':
 					_root.CurrentPlayer = 'Luigi';
 					_root.textManager.write(5, 'Character switched to Luigi.');
 					break;
@@ -1361,7 +1397,9 @@ class IndividualLevel {
 	
 	public function start(level) {
 		this.level = level;
-		_root.timer.reset();
+		setTimeout(function() {
+			_root.timer.reset();			
+		}, 200);
 	}
 	
 	
@@ -1396,7 +1434,7 @@ if(_root.installed != true)
    trace("installed");
    _root.collision = {front:true,back:true,plats:false,hurt:false,misc:false};
    //_root.stack = ["out","def char","lda _root.CurrentPlayer","ldd Mario","ifn","jit 2","ldd Luigi","sto _root.CurrentPlayer","ret","def level","sto temp","ldd StarIn","aarg","lda temp","aarg","ldd 0","num","aarg","aarg","aarg","aarg","ldd true","bool","aarg","ext changecourse","carg","ret","def 411","lda _root.SaveFluddH","not","sto _root.SaveFluddH","ret","def 412","lda _root.SaveFluddR","not","sto _root.SaveFluddR","ret","def 413","lda _root.SaveFluddT","not","sto _root.SaveFluddT","ret"];
-   _root.stack = ["out","def level","sto temp","ldd StarIn","aarg","lda temp","aarg","ldd 0","num","aarg","aarg","aarg","aarg","ldd true","bool","aarg","ext changecourse","carg","ret","def 411","lda _root.SaveFluddH","not","sto _root.SaveFluddH","ret","def 412","lda _root.SaveFluddR","not","sto _root.SaveFluddR","ret","def 413","lda _root.SaveFluddT","not","sto _root.SaveFluddT","ret"];
+   _root.stack = ["out","def level","carg","sto temp","aarg StarIn","lda temp","aarg","num 0","aarg","aarg","aarg","aarg","bool true","aarg","ext changecourse","carg","ret","def 411","lda _root.SaveFluddH","not","sto _root.SaveFluddH","ret","def 412","lda _root.SaveFluddR","not","sto _root.SaveFluddR","ret","def 413","lda _root.SaveFluddT","not","sto _root.SaveFluddT","ret"];
    _root.acc = "";
    _root.prevAcc = "";
    _root.boolAcc = false;
@@ -1415,7 +1453,7 @@ if(_root.installed != true)
       _root.prevAcc = _root.acc;
       _root.acc = data;
    };
-   _root.interpret = function(command, data)
+	   _root.interpret = function(command, data)
    {
       trace(command + ", " + data);
       if(!data || data == command)
@@ -1430,8 +1468,8 @@ if(_root.installed != true)
       switch(command)
       {
          case "def":
-            _root.funcs[data] = [];
-            trace("func " + data + ": " + _root.funcs[data]);
+            _root.funcs[castData] = [];
+            trace("func " + castData + ": " + _root.funcs[castData]);
             _root.mode = "func";
             break;
          case "ret":
@@ -1469,14 +1507,12 @@ if(_root.installed != true)
             _root.boolAcc = _root.acc != _root.prevAcc;
             break;
          case "ldd":
-            _root.cycleAcc(data);
+            _root.cycleAcc(castData);
             trace(_root.acc);
-			if (_root.verbose === true) _root.textManager.write(5, _root.acc);
             break;
          case "out":
             trace(_root.acc);
             _root.out = _root.acc;
-			_root.textManager.write(5, _root.out);
             break;
          case "num":
             _root.cycleAcc(Number(castData));
@@ -1516,46 +1552,46 @@ if(_root.installed != true)
             trace(_root.boolAcc);
             if(_root.boolAcc)
             {
-               _root.programCounter = _root.programCounter + Number(data) - 1;
+               _root.programCounter = _root.programCounter + Number(castData) - 1;
                trace("Jumping to " + _root.programCounter);
             }
             break;
          case "aarg":
-            _root.extArgs.push(data);
+            _root.extArgs.push(castData);
             break;
          case "carg":
             _root.extArgs = [];
             break;
          case "ext":
-            temp = eval(data).apply(null,_root.extArgs);
+            temp = eval(castData).apply(null,_root.extArgs);
             if(temp)
             {
                _root.cycleAcc(temp);
             }
             break;
          case "map":
-            set("_root." + data,function()
+            set("_root." + castData,function()
             {
-               _root.newData([data]);
+               _root.newData([castData]);
                return _root.acc;
             });
             break;
          case "not":
-            _root.cycleAcc(!data);
+            _root.cycleAcc(!castData);
             break;
          case "eval":
-            _root.cycleAcc(eval(data));
+            _root.cycleAcc(eval(castData));
             break;
          case "arr":
-            _root.arrAcc = eval(data).join(",").split(",");
-            trace(eval(data));
+            _root.arrAcc = eval(castData).join(",").split(",");
+            trace(eval(castData));
             trace(_root.arrAcc);
             _root.modeBak = _root.mode;
             _root.mode = "arr";
             break;
          case "carr":
-            set(data,_root.arrAcc);
-            trace(eval(data));
+            set(castData,_root.arrAcc);
+            trace(eval(castData));
             trace(_root.arrAcc);
             _root.mode = _root.modeBak;
             break;
@@ -1576,16 +1612,16 @@ if(_root.installed != true)
                }
                else
                {
-					_root.textManager.write(5, "Script load failed");
+                  trace("Script load failed");
                }
             };
-            loader.load(data);
+            loader.load(castData);
             break;
          case undefined:
             panic();
             break;
          default:
-            _root.cycleAcc(data);
+            _root.cycleAcc(castData);
             if(_root.funcs[command] != undefined)
             {
                _root.curFunc = _root.funcs[command];
@@ -1595,10 +1631,11 @@ if(_root.installed != true)
                _root.programCounter = -1;
                break;
             }
-            trace("inval: " + command + " " + data);
+            trace("inval: " + command + " " + castData);
             break;
       }
    };
+   
    _root.cpu = function()
    {
       trace("doCycle " + _root.programCounter);
