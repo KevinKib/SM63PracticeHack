@@ -24,9 +24,9 @@ onEnterFrame = function()
    {
       if(warpnum == 1)
       {
-		 _root.event.onSpaceEnd();
          //_root.gotoAndStop("BowserBattle3");
-         _root.RemoveCourse();
+		 _root.event.onSpaceEnd();
+         _root.RemoveCourse(); 
       }
    }
 };

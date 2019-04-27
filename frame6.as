@@ -177,6 +177,11 @@ class Utils {
 							[36],
 							[],
 							[]),
+							new World(0, 'endgame', "Any% Endgame", "C-13",
+							[1123.9, -159.05],
+							[36],
+							[],
+							[]),
 							new World(0, 'eotmk', "Edge of the Mushroom Kingdom", "Castle",
 							[2163.9, -233.25],
 							[64],
@@ -579,18 +584,19 @@ class Event {
 		if (_root.codeManager.getIL().isGoing() === true) {
 			_root.utils.setFlag('bt3', true);
 			_root.codeManager.getIL().onStarCollected();
+			_root.WaterAmount = _root.TotalWater;
 		}
 	}
 	
 	// Triggers code that happens when Space is finished.
 	public function onSpaceEnd() {
+		_root.utils.setFlag('space', true);
 		if (_root.codeManager.getIL().isGoing() === true) {
-			_root.utils.setFlag('space', true);
 			_root.codeManager.getIL().onStarCollected();
-			_root.Fluddpow = "";
-			_root.CharHP = 8;
-			_root.utils.warp('8-16', 0, -350, 0, -250);
 		}
+		_root.Fluddpow = "";
+		_root.CharHP = 8;
+		_root.utils.warp('8-16', 0, -350, 0, -250);
 	}
 	
 	// Triggers code that happens when the true bowser fight is loaded.
@@ -607,13 +613,16 @@ class Event {
 		_root.Fluddpow = "";
 		_root.CharHP = 8;
 		_root.utils.warp('BC-1', 0, 0, 0, 0);
+		_root.utils.setSaveFludd(true);
 	}
 	
 	// Triggers code that happens when the escape is finished / the game is done.
 	public function onEscapeEnd() {
 		_root.utils.warp('C-1', 0, 0, 0, 0);
-		_root.utils.setStar(64,	true);
-		_root.codeManager.getIL().onStarCollected();
+		_root.utils.setStar(36,	true);
+		if (_root.codeManager.getIL().isGoing() === true) {
+			_root.codeManager.getIL().onStarCollected();
+		}
 	}
 	
 }
@@ -958,7 +967,8 @@ class CodeManager {
 		}));
 
 		this.add(new Code('position pos', function(command) {
-			_root.textManager.write(5, _root.utils.getPositionString() + ' | | '  + _root.Course.Char._x + ' ' + _root.Course.Char._y + ' | ' + _root.Course.FrontGFX._x + ' ' + _root.Course.FrontGFX._y + ' | ' +_root.Course.Char._X + ' ' + _root.Course.Char._Y);
+			//_root.textManager.write(5, _root.utils.getPositionString() + ' | | '  + _root.Course.Char._x + ' ' + _root.Course.Char._y + ' | ' + _root.Course.FrontGFX._x + ' ' + _root.Course.FrontGFX._y + ' | ' +_root.Course.Char._X + ' ' + _root.Course.Char._Y);
+			_root.textManager.write(5, _root.utils.getPositionString());
 		}));
 
 		this.add(new Code('latestwarpposition lwp', function(command) {
@@ -1006,6 +1016,14 @@ class CodeManager {
 			_root.utils.setWorldStars(level, false);
 			_root.utils.setWorldStarCoins(level, false);
 			_root.utils.setWorldFlags(level, false);
+			
+			
+			// Exceptions
+			if (level == 'bt3' || level == 'endgame' ) {
+				_root.SaveFluddH = false;
+				_root.SaveFluddR = true;
+				_root.SaveFluddT = true;
+			}
 			
 			// Clean this code pls
 
