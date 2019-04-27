@@ -170,8 +170,13 @@ class Utils {
 							new World(0, 'space', "Space", "8-12",
 							[0, 0],
 							[],
-							[],
+							[54],
 							['space']),
+							new World(0, 'escape', "Escape", "8-16",
+							[0, 0],
+							[36],
+							[],
+							[]),
 							new World(0, 'eotmk', "Edge of the Mushroom Kingdom", "Castle",
 							[2163.9, -233.25],
 							[64],
@@ -575,6 +580,40 @@ class Event {
 			_root.utils.setFlag('bt3', true);
 			_root.codeManager.getIL().onStarCollected();
 		}
+	}
+	
+	// Triggers code that happens when Space is finished.
+	public function onSpaceEnd() {
+		if (_root.codeManager.getIL().isGoing() === true) {
+			_root.utils.setFlag('space', true);
+			_root.codeManager.getIL().onStarCollected();
+			_root.Fluddpow = "";
+			_root.CharHP = 8;
+			_root.utils.warp('8-16', 0, -350, 0, -250);
+		}
+	}
+	
+	// Triggers code that happens when the true bowser fight is loaded.
+	public function onTrueBowserStart() {
+		/*
+		if (_root.codeManager.getIL().isGoing() === true) {
+			_root.codeManager.getIL().onStarCollected();
+		}
+		*/
+	}
+	
+	// Triggers code that happens when the true bowser fight is terminated.
+	public function onTrueBowserEnd() {
+		_root.Fluddpow = "";
+		_root.CharHP = 8;
+		_root.utils.warp('BC-1', 0, 0, 0, 0);
+	}
+	
+	// Triggers code that happens when the escape is finished / the game is done.
+	public function onEscapeEnd() {
+		_root.utils.warp('C-1', 0, 0, 0, 0);
+		_root.utils.setStar(64,	true);
+		_root.codeManager.getIL().onStarCollected();
 	}
 	
 }
