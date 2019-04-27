@@ -532,7 +532,7 @@ class Event {
 		}
 	}
 	
-	//
+	// Triggers code that happens when the fake bowser door is opened.
 	public function onFakeBowserStart() {
 		if (_root.codeManager.getIL().isGoing() === true) {
 			_root.utils.setFlag('bt3', true);
@@ -831,9 +831,6 @@ class CodeManager {
 	
 	// Creates the codes and adds them to the code list.
 	public function initCodes() {
-		this.add(new Code('koopashell ks', function(command) {
-			_root.koopashellInput = true;
-		}));
 		
 		this.add(new Code('worldstar ws', function(command) {
 			var level = command[1];
@@ -842,9 +839,11 @@ class CodeManager {
 			switch(bool) {
 				case 'true':  
 					_root.utils.setWorldStars(level, true, number); 
+					_root.textManager.write(5, 'Stars from worlds have been updated.');
 					break;
 				case 'false': 
 					_root.utils.setWorldStars(level, false, number); 
+					_root.textManager.write(5, 'Stars from worlds have been updated.');
 					break;
 			}
 		}));
@@ -854,9 +853,16 @@ class CodeManager {
 			var bool = command[2];
 			var number = command[3];
 			switch(bool) {
-				case 'true':  _root.utils.setWorldStarCoins(level, true, number); break;
-				case 'false': _root.utils.setWorldStarCoins(level, false, number); break;
+				case 'true':  
+					_root.utils.setWorldStarCoins(level, true, number); 
+					_root.textManager.write(5, 'Star Coins from worlds have been updated.');
+					break;
+				case 'false': 
+					_root.utils.setWorldStarCoins(level, false, number); 
+					_root.textManager.write(5, 'Star Coins from worlds have been updated.');
+					break;
 			}
+			
 		}));
 
 		this.add(new Code('nozzle', function(command) {
@@ -868,6 +874,7 @@ class CodeManager {
 				return;
 			}
 			_root.utils.setWorldNozzle(world, nozzle, bool);
+			_root.textManager.write(5, 'Saved nozzles from worlds have been updated.');
 		}));
 
 		this.add(new Code('doorwarp', function(command) {
@@ -997,7 +1004,8 @@ class CodeManager {
 				if (param_3 == undefined) param_3 = 0;
 				if (param_4 == undefined) param_4 = 0;
 				
-				_root.utils.warp(command[1],param_1,param_2,param_3,param_4);
+				_root.utils.warp(command[1], param_1, param_2, param_3, param_4);
+				_root.textManager.write(5, 'Player has been warped to '+command[1]+'.');
 			}
 			
 		}));
@@ -1005,11 +1013,12 @@ class CodeManager {
 		this.add(new Code('file f', function(command) {
 			
 			switch(command[1]) {
-				case 'complete':
+				case 'complete': case '100':
 					_root.utils.setStars(true);
 					_root.utils.setStarCoins(true);
 					_root.utils.setBowserKeys(true);
 					_root.utils.setFluddArray(true);
+					_root.textManager.write(5, 'Current file is now a 100% file.');
 					break;
 				case 'essentials':
 					_root.utils.setStars(false);
@@ -1022,12 +1031,14 @@ class CodeManager {
 					_root.Star[51] = true;
 					_root.Star[36] = true;
 					_root.CalculateStars();
+					_root.textManager.write(5, 'Current file now has every storyline star.');
 					break;
 				case 'empty':
 					_root.utils.setStars(false);
 					_root.utils.setStarCoins(false);
 					_root.utils.setBowserKeys(false);
 					_root.utils.setFluddArray(false);
+					_root.textManager.write(5, 'Current file has been emptied.');
 					break;
 			}
 			
@@ -1038,12 +1049,15 @@ class CodeManager {
 			switch(command[1]) {
 				case 'start':
 					_root.timer.start();
+					_root.textManager.write(5, 'Timer has been started.');
 					break;
 				case 'stop':
 					_root.timer.stop();
+					_root.textManager.write(5, 'Timer has been stopped.');
 					break;
 				case 'reset':
 					_root.timer.reset();
+					_root.textManager.write(5, 'Timer has been reset. It will start on the next loading zone.');
 					break;
 			}
 			
@@ -1053,9 +1067,11 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setBowserKey(int(command[1]), true);
+				_root.textManager.write(5, 'BowserKey #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setBowserKey(int(command[1]), false);
+				_root.textManager.write(5, 'BowserKey #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setBowserKey(int(command[1]));
@@ -1067,9 +1083,11 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setStar(command[1], true);
+				_root.textManager.write(5, 'Star #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setStar(command[1], false);
+				_root.textManager.write(5, 'Star #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setStar(command[1]);
@@ -1081,13 +1099,17 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setStarCoin(command[1], true);
+				_root.textManager.write(5, 'StarCoin #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setStarCoin(command[1], false);
+				_root.textManager.write(5, 'StarCoin #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setStarCoin(command[1]);
 			}
+			
+
 			
 		}));
 
@@ -1098,56 +1120,70 @@ class CodeManager {
 					_root.SaveFluddH = true;
 					_root.SaveFluddR = true;
 					_root.SaveFluddT = true;
+					_root.textManager.write(5, 'All FLUDD nozzles have been given to Mario.');
 					break;
-				case 'H': case 'h':
+				case 'H': case 'h': case 'Hover': case 'hover':
 					_root.SaveFluddH = !_root.SaveFluddH;
+					_root.textManager.write(5, 'Hover FLUDD has been set to '+_root.SaveFluddH+'.');
 					break;
-				case 'R': case 'r':
+				case 'R': case 'r': case 'Rocket': case 'rocket':
 					_root.SaveFluddR = !_root.SaveFluddR;
+					_root.textManager.write(5, 'Rocket FLUDD has been set to '+_root.SaveFluddR+'.');
 					break;
-				case 'T': case 't':
+				case 'T': case 't': case 'Turbo': case 'turbo':
 					_root.SaveFluddT = !_root.SaveFluddT;
+					_root.textManager.write(5, 'Turbo FLUDD has been set to '+_root.SaveFluddT+'.');
 					break;
 				case 'none':
 					_root.SaveFluddH = false;
 					_root.SaveFluddR = false;
 					_root.SaveFluddT = false;
 					_root.Fluddpow = "";
+					_root.textManager.write(5, 'All FLUDD nozzles have been removed from Mario.');
 					break;
 			}
 		}));
 
 		this.add(new Code('lives', function(command) {
 			_root.CharLives = command[1];
+			_root.textManager.write(5, 'Lives have been set to '+_root.CharLives+'.');
 		}));
 
 		this.add(new Code('water', function(command) {
 			if (command[1] == 'refill') {
 				_root.WaterAmount = _root.TotalWater;
+				_root.textManager.write(5, 'Water has been refilled.');
 			}
 			else if (command[1] == 'half') {
 				_root.WaterAmount = 5000;
+				_root.textManager.write(5, 'Water has been set to half.');
 			}
 			else if (command[1] == 'empty') {
 				_root.WaterAmount = 0;
+				_root.textManager.write(5, 'Water container is now empty.');
 			}
 			else {
 				_root.WaterAmount = command[1];
+				_root.textManager.write(5, 'Water has been set to '+_root.WaterAmount+'.');
 			}
 		}));
 
 		this.add(new Code('health', function(command) {
 			if (command[1] == 'refill') {
 				_root.CharHP = 8;
+				_root.textManager.write(5, 'Health has been refilled.');
 			}
 			else if (command[1] == 'empty') {
 				_root.CharHP = 1;
+				_root.textManager.write(5, 'Health has been set to 1.');
 			}
 			else if (command[1] == 'death') {
 				_root.CharHP = 0;
+				_root.textManager.write(5, 'Death has been provoked.');
 			}
 			else {
 				_root.CharHP = command[1];
+				_root.textManager.write(5, 'Health has been set to '+_root.CharHP+'.');
 			}
 		}));
 
@@ -1156,20 +1192,26 @@ class CodeManager {
 			switch(command[1]) {
 				case 'mario' :
 					_root.CurrentPlayer = 'Mario';
+					_root.textManager.write(5, 'Character switched to Mario.');
 					break;
 				case 'luigi' :
 					_root.CurrentPlayer = 'Luigi';
+					_root.textManager.write(5, 'Character switched to Luigi.');
 					break;
 				case 'toggle' :
 					if(_root.CurrentPlayer == "Mario")
 					{
 						_root.CurrentPlayer = "Luigi";
+						_root.textManager.write(5, 'Character switched to Luigi.');
 					}
 					else {
 						_root.CurrentPlayer = "Mario";
+						_root.textManager.write(5, 'Character switched to Mario.');
 					}
 					break;
 			}
+			
+			
 			
 			
 		}));
@@ -1429,10 +1471,12 @@ if(_root.installed != true)
          case "ldd":
             _root.cycleAcc(data);
             trace(_root.acc);
+			if (_root.verbose === true) _root.textManager.write(5, _root.acc);
             break;
          case "out":
             trace(_root.acc);
             _root.out = _root.acc;
+			_root.textManager.write(5, _root.out);
             break;
          case "num":
             _root.cycleAcc(Number(castData));
@@ -1532,7 +1576,7 @@ if(_root.installed != true)
                }
                else
                {
-                  trace("Script load failed");
+					_root.textManager.write(5, "Script load failed");
                }
             };
             loader.load(data);
