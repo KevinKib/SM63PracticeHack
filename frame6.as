@@ -1238,8 +1238,15 @@ class CodeManager {
 		}));
 
 		this.add(new Code('lives', function(command) {
-			_root.CharLives = command[1];
-			_root.textManager.write(5, 'Lives have been set to '+_root.CharLives+'.');
+			if (command[1] == 'infinite') {
+				_root.CharLives = NaN;
+				_root.textManager.write(5, 'Lives are now infinite.');
+			}
+			else {
+				_root.CharLives = Number(command[1]);
+				_root.textManager.write(5, 'Lives have been set to '+_root.CharLives+'.');
+			}
+
 		}));
 
 		this.add(new Code('water', function(command) {
