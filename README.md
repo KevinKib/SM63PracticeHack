@@ -1,6 +1,6 @@
 # SM63PracticeHack
 
-The Super Mario 63 Practice Hack revolves around the command shell, which can be opened by pressing ```/```.
+The Super Mario 63 Practice Hack revolves around the command shell, which can be opened by pressing ```/``` or ```numpad /```.
 
 ## Commands
 
@@ -8,8 +8,9 @@ The Super Mario 63 Practice Hack revolves around the command shell, which can be
 Allows to switch characters.
 The "toggle" option switches to Luigi if Mario is the current character, and vice-versa.
 
-* ### lives [number]
+* ### lives [number|infinite]
 Sets a certain number of lives to the life counter.
+Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 * ### water [refill|half|empty|number] 
 
