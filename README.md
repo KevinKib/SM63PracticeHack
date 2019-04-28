@@ -1,5 +1,7 @@
 # SM63PracticeHack
 
+The Super Mario 63 Practice Hack revolves around the command shell, which can be opened by pressing ```/```.
+
 ## Commands
 
 * ### char [mario|luigi|toggle]
