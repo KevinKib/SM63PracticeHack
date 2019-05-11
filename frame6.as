@@ -250,6 +250,7 @@ class Utils {
 		First problems have been detected with a timeout of 10ms, so the default has been
 		set to 100ms for now.*/
 		setTimeout(function() {
+			_root.Restartcoins();
 			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, false);
 		}, 100);
 		
@@ -1019,11 +1020,15 @@ class CodeManager {
 			
 			
 			// Exceptions
-			if (level == 'bt3' || level == 'endgame' ) {
-				_root.SaveFluddH = false;
-				_root.SaveFluddR = true;
-				_root.SaveFluddT = true;
-			}
+			setTimeout(function() {
+				if (level == 'bt3' || level == 'endgame' ) {
+					_root.SaveFluddH = false;
+					_root.SaveFluddR = true;
+					_root.SaveFluddT = true;
+					_root.utils.setWorldNozzle('bt3', 'h', 'false');
+				}
+			}, 150);
+			
 			
 			// Clean this code pls
 
@@ -1077,6 +1082,8 @@ class CodeManager {
 				default:
 					mode = 'None';
 			}
+			
+			_root.WaterAmount = _root.TotalWater;
 			
 			_root.textManager.write(5, 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
 			_root.utils.warp(startingLevel, posX, posY, posX, posY);
@@ -1324,6 +1331,7 @@ class CodeManager {
 	
 	// Executes a specific code.
 	public function execute(code) {
+		_root.textManager.write(5, '');
 		var i = 0;
 		for (i = 0; i < this.codeList.length; i = i + 1) {
 			this.codeList[i].execute(code);
@@ -1337,6 +1345,7 @@ class CodeManager {
 		
 		if (_root.KeySlash()) {
 			this.resetDelay();
+			_root.textManager.write(5, 'Enter your command!');
 			_root.PauseGame = true;
 		}
 		else if (this.delay > 0) {
