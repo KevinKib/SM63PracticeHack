@@ -1246,7 +1246,6 @@ class CodeManager {
 				_root.CharLives = Number(command[1]);
 				_root.textManager.write(5, 'Lives have been set to '+_root.CharLives+'.');
 			}
-
 		}));
 
 		this.add(new Code('water', function(command) {
@@ -1329,6 +1328,7 @@ class CodeManager {
 		for (i = 0; i < this.codeList.length; i = i + 1) {
 			this.codeList[i].execute(code);
 		}
+		_root.PauseGame = false;
 	}
 	
 	// Defines the code that happens on each frame.
@@ -1337,11 +1337,14 @@ class CodeManager {
 		
 		if (_root.KeySlash()) {
 			this.resetDelay();
+			_root.PauseGame = true;
 		}
 		else if (this.delay > 0) {
 			this.reduceDelay();
 			if (this.delay <= 0) {
 				this.currentCode = "";
+				// Delay equals 0, we cancel the PauseGame effect.
+				_root.PauseGame = false;
 			}
 		}
 	}
