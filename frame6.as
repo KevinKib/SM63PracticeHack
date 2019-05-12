@@ -1,3 +1,40 @@
+// This code overwrites the functions written in frame3_3, as editing the file is impossible in FFDec
+_root.gotoCourseSelect = function(level)
+{
+   _root.Playinglevel = level;
+   _root.RemoveCourse();
+   _root.Restartcoins();
+   _root.gotoAndStop("CourseSelect");
+   _root.Transition.removeMovieClip(_root.Transition);
+   _root.attachMovie("Fromwhite","Transition",_root.getNextHighestDepth(),{_x:_root.screensizeX / 2,_y:_root.screensizeY / 2});
+   _root.bgsong.stop();
+   _root.bgsong = new Sound(this);
+   _root.bgsong.attachSound("Star Swish");
+   _root.bgsong.start(0,1);
+   _root.bgsong.setVolume(_root.BgVolume);
+   
+   // On course select
+   _root.event.onCourseSelect();
+};
+_root.gotoMiniCourseSelect = function(level)
+{
+   _root.Playinglevelnum = level;
+   _root.Playinglevel = level + 8;
+   _root.RemoveCourse();
+   _root.Restartcoins();
+   _root.gotoAndStop("MiniCourseSelect");
+   _root.Transition.removeMovieClip(_root.Transition);
+   _root.attachMovie("Fromwhite","Transition",_root.getNextHighestDepth(),{_x:_root.screensizeX / 2,_y:_root.screensizeY / 2});
+   _root.bgsong.stop();
+   _root.bgsong = new Sound(this);
+   _root.bgsong.attachSound("Star Swish");
+   _root.bgsong.start(0,1);
+   _root.bgsong.setVolume(_root.BgVolume);
+   
+   // On mini course select
+   _root.event.onMiniCourseSelect();
+};
+
 // Defines the informations from a world
 class World {
 	
@@ -626,6 +663,16 @@ class Event {
 		}
 	}
 	
+	// Triggers code that happens on the course select menu.
+	public function onCourseSelect() {
+		_root.timer.addSecond();
+	}
+	
+	// Triggers code that happens on the mini course select menu.
+	public function onMiniCourseSelect() {
+		this.onCourseSelect();
+	}
+	
 }
 
 // Class that manages a time counter.
@@ -671,7 +718,7 @@ class TimeCounter {
 	}
 	
 	// Adds a second to the timer, and manages everything that happens next.
-	private function addSecond() {
+	public function addSecond() {
 		this.seconds++;
 		if (this.seconds >= 60) {
 			this.seconds = 0;
@@ -811,6 +858,11 @@ class Timer {
 		return this.lastUpdatedTime.getDisplay();
 	}
 	
+	// Adds a second to the time.
+	public function addSecond() {
+		this.realTime.addSecond();
+	}
+	
 }
 
 // Class that defines a code and its effects.
@@ -857,6 +909,7 @@ class CodeManager {
 	private var delay;
 	private var input;
 	private var currentCode;
+	private var lastCode;
 	
 	private var il;
 	
@@ -865,6 +918,7 @@ class CodeManager {
 		this.codeList = new Array();
 		this.input = true;
 		this.currentCode = "";
+		this.lastCode = "";
 		this.delay = 0;
 		this.il = new IndividualLevel();
 		
@@ -998,9 +1052,7 @@ class CodeManager {
 				return;
 			}
 			
-
-			var emptyArray = new Array();
-						
+			var emptyArray = new Array();	
 			var mode = 'none';
 			
 			// World info
@@ -1015,9 +1067,17 @@ class CodeManager {
 			var posY = selectedWorld.getCoordinates()[1];
 			
 			_root.utils.setWorldStars(level, false);
-			_root.utils.setWorldStarCoins(level, false);
 			_root.utils.setWorldFlags(level, false);
 			
+			// Exception :If star coins do not matter in the goal,
+			// we want them to already be collected
+			if (type == 'starsfludd' || type == 'sf' || type == 'stars'
+				|| type == 'starfludd' || type == 'star') {
+				_root.utils.setWorldStarCoins(level, true);
+			}
+			else {
+				_root.utils.setWorldStarCoins(level, false);			
+			}
 			
 			// Exceptions
 			setTimeout(function() {
@@ -1028,7 +1088,6 @@ class CodeManager {
 					_root.utils.setWorldNozzle('bt3', 'h', 'false');
 				}
 			}, 150);
-			
 			
 			// Clean this code pls
 
@@ -1083,6 +1142,7 @@ class CodeManager {
 					mode = 'None';
 			}
 			
+			// Water recharge
 			_root.WaterAmount = _root.TotalWater;
 			
 			_root.textManager.write(5, 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
@@ -1322,6 +1382,9 @@ class CodeManager {
 			
 		}));
 
+		this.add(new Code('last', function(command) {
+			_root.codeManager.executeLastCode();
+		}));
 	}
 	
 	// Adds a new code to the code list.
@@ -1336,7 +1399,17 @@ class CodeManager {
 		for (i = 0; i < this.codeList.length; i = i + 1) {
 			this.codeList[i].execute(code);
 		}
+		// To avoid infinite loops/recursion, we prevent setting the last code
+		// if the last command executed was 'last'.
+		if (code != 'last') {
+			this.lastCode = code;
+		}
 		_root.PauseGame = false;
+	}
+	
+	// Executes the last command that was executed by the player.
+	public function executeLastCode() {
+		this.execute(this.lastCode);
 	}
 	
 	// Defines the code that happens on each frame.
@@ -1491,6 +1564,7 @@ class IndividualLevel {
 	
 }
 
+// KoopaShell
 setCollision = function()
 {
    _root.Course.BackGFX._visible = _root.collision.back;
