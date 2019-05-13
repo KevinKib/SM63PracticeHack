@@ -150,7 +150,12 @@ Sets the state of the star coins in a specific world.
 
 **number** (Falcultative) Number of one specific star coin that can be chosen. Refer to worldstar to see an example of use.
 
-* ### koopashell / ks
+* ### last
+
+Re-executes the last command that was executed.
+Calling last after another last command doesn't create an infinite loop : instead, it executes the last command that wasn't 'last'.
+
+## koopashell / ks
 
 Sends to the KoopaShell console written by Jhynjhiruu. Allows to modify pretty much every variable of the game. Documentation of the KoopaShell module will get here soon.
 
