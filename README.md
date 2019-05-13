@@ -111,7 +111,8 @@ Starts an individual level.
 **type**: The type of individual level that will be performed.
 Can be either:
 - **100 / all** : Starts a world from scratch. Collect every star and star coin from the world.
-- **starfludd / sf** : Starts a world with every nozzle. Collect every star from the world.
+- **starsfludd** : Starts a world with every nozzle. Collect every star from the world.
+- **starfludd / sf** : Starts a world with every nozzle. Collect one star from the world. Number of the star has to be precised right after. Example : "il bob starfludd 4"
 - **stars** : From scratch. Collect every star from the world.
 - **star** : From scratch. Collect one specific from the world. Number of the star has to be precised right after. Example : "il bob star 4"
 - **starcoins / starcoin** : From scratch. Collect every star coin from the world.
