@@ -155,7 +155,8 @@ Sets the state of the star coins in a specific world.
 Re-executes the last command that was executed.
 Calling last after another last command doesn't create an infinite loop : instead, it executes the last command that wasn't 'last'.
 
-## koopashell / ks
+## KoopaShell
 
-Sends to the KoopaShell console written by Jhynjhiruu. Allows to modify pretty much every variable of the game. Documentation of the KoopaShell module will get here soon.
+The KoopaShell console written by Jhynjhiruu is fully included. It allows to modify pretty much every variable of the game.
+The documentation of the KoopaShell module is available [here](https://github.com/Sekanor/SM63PracticeHack/wiki/KoopaShell-v2.0-Documentation).
 
