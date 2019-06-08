@@ -535,6 +535,44 @@ class Utils {
 		return _root.playingcourse;
 	}
 	
+	// Sets the player's current cap (invisible, invincible, wing cap or metal).
+	public function setCap(cap, boolText) {
+		var capTime = 10000;
+		this.setCapTimer(capTime);
+		
+		var bool = true;
+		if (boolText == 'false') {
+			bool = false;
+		}
+		
+		switch(cap) {
+			case 'invincible':
+				_root.StartNewMusicAndIntroNoVar("WingCap - Intro","WingCap - Repeat");
+				_root.Invincible = bool;
+				break;
+			case 'invisible':
+				_root.StartNewMusicAndIntroNoVar("WingCap - Intro","WingCap - Repeat");
+				_root.Invisible = bool;
+				break;
+			case 'metal':
+				_root.StartNewMusicAndIntroNoVar("MetalCap - Intro","MetalCap - Repeat");
+				_root.Metal = bool;
+				break;
+			case 'wingcap': case 'wing':
+				_root.StartNewMusicAndIntroNoVar("WingCap - Intro","WingCap - Repeat");
+				_root.WingCap = bool;
+				break;
+			case 'none':
+				this.setCapTimer( -1);
+				break;
+		}
+	}
+	
+	// Defines for how long the cap will be used.
+	public function setCapTimer(time) {
+		_root.PowerTimer = time;
+	}
+	
 }
 
 // Class that manages everything related to displayed text.
@@ -1385,6 +1423,13 @@ class CodeManager {
 		this.add(new Code('last', function(command) {
 			_root.codeManager.executeLastCode();
 		}));
+	
+		this.add(new Code('cap', function(command) {
+			_root.utils.setCap(command[1], command[2]);
+			
+			_root.textManager.write(5, 'Current cap updated.');
+		}));
+		
 	}
 	
 	// Adds a new code to the code list.
