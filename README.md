@@ -50,6 +50,14 @@ Manages the current nozzles that the player has access to.
 
 **none**: Removes every nozzle of the player.
 
+* ### cap [type] [boolean]
+
+Gives a specific cap to the player.
+
+**type**: The wanted type of cap. Can be either invisible, metal, invincible, wing (or wingcap).
+
+**boolean**: Boolean that sets the state of the cap (if unspecified, will be true per default).
+
 * ### star / s [number] [boolean]
 
 Manages the state of a specific star.
