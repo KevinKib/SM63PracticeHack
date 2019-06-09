@@ -1430,6 +1430,40 @@ class CodeManager {
 			_root.textManager.write(5, 'Current cap updated.');
 		}));
 		
+		this.add(new Code('betaquest bq', function(command) {
+			if (command[1] == 'stop') {
+				_root.betaQuest.stop();
+			}
+			else if (command[1] == 'start') {
+				_root.betaQuest.start();
+			}
+		}));
+		
+		this.add(new Code('forcewarp fw', function(command) {
+			
+			_root.betaQuest.stop();
+			
+			// Copy of the warp code, might clean later
+			var level = command[1];
+			var param_1 = command[2];
+			var param_2 = command[3];
+			var param_3 = command[4];
+			var param_4 = command[5];
+			
+			if (level != undefined) {
+				if (param_1 == undefined) param_1 = 0;
+				if (param_2 == undefined) param_2 = 0;
+				if (param_3 == undefined) param_3 = 0;
+				if (param_4 == undefined) param_4 = 0;
+				
+				_root.utils.warp(command[1], param_1, param_2, param_3, param_4);
+				_root.textManager.write(5, 'Player has been warped to '+command[1]+'.');
+			}
+			
+			_root.betaQuest.start();
+			
+		}));
+		
 	}
 	
 	// Adds a new code to the code list.
@@ -1608,6 +1642,110 @@ class IndividualLevel {
 	}
 	
 }
+
+// Class that manages the warps for Beta Quest mode.
+class BetaQuest {
+
+	private var started;
+	private var warpList;
+	private var newWarpList;
+	
+	public function BetaQuest() {
+		
+		this.started = true;
+		this.warpList = new Array();
+		this.newWarpList = new Array();
+		this.initWarpList();
+		
+		this.newWarpList = this.shuffle(this.warpList);
+	}
+	
+	private function initWarpList() {
+		this.warpList.push("1-1", "1-2", "1-3", "1-4", "1-5",
+		"2-1", "2-2", "2-2A", "2-3", "2-4", "2-5",
+		"3-1", "3-2", "3-3", "3-4", "3-5", "3-6", "3-7", "3-8",
+		"4-1", "4-2", "4-3", "4-4", "4-5", "4-6", "4-7", "4-8", "4-9", "4-10", "4-11",
+		"5-1", "5-2", "5-3", "5-4", "5-5", "5-6", "5-7", "5-8", "5-9",
+		"6-1", "6-2", "6-3", "6-4", "6-5", "6-6", "6-1-2",
+		"7-1", "7-2", "7-3", "7-4", "7-5", "7-6",
+		"8-1", "8-2", "8-3", "8-4", "8-5", "8-6", "8-7", "8-8", "8-9",
+		"8-10", "8-10-b", "8-11", "8-12", "8-13", "8-14", "8-15", "8-16",
+		"BC-1", "BC-2", "BC-3",
+		
+		"8-E1-1", "8-E1-1-2", "8-E1-2", "8-E1-2-2", "8-E3-1", "8-E3-2",
+		"8-E2-1", "8-E2-2", "8-E5-1", "8-E5-2", "8-E5-3", "8-E5-4",
+		"9-01", "9-02", "9-03", "9-03-D", "9-04",
+		"9-05", "9-06", "9-07", "9-08", "9-10", "9-11",
+		"M1-1", "M1-2", "M2-1", "M2-2", "M3-3",
+		"C4-SC1",
+		
+		"C-1", "C-2", "C-2-2", "C-3", "C-3-2", "C-4",
+		"C-5", "C-6", "C-O", "C-7", "C-8", "C-4H",
+		"C-9", "C-10", "C-11", "C-12", "C-13",
+		
+		"K-1", "K-2"
+		
+		);
+	}
+	
+	private function shuffle(array) {
+		var newArray = array.slice();
+		newArray.sort(this.randomSort);
+		return newArray;
+	}
+	
+	private function randomSort(a, b)
+	{
+		if (Math.random() < 0.5) return -1;
+		else return 1;
+	}
+	
+	private function indexOf(array, value) {
+		
+		var index = -1;
+		var i = 0;
+		
+		for (i = 0; i < array.length; i++) {
+			if (array[i] === value) {
+				return i;
+			}
+		}
+		
+	}
+	
+	
+	public function getCorrespondingArea(warpArea) {
+		var index = this.indexOf(this.warpList, warpArea);
+		_root.textManager.write(5, this.indexOf(this.warpList, warpArea));
+		//var index = 2;
+		var newWarp;
+		
+		if (index != undefined && index != -1 && this.started === true) {
+			newWarp = this.newWarpList[index];
+		}
+		else {
+			newWarp = warpArea;
+		}
+		
+		_root.textManager.write(3, 'Warp area '+warpArea+' | New warp : ' + newWarp);
+		
+		return newWarp;
+	}
+	
+	public function getNewWarpList() {
+		return this.newWarpList;
+	}
+	
+	public function start() {
+		this.started = true;
+	}
+	
+	public function stop() {
+		this.started = false;
+	}
+	
+}
+
 
 // KoopaShell
 setCollision = function()
@@ -1967,4 +2105,5 @@ _root.timer.start();
 _root.textManager = new TextManager();
 _root.utils = new Utils();
 _root.codeManager = new CodeManager();
+_root.betaQuest = new BetaQuest();
 _root.event = new Event();
