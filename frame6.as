@@ -1797,9 +1797,8 @@ _root.interpret = function (command, data)
             _root.cycleAcc(setInterval(function () 
             {
                 _root.newData([castData]);
-                return _root.acc;
             },
-            31.25 * Number(castData)));
+            31.25 * Number(data)));
             break;
         case "cloop":
             clearInterval(castData);
@@ -1808,7 +1807,10 @@ _root.interpret = function (command, data)
             panic();
             break;
         default:
-            _root.cycleAcc(castData);
+            if(castData == data)
+            {
+                _root.cycleAcc(castData);
+            }
             if (_root.funcs[command] != undefined) 
             {
                 _root.curFunc = _root.funcs[command];
@@ -1818,7 +1820,10 @@ _root.interpret = function (command, data)
                 _root.programCounter = - 1;
                 break;
             }
-            trace("inval: " + command + " " + castData);
+            else
+            {
+                trace("inval: " + command + " " + castData);
+            }
             break;
     }
 };
