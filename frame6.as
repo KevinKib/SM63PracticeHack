@@ -1794,11 +1794,11 @@ _root.interpret = function (command, data)
             loader.load(castData);
             break;
         case "loop":
-            _root.cycleAcc(setInterval(function () 
+            _root.cycleAcc(setInterval(function (param) 
             {
-                _root.newData([castData]);
+                _root.newData([param]);
             },
-            31.25 * Number(data)));
+            31.25 * Number(data), castData));
             break;
         case "cloop":
             clearInterval(castData);
