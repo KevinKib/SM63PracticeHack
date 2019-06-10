@@ -1436,7 +1436,8 @@ class CodeManager {
 				_root.betaQuest.stop();
 			}
 			else if (command[1] == 'start') {
-				_root.betaQuest.start();
+				var seed = Number(command[2]);
+				_root.betaQuest.start(seed);
 			}
 		}));
 		
@@ -1649,20 +1650,31 @@ class IndividualLevel {
 // Class that manages the warps for Beta Quest mode.
 class BetaQuest {
 
+	private var seed;
+	private var rngValue;
 	private var started;
 	private var warpList;
 	private var newWarpList;
 	
+	// Constructor of the Beta Quest class.
 	public function BetaQuest() {
 		
-		this.started = true;
+		this.seed = undefined;
+		this.rngValue = undefined;
+		this.started = false;
 		this.warpList = new Array();
 		this.newWarpList = new Array();
 		this.initWarpList();
 		
+		this.generateWarpList();
+	}
+	
+	// Generates a new warp li
+	private function generateWarpList() {
 		this.newWarpList = this.shuffle(this.warpList);
 	}
 	
+	// Inits the warp list, with a list of all the different warps.
 	private function initWarpList() {
 		this.warpList.push(
 		
@@ -1683,8 +1695,8 @@ class BetaQuest {
 		// Mini-course & CSS warps
 		"8-E1-1", "8-E1-1-2", "8-E1-2", "8-E1-2-2", "8-E3-1", "8-E3-2",
 		"8-E2-1", "8-E2-2", "8-E5-1", "8-E5-2", "8-E5-3", "8-E5-4",
-		"9-01", "9-02", "9-03", "9-03-D", "9-04",
-		"9-05", "9-06", "9-07", "9-08", "9-10", "9-11",
+		"9-01", "9-02", "9-03", "9-03-D", "9-03-2", "9-04",
+		"9-05", "9-06", "9-07", "9-08", "9-10", "9-10-2", "9-11",
 		"M1-1", "M1-2", "M2-1", "M2-2", "M3-3",
 		"K-1", "K-2",
 		
@@ -1697,19 +1709,38 @@ class BetaQuest {
 		);
 	}
 	
+	// Shuffles an array.
 	private function shuffle(array) {
 		var newArray = array.slice();
 		newArray.sort(this.randomSort);
 		return newArray;
 	}
 	
-	private function randomSort(a, b)
-	{
-		if (Math.random() < 0.5) return -1;
+	// Method that simulates a 1/2 chance aiming to sort arrays.
+	private function randomSort(a, b) {
+		
+		var self = _root.betaQuest;
+		
+		var value;
+		if (self.isSeeded()) value = self.RNG();
+		else value = Math.random();
+		
+		if (value < 0.5) return -1;
 		else return 1;
 	}
 	
-	// to comment
+	// Method that generates a random number, based on a seed.
+	private function randomSeed(seed) {
+		return ((seed * 1664525) + 1013904223) % 4294967296;
+	}
+	
+	// RNG function.
+	private function RNG() {
+		this.rngValue = this.randomSeed(this.rngValue);
+		return this.rngValue / 4294967296;
+	}
+	
+	// Returns the index of an element in an array.
 	private function indexOf(array, value) {
 		var i = 0;
 		
@@ -1722,7 +1753,7 @@ class BetaQuest {
 		return -1;
 	}
 	
-	
+	// Returns the new zone the player will be warped in.
 	public function getCorrespondingArea(warpArea) {
 		var index = this.indexOf(this.warpList, warpArea);
 		_root.textManager.write(5, this.indexOf(this.warpList, warpArea));
@@ -1736,21 +1767,42 @@ class BetaQuest {
 			newWarp = warpArea;
 		}
 		
-		_root.textManager.write(3, 'Started : '+this.started+' Warp area '+warpArea+' | New warp : ' + newWarp);
+		_root.textManager.write(3, ' Warp area '+warpArea+' | New warp : ' + newWarp);
 		
 		return newWarp;
 	}
 	
+	// Returns the new, updated, warp list.
 	public function getNewWarpList() {
 		return this.newWarpList;
 	}
 	
-	public function start() {
+	// Activates Beta Quest.
+	public function start(seed) {
+		if (seed != undefined) this.setSeed(seed);
 		this.started = true;
+		this.generateWarpList();
 	}
 	
+	// Deactivates Beta Quest.
 	public function stop() {
 		this.started = false;
+	}
+	
+	// Defines a new seed.
+	public function setSeed(s) {
+		this.seed = s;
+		this.rngValue = this.seed;
+	}
+	
+	// Getter of the seed.
+	public function getSeed() {
+		return this.seed;
+	}
+	
+	// Returns if the current BQ is seeded or not.
+	public function isSeeded() {
+		return (this.seed != undefined)
 	}
 	
 }
