@@ -35,6 +35,7 @@ _root.gotoMiniCourseSelect = function(level)
    _root.event.onMiniCourseSelect();
 };
 
+
 // Defines the informations from a world
 class World {
 	
@@ -1459,8 +1460,10 @@ class CodeManager {
 				_root.utils.warp(command[1], param_1, param_2, param_3, param_4);
 				_root.textManager.write(5, 'Player has been warped to '+command[1]+'.');
 			}
-			
-			_root.betaQuest.start();
+				
+			setTimeout(function() {
+				_root.betaQuest.start();
+			}, 100);
 			
 		}));
 		
@@ -1661,29 +1664,35 @@ class BetaQuest {
 	}
 	
 	private function initWarpList() {
-		this.warpList.push("1-1", "1-2", "1-3", "1-4", "1-5",
+		this.warpList.push(
+		
+		// Course warps
+		"1-1", "1-2", "1-3", "1-4", "1-5",
 		"2-1", "2-2", "2-2A", "2-3", "2-4", "2-5",
 		"3-1", "3-2", "3-3", "3-4", "3-5", "3-6", "3-7", "3-8",
 		"4-1", "4-2", "4-3", "4-4", "4-5", "4-6", "4-7", "4-8", "4-9", "4-10", "4-11",
 		"5-1", "5-2", "5-3", "5-4", "5-5", "5-6", "5-7", "5-8", "5-9",
 		"6-1", "6-2", "6-3", "6-4", "6-5", "6-6", "6-1-2",
 		"7-1", "7-2", "7-3", "7-4", "7-5", "7-6",
+		
+		// Bowser 3 warps
 		"8-1", "8-2", "8-3", "8-4", "8-5", "8-6", "8-7", "8-8", "8-9",
 		"8-10", "8-10-b", "8-11", "8-12", "8-13", "8-14", "8-15", "8-16",
 		"BC-1", "BC-2", "BC-3",
 		
+		// Mini-course & CSS warps
 		"8-E1-1", "8-E1-1-2", "8-E1-2", "8-E1-2-2", "8-E3-1", "8-E3-2",
 		"8-E2-1", "8-E2-2", "8-E5-1", "8-E5-2", "8-E5-3", "8-E5-4",
 		"9-01", "9-02", "9-03", "9-03-D", "9-04",
 		"9-05", "9-06", "9-07", "9-08", "9-10", "9-11",
 		"M1-1", "M1-2", "M2-1", "M2-2", "M3-3",
-		"C4-SC1",
+		"K-1", "K-2",
 		
+		// Castle warps
 		"C-1", "C-2", "C-2-2", "C-3", "C-3-2", "C-4",
 		"C-5", "C-6", "C-O", "C-7", "C-8", "C-4H",
 		"C-9", "C-10", "C-11", "C-12", "C-13",
-		
-		"K-1", "K-2"
+		"C-4-SC1", "Castle"
 		
 		);
 	}
@@ -1700,9 +1709,8 @@ class BetaQuest {
 		else return 1;
 	}
 	
+	// to comment
 	private function indexOf(array, value) {
-		
-		var index = -1;
 		var i = 0;
 		
 		for (i = 0; i < array.length; i++) {
@@ -1711,6 +1719,7 @@ class BetaQuest {
 			}
 		}
 		
+		return -1;
 	}
 	
 	
@@ -1720,14 +1729,14 @@ class BetaQuest {
 		//var index = 2;
 		var newWarp;
 		
-		if (index != undefined && index != -1 && this.started === true) {
+		if ((index != undefined && index != -1 ) && (this.started === true)) {
 			newWarp = this.newWarpList[index];
 		}
 		else {
 			newWarp = warpArea;
 		}
 		
-		_root.textManager.write(3, 'Warp area '+warpArea+' | New warp : ' + newWarp);
+		_root.textManager.write(3, 'Started : '+this.started+' Warp area '+warpArea+' | New warp : ' + newWarp);
 		
 		return newWarp;
 	}
