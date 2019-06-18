@@ -98,7 +98,7 @@ Setups a file setting.
 
 Warps the player to a specific section.
 
-**name**: Name of that specific section. A list of the sections available will be added soon.
+**name**: Name of that specific section. A list of the sections is available [here](https://docs.google.com/spreadsheets/d/1FLYArXZ4g_c7-L8tu4j_GyHaQ-BDFCvdqIluxmHcKkU/edit#gid=559521057).
 
 **coordinates**: Coordinates of the starting location of the player (4 parameters).
 
