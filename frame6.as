@@ -288,7 +288,7 @@ class Utils {
 		First problems have been detected with a timeout of 10ms, so the default has been
 		set to 100ms for now.*/
 		setTimeout(function() {
-			_root.Restartcoins();
+			//_root.Restartcoins();
 			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, false);
 		}, 100);
 		
@@ -304,6 +304,22 @@ class Utils {
 		var lwp = new Array();
 		lwp.push(b, c, d, e);
 		this.latestWarpPosition = lwp.slice();
+	}
+	
+	// Sets Mario's current x position.
+	public function setX(value) {
+		this.setPosition(value, this.getPosition()[1]);
+	}
+	
+	// Sets Mario's current y position.
+	public function setY(value) {
+		this.setPosition(this.getPosition()[0], y);
+	}
+	
+	// Sets Mario's current position to a new value.
+	public function setPosition(x, y) {
+		_root.Course.Char._x = x - (_root.Course.Char._x - _root.Course.FrontGFX._x);
+		_root.Course.Char._y = y - (_root.Course.Char._y - _root.Course.FrontGFX._y);
 	}
 	
 	// Returns Mario's current position.
@@ -1468,6 +1484,11 @@ class CodeManager {
 			
 		}));
 		
+		this.add(new Code('setpos', function(command) {
+			_root.utils.setPosition(command[1], command[2]);
+			
+			_root.textManager.write(5, 'Current position updated.');
+		}));
 	}
 	
 	// Adds a new code to the code list.
