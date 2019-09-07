@@ -34,7 +34,21 @@ _root.gotoMiniCourseSelect = function(level)
    // On mini course select
    _root.event.onMiniCourseSelect();
 };
-
+_root.changecourse = function(transition, level, a, b, c, d, e, isCommand)
+{
+	_root.RemoveCourse();
+	_root.gotoAndStop("Courseframe");
+	if(e == undefined)
+	{
+		e = false;
+	}
+	_root.StartChar(level,a,b,c,d,100,_root.CurrentPlayer,_root.Fluddpow,transition,e, isCommand);
+	_root.onEnterFrame = function()
+	{
+		_root.CharCode();
+	};
+	e = false;
+};
 
 // Defines the informations from a world
 class World {
@@ -294,7 +308,7 @@ class Utils {
 		set to 100ms for now.*/
 		setTimeout(function() {
 			//_root.Restartcoins();
-			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, false);
+			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, true);
 		}, 100);
 		
 	}
@@ -1728,7 +1742,7 @@ class BetaQuest {
 		this.generateWarpList();
 	}
 	
-	// Generates a new warp li
+	// Generates a new warp list.
 	private function generateWarpList() {
 		this.newWarpList = this.shuffle(this.warpList);
 	}
@@ -1826,14 +1840,35 @@ class BetaQuest {
 			newWarp = warpArea;
 		}
 		
-		_root.textManager.write(3, ' Warp area ' + warpArea + ' | New warp : ' + newWarp);
+		// _root.textManager.write(3, 'Warp area ' + warpArea + ' | New warp : ' + newWarp);
+		
+		var warpCoordinates = this.getWarpCoordinates(newWarp);
+		
+		return [newWarp, warpCoordinates.x, warpCoordinates.y];
+	}
+	
+	
+	// Returns special warp coordinates, in case 0,0 isn't the ideal position.
+	public function getWarpCoordinates(warp) {
 		
 		var x = 0;
 		var y = 0;
 		
+		switch(warp)
+		{
+			case "8-10":
+				x = -290;
+				y = 0;
+				break;
+			case "8-10-b":
+				x = 500;
+				y = -10;
+				break;
+			default:
+				break;
+		}
 		
-		
-		return [newWarp, x, y];
+		return {x: x, y: y}
 	}
 	
 	// Returns the new, updated, warp list.
