@@ -12,7 +12,7 @@ The "toggle" option switches to Luigi if Mario is the current character, and vic
 Sets a certain number of lives to the life counter.
 Writing 'lives infinite' will prevent Mario from ever game-overing.
 
-* ### water [refill|half|empty|number] 
+* ### water [refill|half|empty|infinite|number] 
 
 Sets a certain amount of water to the player. Water count goes from 0 to 10000.
 
@@ -21,6 +21,8 @@ Sets a certain amount of water to the player. Water count goes from 0 to 10000.
 **half**: Half fills the water, to the value 5000.
 
 **empty**: Empties the water, to the value 0.
+
+**infinite**: Sets the water to be infinite, always keeping it to 10000.
 
 **number**: Any number between 0 and 10000.
 
@@ -159,7 +161,7 @@ Sets the state of the star coins in a specific world.
 
 **number** (Falcultative) Number of one specific star coin that can be chosen. Refer to worldstar to see an example of use.
 
-* ### last
+* ### last / l
 
 Re-executes the last command that was executed.
 Calling last after another last command doesn't create an infinite loop : instead, it executes the last command that wasn't 'last'.
