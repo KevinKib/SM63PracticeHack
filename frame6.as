@@ -99,12 +99,17 @@ class Utils {
 	private var worldList;
 	private var flags;
 	
+	private var waterInterval;
+	
 	// Constructor of the Utils class.
 	public function Utils() {
 		this.worldList = new Array();
 		this.flags = new Array();
 		this.flags.push(false, false);
 		this.latestWarpPosition = [0, 0, 0, 0];
+		
+		this.waterInterval = null;
+		
 		this.worldList.push(new World(1, 'bob', 'Bom-Omb Battlefield', "C-2",
 							[-174.1, 9.35],
 							[1, 2, 3, 4, 5],
@@ -592,6 +597,17 @@ class Utils {
 		_root.PowerTimer = time;
 	}
 	
+	// Defines if the water is infinite or not.
+	public function setInfiniteWater(bool) {
+		if (bool == true) {
+			this.waterInterval = setInterval(function() {
+				_root.WaterAmount = _root.TotalWater;
+			}, 200);
+		}
+		else {
+			clearInterval(this.waterInterval);
+		}
+	}
 }
 
 // Class that manages everything related to displayed text.
@@ -978,6 +994,7 @@ class CodeManager {
 		this.currentCode = "";
 		this.lastCode = "";
 		this.delay = 0;
+		
 		this.il = new IndividualLevel();
 		
 		this.initKeyListener();
@@ -1390,6 +1407,14 @@ class CodeManager {
 				_root.WaterAmount = command[1];
 				_root.textManager.write(5, 'Water has been set to '+_root.WaterAmount+'.');
 			}
+			
+			if (command[1] == 'infinite') {
+				_root.WaterAmount = _root.TotalWater;
+				_root.utils.setInfiniteWater(true);
+			}
+			else {
+				_root.utils.setInfiniteWater(false);
+			}
 		}));
 
 		this.add(new Code('health', function(command) {
@@ -1408,6 +1433,15 @@ class CodeManager {
 			else {
 				_root.CharHP = command[1];
 				_root.textManager.write(5, 'Health has been set to '+_root.CharHP+'.');
+			}
+			
+			if (command[1] == 'infinite') {
+				setInterval(function() {
+					_root.WaterAmount = _root.TotalWater;
+				}, 100);
+			}
+			else {
+				
 			}
 		}));
 
@@ -1577,6 +1611,7 @@ class CodeManager {
 	public function getIL() {
 		return this.il;
 	}
+
 }
 
 // Class that manages the start and end of individual levels.
