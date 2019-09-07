@@ -318,8 +318,10 @@ class Utils {
 	
 	// Sets Mario's current position to a new value.
 	public function setPosition(x, y) {
-		_root.Course.Char._x = x - (_root.Course.Char._x - _root.Course.FrontGFX._x);
-		_root.Course.Char._y = y - (_root.Course.Char._y - _root.Course.FrontGFX._y);
+		// _root.Course.Char._x = x - (_root.Course.Char._x - _root.Course.FrontGFX._x);
+		// _root.Course.Char._y = y - (_root.Course.Char._y - _root.Course.FrontGFX._y);
+		
+		this.warp(this.getLevelName(), x, y, x, y);
 	}
 	
 	// Returns Mario's current position.
@@ -868,6 +870,7 @@ class Timer {
 	// Constructor
 	public function Timer() {
 		this.reset();
+		this.start();
 	}
 	
 	// Resets the timer.
@@ -1437,7 +1440,7 @@ class CodeManager {
 			
 		}));
 
-		this.add(new Code('last', function(command) {
+		this.add(new Code('last l', function(command) {
 			_root.codeManager.executeLastCode();
 		}));
 	
@@ -1505,7 +1508,7 @@ class CodeManager {
 		}
 		// To avoid infinite loops/recursion, we prevent setting the last code
 		// if the last command executed was 'last'.
-		if (code != 'last') {
+		if (code != 'last' && code != 'l') {
 			this.lastCode = code;
 		}
 		_root.PauseGame = false;
@@ -1788,9 +1791,14 @@ class BetaQuest {
 			newWarp = warpArea;
 		}
 		
-		_root.textManager.write(3, ' Warp area '+warpArea+' | New warp : ' + newWarp);
+		_root.textManager.write(3, ' Warp area ' + warpArea + ' | New warp : ' + newWarp);
 		
-		return newWarp;
+		var x = 0;
+		var y = 0;
+		
+		
+		
+		return [newWarp, x, y];
 	}
 	
 	// Returns the new, updated, warp list.
@@ -2183,7 +2191,6 @@ _root.Save_StarCoin = new Array();
 _root.Save_FluddArray = new Array();
 
 _root.timer = new Timer();
-_root.timer.start();
 _root.textManager = new TextManager();
 _root.utils = new Utils();
 _root.codeManager = new CodeManager();
