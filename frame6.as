@@ -124,6 +124,11 @@ class Utils {
 		
 		this.waterInterval = null;
 		
+		this.initWorlds();
+	}
+	
+	// Initializes the worlds / individual levels.
+	public function initWorlds() {
 		this.worldList.push(new World(1, 'bob', 'Bom-Omb Battlefield', "C-2",
 							[-174.1, 9.35],
 							[1, 2, 3, 4, 5],
@@ -245,7 +250,6 @@ class Utils {
 							[64],
 							[])
 							);
-		
 	}
 	
 	// Returns a specific world using its name.
@@ -1176,6 +1180,11 @@ class CodeManager {
 					_root.SaveFluddT = true;
 					_root.utils.setWorldNozzle('bt3', 'h', 'false');
 				}
+				if (level == 'space') {
+					_root.SaveFluddH = true;
+					_root.SaveFluddR = true;
+					_root.SaveFluddT = true;
+				}
 			}, 150);
 			
 			// Clean this code pls
@@ -1667,7 +1676,7 @@ class IndividualLevel {
 		this.requiredFlags = array.slice();
 	}
 	
-	
+	// Checks if the IL is finished.
 	public function check() {
 		var bool = true;
 		var i = 0;		
@@ -1692,14 +1701,14 @@ class IndividualLevel {
 		return bool;
 	}
 	
-	
+	// Code that is executed when a star is collected.
 	public function onStarCollected() {
 		if (this.check() === true) {
 			this.stop();
 		}
 	}
 	
-	
+	// Starts an IL.
 	public function start(level) {
 		this.level = level;
 		setTimeout(function() {
@@ -1707,13 +1716,13 @@ class IndividualLevel {
 		}, 200);
 	}
 	
-	
+	// Stops an IL.
 	public function stop() {
 		this.level = 'none';
 		_root.timer.stop();
 	}
 	
-	
+	// Returns true if an IL is currently in the way.
 	public function isGoing() {
 		return (this.level != 'none');
 	}
