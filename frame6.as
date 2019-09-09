@@ -479,10 +479,17 @@ class Utils {
 	}
 	
 	// Sets the state of the current saved fludd nozzles.
-	public function setSaveFludd(bool) {
-	   _root.SaveFluddH = bool;
-	   _root.SaveFluddR = bool;
-	   _root.SaveFluddT = bool;
+	public function setSaveFludd(bool, bool2, bool3) {
+		if (bool2 == undefined || bool3 == undefined) {
+			_root.SaveFluddH = bool;
+			_root.SaveFluddR = bool;
+			_root.SaveFluddT = bool;
+		}
+		else {
+			_root.SaveFluddH = bool;
+			_root.SaveFluddR = bool2;
+			_root.SaveFluddT = bool3;
+		}
 	}
 	
 	// Sets the state of every fludd stored in levels.
@@ -499,6 +506,15 @@ class Utils {
 		["", bool, bool, bool],
 		["", bool, bool, bool],
 		["",bool,bool,bool]];
+	}
+	
+	// Sets the current fludd the player is holding.
+	public function setFluddPow(value) {
+		// "" for nothing, "h" for hover, "r" for rocket and "t" for turbo.
+		if (value != "" && value != "h" && value != "r" && value != "t") {
+			value = "";
+		}
+		_root.Fluddpow = value;
 	}
 	
 	// Sets the saved nozzles for a chosen world.
@@ -1175,15 +1191,15 @@ class CodeManager {
 			// Exceptions
 			setTimeout(function() {
 				if (level == 'bt3' || level == 'endgame' ) {
-					_root.SaveFluddH = false;
-					_root.SaveFluddR = true;
-					_root.SaveFluddT = true;
+					_root.utils.setSaveFludd(false, true, true);
 					_root.utils.setWorldNozzle('bt3', 'h', 'false');
 				}
 				if (level == 'space') {
-					_root.SaveFluddH = true;
-					_root.SaveFluddR = true;
-					_root.SaveFluddT = true;
+					_root.utils.setSaveFludd(true, true, true);
+				}
+				if (level == 'escape') {
+					_root.utils.setFluddPow("");
+					_root.utils.setSaveFludd(true, true, true);
 				}
 			}, 150);
 			
@@ -1242,6 +1258,7 @@ class CodeManager {
 			
 			// Water recharge
 			_root.WaterAmount = _root.TotalWater;
+			_root.utils.setInfiniteWater(false);
 			
 			_root.textManager.write(5, 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
 			_root.utils.warp(startingLevel, posX, posY, posX, posY);
@@ -1549,6 +1566,15 @@ class CodeManager {
 			
 			_root.textManager.write(5, 'Current position updated.');
 		}));
+	
+		this.add(new Code('savestate ss', function(command) {
+			
+		}));
+		
+		this.add(new Code('loadstate ls', function(command) {
+			
+		}));
+		
 	}
 	
 	// Adds a new code to the code list.
@@ -1914,6 +1940,23 @@ class BetaQuest {
 	}
 	
 }
+
+class SaveState {
+	
+	private var warp;
+	private var position;
+	private var fludd;
+	private var water;
+	private var health;
+	private var fluddpow;
+	
+	// Constructor of the SaveState class.
+	public function SaveState() {
+		
+	}
+
+}
+
 
 
 // KoopaShell
