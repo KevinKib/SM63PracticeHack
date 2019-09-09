@@ -127,7 +127,7 @@ class Utils {
 		this.initWorlds();
 	}
 	
-	// Initializes the worlds / individual levels.
+	// Initializes the worlds.
 	public function initWorlds() {
 		this.worldList.push(new World(1, 'bob', 'Bom-Omb Battlefield', "C-2",
 							[-174.1, 9.35],
@@ -252,18 +252,11 @@ class Utils {
 							);
 	}
 	
-	// Returns a specific world using its name.
-	public function getWorld(name) {
-		var world;
-		var i = 0;
-		for (i = 0; i < _root.utils.worldList.length; i++) {
-			if (this.worldList[i].getName() == name) {
-				world = this.worldList[i];
-				break;
-			}
-		}
-		return world;
-	}
+	
+	
+	/// --- SETTERS --- ///
+	
+	
 	
 	// Sets stars of a certain world in a certain state.
 	public function setWorldStars(name, bool, number) {
@@ -345,29 +338,6 @@ class Utils {
 		// _root.Course.Char._y = y - (_root.Course.Char._y - _root.Course.FrontGFX._y);
 		
 		this.warp(this.getLevelName(), x, y, x, y);
-	}
-	
-	// Returns Mario's current position.
-	public function getPosition() {
-		var pos = new Array();
-		pos.push(_root.Course.Char._x - _root.Course.FrontGFX._x);
-		pos.push(_root.Course.Char._y - _root.Course.FrontGFX._y);
-		return pos;
-	}
-	
-	// Returns Mario's current position, with a string.
-	public function getPositionString() {
-		return this.getPosition()[0] + ' ' + this.getPosition()[1];
-	}
-	
-	// Returns the latest warp position.
-	public function getLatestWarpPosition() {
-		return this.latestWarpPosition;
-	}
-	
-	// Returns the latest warp position.
-	public function getLatestWarpPositionString() {
-		return this.latestWarpPosition[0] +  ' ' + this.latestWarpPosition[1] +  ' ' + this.latestWarpPosition[2] +  ' ' + this.latestWarpPosition[3];
 	}
 	
 	// Sets the state of every star coin.
@@ -462,20 +432,6 @@ class Utils {
 				this.flags[1] = bool;
 				break;
 		}
-	}
-	
-	// Returns the state of a flag, used for IL timings.
-	public function getFlag(name, bool) {
-		var flag;
-		switch(name) {
-			case 'bt3':
-				flag = this.flags[0];
-				break;
-			case 'space':
-				flag = this.flags[1];
-				break;
-		}
-		return flag;
 	}
 	
 	// Sets the state of the current saved fludd nozzles.
@@ -578,21 +534,6 @@ class Utils {
 		_root.FluddArray[playingLevel][3] = bool;
 	}
 
-	// Returns the state of a star.
-	public function getStar(index) {
-		return _root.Star[index];
-	}
-	
-	// Returns the state of a star coin.
-	public function getStarCoin(index) {
-		return _root.StarCoin[index];
-	}
-	
-	// Returns the current level name/ID.
-	public function getLevelName() {
-		return _root.playingcourse;
-	}
-	
 	// Sets the player's current cap (invisible, invincible, wing cap or metal).
 	public function setCap(cap, boolText) {
 		var capTime = 10000;
@@ -642,6 +583,102 @@ class Utils {
 			clearInterval(this.waterInterval);
 		}
 	}
+
+	
+	
+	/// --- GETTERS --- ///
+	
+	
+	
+	// Returns a specific world using its name.
+	public function getWorld(name) {
+		var world;
+		var i = 0;
+		for (i = 0; i < _root.utils.worldList.length; i++) {
+			if (this.worldList[i].getName() == name) {
+				world = this.worldList[i];
+				break;
+			}
+		}
+		return world;
+	}
+	
+	// Returns the state of a star.
+	public function getStar(index) {
+		return _root.Star[index];
+	}
+	
+	// Returns the state of a star coin.
+	public function getStarCoin(index) {
+		return _root.StarCoin[index];
+	}
+	
+	// Returns the current level name/ID.
+	public function getLevelName() {
+		return _root.playingcourse;
+	}
+	
+	// Returns the state of a flag, used for IL timings.
+	public function getFlag(name, bool) {
+		var flag;
+		switch(name) {
+			case 'bt3':
+				flag = this.flags[0];
+				break;
+			case 'space':
+				flag = this.flags[1];
+				break;
+		}
+		return flag;
+	}
+	
+	// Returns Mario's current position.
+	public function getPosition() {
+		var pos = new Array();
+		pos.push(_root.Course.Char._x - _root.Course.FrontGFX._x);
+		pos.push(_root.Course.Char._y - _root.Course.FrontGFX._y);
+		return pos;
+	}
+	
+	// Returns Mario's current position, with a string.
+	public function getPositionString() {
+		return this.getPosition()[0] + ' ' + this.getPosition()[1];
+	}
+	
+	// Returns the latest warp position.
+	public function getLatestWarpPosition() {
+		return this.latestWarpPosition;
+	}
+	
+	// Returns the latest warp position.
+	public function getLatestWarpPositionString() {
+		return this.latestWarpPosition[0] +  ' ' + this.latestWarpPosition[1] +  ' ' + this.latestWarpPosition[2] +  ' ' + this.latestWarpPosition[3];
+	}
+	
+	// Returns the current state of the saved fludd.
+	public function getSaveFludd() {
+		return {
+			h: _root.SaveFluddH,
+			r: _root.SaveFluddR,
+			t: _root.SaveFluddT
+		}
+	}
+
+	// Returns the current amount of water.
+	public function getWater() {
+		return _root.WaterAmount;
+	}
+	
+	// Returns the current amount of health.
+	public function getHealth() {
+		return _root.CharHP;
+	}
+
+	// Returns the current fludd nozzle the player is holding.
+	public function getFluddPow() {
+		return _root.Fluddpow;
+	}
+	
 }
 
 // Class that manages everything related to displayed text.
@@ -1941,7 +1978,22 @@ class BetaQuest {
 	
 }
 
+// Class that manages the behaviour of all save states and their actions.
+class SaveStateManager {
+	
+	private var saveStateList;
+	
+	// Constructor of the SaveStateManager class.
+	public function SaveStateManager() {
+		
+	}
+	
+}
+
+// Class that manages the data that a savestate holds.
 class SaveState {
+	
+	private var name;
 	
 	private var warp;
 	private var position;
@@ -1951,8 +2003,19 @@ class SaveState {
 	private var fluddpow;
 	
 	// Constructor of the SaveState class.
-	public function SaveState() {
-		
+	public function SaveState(name) {
+		this.name = name;
+		this.retrieveData();
+	}
+	
+	// Sets the current world data into the save state.
+	public function retrieveData() {
+		this.warp = _root.utils.getLevelName();
+		this.position = _root.utils.getLatestWarpPosition();
+		this.fludd = _root.utils.getSaveFludd();
+		this.water = _root.utils.getWater();
+		this.health = _root.utils.getHealth();
+		this.fluddpow = _root.utils.getFluddPow();
 	}
 
 }
