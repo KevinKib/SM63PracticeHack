@@ -56,7 +56,7 @@ Manages the current nozzles that the player has access to.
 
 Gives a specific cap to the player.
 
-**type**: The wanted type of cap. Can be either invisible, metal, invincible, wing (or wingcap).
+**type**: The wanted type of cap. Can be either invisible, metal, invincible, wing (or wingcap). "none" resets the caps.
 
 **boolean**: Boolean that sets the state of the cap (if unspecified, will be true per default).
 
