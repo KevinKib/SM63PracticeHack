@@ -467,9 +467,11 @@ class Utils {
 	// Sets the current fludd the player is holding.
 	public function setFluddPow(value) {
 		// "" for nothing, "h" for hover, "r" for rocket and "t" for turbo.
+		/*
 		if (value != "" && value != "h" && value != "r" && value != "t") {
 			value = "";
 		}
+		*/
 		_root.Fluddpow = value;
 	}
 	
@@ -570,6 +572,16 @@ class Utils {
 	// Defines for how long the cap will be used.
 	public function setCapTimer(time) {
 		_root.PowerTimer = time;
+	}
+	
+	// Sets the current amount of water, between 0 and 10000.
+	public function setWater(value) {
+		_root.WaterAmount = value;
+	}
+	
+	// Sets the current amount of health.
+	public function setHealth(value) {
+		_root.CharHP = value;
 	}
 	
 	// Defines if the water is infinite or not.
@@ -1605,11 +1617,15 @@ class CodeManager {
 		}));
 	
 		this.add(new Code('savestate ss', function(command) {
-			
+			var name = command[1];
+			_root.saveStateManager.save(name);
+			_root.textManager.write(3, "State "+name+" saved.");
 		}));
 		
 		this.add(new Code('loadstate ls', function(command) {
-			
+			var name = command[1];
+			_root.saveStateManager.load(name);
+			//_root.textManager.write(3, "State "+name+" loaded.");
 		}));
 		
 	}
@@ -1985,7 +2001,26 @@ class SaveStateManager {
 	
 	// Constructor of the SaveStateManager class.
 	public function SaveStateManager() {
+		this.saveStateList = new Array();
+	}
+	
+	public function save(name) {
+		var state = new SaveState(name);
+		this.saveStateList.push(state);
+	}
+	
+	public function load(name) {
 		
+		var state = null;
+		var i = 0;
+		
+		for (i = 0; i < this.saveStateList.length; i++) {
+			if (this.saveStateList[i].name == name) {
+				state = this.saveStateList[i];
+			}
+		}
+		
+		state.load();
 	}
 	
 }
@@ -2016,6 +2051,21 @@ class SaveState {
 		this.water = _root.utils.getWater();
 		this.health = _root.utils.getHealth();
 		this.fluddpow = _root.utils.getFluddPow();
+	}
+	
+	// Loads a save state in the game.
+	public function load() {
+		_root.utils.warp(this.warp,
+						this.position[0],
+						this.position[1],
+						this.position[0],
+						this.position[1]);
+		
+		_root.utils.setSaveFludd(this.fludd.h, this.fludd.r, this.fludd.t);
+		_root.utils.setWater(this.water);
+		_root.utils.setHealth(this.health);
+		_root.utils.setFluddPow(this.fluddpow);
+		
 	}
 
 }
@@ -2381,3 +2431,4 @@ _root.utils = new Utils();
 _root.codeManager = new CodeManager();
 _root.betaQuest = new BetaQuest();
 _root.event = new Event();
+_root.saveStateManager = new SaveStateManager();
