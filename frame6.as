@@ -114,6 +114,7 @@ class Utils {
 	private var flags;
 	
 	private var waterInterval;
+	private var healthInterval;
 	
 	// Constructor of the Utils class.
 	public function Utils() {
@@ -123,6 +124,7 @@ class Utils {
 		this.latestWarpPosition = [0, 0, 0, 0];
 		
 		this.waterInterval = null;
+		this.healthInterval = null;
 		
 		this.initWorlds();
 	}
@@ -595,6 +597,18 @@ class Utils {
 			clearInterval(this.waterInterval);
 		}
 	}
+	
+	// Defines if the health is infinite or not.
+	public function setInfiniteHealth(bool) {
+		if (bool == true) {
+			this.healthInterval = setInterval(function() {
+				_root.utils.setHealth(8);
+			}, 200);
+		}
+		else {
+			clearInterval(this.healthInterval);
+		}
+	}
 
 	
 	
@@ -691,6 +705,16 @@ class Utils {
 		return _root.Fluddpow;
 	}
 	
+	// Returns if the water is infinite or not.
+	public function isWaterInfinite() {
+		return (this.waterInterval != null);
+	}
+	
+	// Returns if the health is infinite or not.
+	public function isHealthInfinite() {
+		return (this.healthInterval != null);
+	}
+	
 }
 
 // Class that manages everything related to displayed text.
@@ -756,6 +780,7 @@ class Event {
 	// Triggers code that happens on every loading zone.
 	public function onLoadingZone() {
 		_root.timer.onLoadingZone();
+		_root.textManager.write(3, "");
 		_root.textManager.write(4, _root.timer.getDisplay());
 	}
 	
@@ -1525,12 +1550,11 @@ class CodeManager {
 			}
 			
 			if (command[1] == 'infinite') {
-				setInterval(function() {
-					_root.WaterAmount = _root.TotalWater;
-				}, 100);
+				_root.utils.setHealth(8);
+				_root.utils.setInfiniteHealth(true);
 			}
 			else {
-				
+				_root.utils.setInfiniteHealth(false);
 			}
 		}));
 
@@ -1917,7 +1941,7 @@ class BetaQuest {
 	// Returns the new zone the player will be warped in.
 	public function getCorrespondingArea(warpArea) {
 		var index = this.indexOf(this.warpList, warpArea);
-		_root.textManager.write(5, this.indexOf(this.warpList, warpArea));
+		//_root.textManager.write(5, this.indexOf(this.warpList, warpArea));
 		//var index = 2;
 		var newWarp;
 		
@@ -2036,6 +2060,8 @@ class SaveState {
 	private var water;
 	private var health;
 	private var fluddpow;
+	private var infiniteWater;
+	private var infiniteHealth;
 	
 	// Constructor of the SaveState class.
 	public function SaveState(name) {
@@ -2051,6 +2077,8 @@ class SaveState {
 		this.water = _root.utils.getWater();
 		this.health = _root.utils.getHealth();
 		this.fluddpow = _root.utils.getFluddPow();
+		//this.infiniteWater = _root.utils.isWaterInfinite();
+		//this.infiniteHealth = _root.utils.isHealthInfinite();
 	}
 	
 	// Loads a save state in the game.
@@ -2065,7 +2093,11 @@ class SaveState {
 		_root.utils.setWater(this.water);
 		_root.utils.setHealth(this.health);
 		_root.utils.setFluddPow(this.fluddpow);
+		//_root.utils.setInfiniteWater(this.infiniteWater);
+		//_root.utils.setInfiniteHealth(this.infiniteHealth);
 		
+		// cap & cap timer
+		// infinite water & health
 	}
 
 }
