@@ -235,6 +235,21 @@ class Utils {
 							[54],
 							[],
 							[]),
+              new World(0, 'b1reds', "Bowser 1 Reds", "C-5",
+							[-316.85, 7.25],
+							[40],
+							[],
+							[56]),
+              new World(0, 'b2reds', "Bowser 2 Reds", "C-7",
+							[619.85, 57.35],
+							[42],
+							[],
+							[57]),
+              new World(0, 'b3reds', "Bowser 3 Reds", "C-13",
+							[971.85, -159.2],
+							[37],
+							[],
+							[52, 53]),
 							new World(0, 'space', "Space", "8-12",
 							[0, 0],
 							[],
@@ -302,11 +317,14 @@ class Utils {
 	}
 	
 	// Warps the player to a certain course.
-	public function warp(title, playerX, playerY, cameraX, cameraY) {
+	public function warp(title, playerX, playerY, cameraX, cameraY, isCommand) {
+    if (isCommand == undefined) {
+      isCommand = true;
+    }
 		
 		setTimeout(function() {
 			//_root.Restartcoins();
-			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, true);
+			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
 		}, this.getWarpTimeout());
 		
 	}
@@ -1352,16 +1370,15 @@ class CodeManager {
 		
 		this.add(new Code('individuallevel il', function(command) {
 			// Would be easier to maintain with OOP for worlds
-			
+			_root.Restartcoins();
 			var IL = _root.codeManager.getIL();
 			
 			var level = command[1];
 			var type = command[2];
-			//var starnum = command[3];
 			var starnum = parseInt(command[3]);
 			
 			var existingTypes = new Array();
-			existingTypes.push('all', '100', 'starsfludd', 'stars', 'starfludd', 'star', 'starcoins', 'starcoin');
+			existingTypes.push('all', '100', 'starsfludd', 'stars', 'starfludd', 'star', 'starcoins', 'starcoin', 'nms');
 			
 			if (existingTypes.indexOf(type) == -1) {
 				_root.textManager.send('message', 'Invalid IL command.');
@@ -1397,7 +1414,7 @@ class CodeManager {
 			
 			// Exceptions
 			setTimeout(function() {
-				if (level == 'bt3' || level == 'endgame' ) {
+				if (level == 'bt3' || level == 'endgame' || level == 'b2reds' || level == 'b3reds') {
 					_root.utils.setSaveFludd(false, true, true);
 					_root.utils.setWorldNozzle('bt3', 'h', 'false');
 				}
@@ -1418,18 +1435,24 @@ class CodeManager {
 					IL.setRequiredStars(requiredStars);
 					IL.setRequiredStarCoins(requiredStarCoins);
 					IL.setRequiredFlags(requiredFlags);
+          IL.setNbRequiredStars(requiredStars.length);
+          IL.setNbRequiredStarCoins(requiredStarCoins.length);
 					mode = '100%';
 					break;
 				case 'starsfludd': case 'sf':
 					_root.utils.setWorldNozzle(level, 'all', 'true');
 					IL.setRequiredStars(requiredStars);
 					IL.setRequiredStarCoins(emptyArray);
+          IL.setNbRequiredStars(requiredStars.length);
+          IL.setNbRequiredStarCoins(requiredStarCoins.length);
 					mode = 'All Stars with Fludd';
 					break;
 				case 'stars':
 					_root.utils.setWorldNozzle(level, 'all', 'false');
 					IL.setRequiredStars(requiredStars);
 					IL.setRequiredStarCoins(emptyArray);
+          IL.setNbRequiredStars(requiredStars.length);
+          IL.setNbRequiredStarCoins(requiredStarCoins.length);
 					mode = 'Stars';
 					break;
 				case 'starfludd':
@@ -1440,6 +1463,8 @@ class CodeManager {
 						arr.push(requiredStars[starnum - 1]);
 						IL.setRequiredStars(arr);
 						IL.setRequiredStarCoins(emptyArray);
+            IL.setNbRequiredStars(requiredStars.length);
+            IL.setNbRequiredStarCoins(requiredStarCoins.length);
 						mode = 'Star '+starnum+' with Fludd';
 					}
 					break;
@@ -1450,6 +1475,8 @@ class CodeManager {
 						arr.push(requiredStars[starnum - 1]);
 						IL.setRequiredStars(arr);
 						IL.setRequiredStarCoins(emptyArray);
+            IL.setNbRequiredStars(requiredStars.length);
+            IL.setNbRequiredStarCoins(requiredStarCoins.length);
 						mode = 'Star '+starnum;
 					}
 					break;
@@ -1457,7 +1484,20 @@ class CodeManager {
 					_root.utils.setWorldNozzle(level, 'all', 'false');
 					IL.setRequiredStars(emptyArray);
 					IL.setRequiredStarCoins(requiredStarCoins);
+          IL.setNbRequiredStars(requiredStars.length);
+          IL.setNbRequiredStarCoins(requiredStarCoins.length);
 					mode = 'Star Coins';
+					break;
+        case 'nms':
+					_root.utils.setWorldNozzle(level, 'all', 'false');
+					IL.setRequiredStars(emptyArray);
+					IL.setRequiredStarCoins(requiredStarCoins);
+
+          var nbStars = parseInt(command[3]);
+          var nbStarCoins = parseInt(command[4]);
+          IL.setNbRequiredStars(nbStars);
+          IL.setNbRequiredStarCoins(nbStarCoins);
+					mode = 'No Major Skips : '+nbStars+' stars, '+nbStarCoins+' star coins';
 					break;
 				default:
 					mode = 'None';
@@ -1471,25 +1511,30 @@ class CodeManager {
 			  _root.textManager.send('message', 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
       }, _root.utils.getAfterWarpTimeout());
 
-			_root.utils.warp(startingLevel, posX, posY, posX, posY);
+			_root.utils.warp(startingLevel, posX, posY, posX, posY, false);
 			IL.start(level);
 		}));
 		
 		this.add(new Code('warp w', function(command) {
 			
 			var level = command[1];
-			var param_1 = command[2];
-			var param_2 = command[3];
-			var param_3 = command[4];
-			var param_4 = command[5];
+			var player_x = command[2];
+			var player_y = command[3];
+			var camera_x = command[4];
+			var camera_y = command[5];
 			
 			if (level != undefined) {
-				if (param_1 == undefined) param_1 = 0;
-				if (param_2 == undefined) param_2 = 0;
-				if (param_3 == undefined) param_3 = 0;
-				if (param_4 == undefined) param_4 = 0;
-				
-				_root.utils.warp(command[1], param_1, param_2, param_3, param_4);
+
+        var definedCoordinates = (player_x != undefined && player_y != undefined);
+
+        if (definedCoordinates) {
+          if (camera_x == undefined) camera_x = player_x;
+          if (camera_y == undefined) camera_y = player_y;
+          _root.utils.warp(command[1], player_x, player_y, camera_x, camera_y, false);
+        }
+        else {
+          _root.utils.warp(command[1], 0, 0, 0, 0, true);
+        }
 
         setTimeout(function() {
           _root.textManager.send('message', 'Player has been warped to '+command[1]+'.');
@@ -1918,11 +1963,16 @@ class IndividualLevel {
 	private var requiredStars;
 	private var requiredStarCoins;
 	private var requiredFlags;
+  private var nbRequiredStars;
+  private var nbRequiredStarCoins;
 	
 	public function IndividualLevel() {
 		this.stop();
 		this.requiredStars = new Array();
 		this.requiredStarCoins = new Array();
+    this.requiredFlags = new Array();
+    this.nbRequiredStars = 0;
+    this.nbRequiredStarCoins = 0;
 	}
 	
 	// Getter for the required stars.
@@ -1949,28 +1999,42 @@ class IndividualLevel {
 	public function setRequiredFlags(array) {
 		this.requiredFlags = array.slice();
 	}
+
+  // Setter for the amount of required stars.
+  public function setNbRequiredStars(nb) {
+    this.nbRequiredStars = nb;
+  }
+
+  // Setter for the amount of required stars.
+  public function setNbRequiredStarCoins(nb) {
+    this.nbRequiredStarCoins = nb;
+  }
 	
 	// Checks if the IL is finished.
 	public function check() {
-		var bool = true;
 		var i = 0;		
 		var j = 0;
+
+    var nbStars = 0;
+    var nbStarCoins = 0;
 		
 		for (i = 0; i < this.requiredStars.length; i++) {
 			var index = this.requiredStars[i];
-			if (_root.utils.getStar(index) === false) {
-				bool = false;
+			if (_root.utils.getStar(index) === true) {
+				nbStars++;
 				break;
 			}
 		}
 		
 		for (j = 0; j < this.requiredStarCoins.length; j++) {
 			var index = this.requiredStarCoins[j];
-			if (_root.utils.getStarCoin(index) === false) {
-				bool = false;
+			if (_root.utils.getStarCoin(index) === true) {
+				nbStarCoins++;
 				break;
 			}
 		}
+
+    var bool = (nbStars >= this.nbRequiredStars) && (nbStarCoins >= this.nbRequiredStarCoins);
 		
 		return bool;
 	}
