@@ -753,6 +753,11 @@ class Utils {
 	public function isHealthInfinite() {
 		return (this.infiniteHealth);
 	}
+
+  // Returns true if the game is currently paused.
+  public function isGamePaused() {
+    return !_root.PauseGame;
+  }
 	
 }
 
@@ -1189,14 +1194,14 @@ class Code {
 	}
 	
 	// Executes the code, if the index is valid.
-	public function execute(code) {
+	public function execute(command) {
 		
 		var i = 0;
-		var command = code.split(' ');
+		var splitCommand = command.split(' ');
 		
 		for (i = 0; i < this.indexList.length; i++) {
-			if (this.indexList[i] == command[0]) {
-				this.func(command);
+			if (this.indexList[i] == splitCommand[0]) {
+				this.func(splitCommand);
 				break;
 			}
 		}
@@ -1237,7 +1242,7 @@ class CodeManager {
 	
 	// Creates the key listener.
 	public function initKeyListener() {
-		var allowedKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_:/.,\\\'%;*+\" [](){}=";
+		var allowedKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_:/.,\\\'%;*+\" [](){}=$";
 		var keyListener = new Object();
 		keyListener.onKeyDown = function()
 		{
@@ -1274,6 +1279,8 @@ class CodeManager {
 					}
 				}
 			}
+
+      _root.hotkeyManager.execute(chr(Key.getAscii()));
 		}
 		Key.addListener(keyListener);
 	}
@@ -1723,9 +1730,6 @@ class CodeManager {
 					break;
 			}
 			
-			
-			
-			
 		}));
 
 		this.add(new Code('last l', function(command) {
@@ -1795,6 +1799,26 @@ class CodeManager {
 				_root.timer.reset();
 			}
 		}));
+
+    this.add(new Code('hotkey htk', function(command) {
+      var newArray = command.slice();
+      newArray.shift();
+      newArray.shift();
+
+      var key = command[1];
+      var unsplitCommand = newArray.join(" ");
+
+      _root.hotkeyManager.add(key, unsplitCommand);
+
+      _root.textManager.send('message', 'The hotkey '+key+' was succesfully binded.');
+    }));
+
+    this.add(new Code('clearhotkey clhtk', function(command) {
+      var key = command[1];
+
+      _root.hotkeyManager.remove(key);
+      _root.textManager.send('message', 'The hotkey '+key+'\'s bind was succesfully removed.');
+    }));
 		
 	}
 	
@@ -1804,16 +1828,18 @@ class CodeManager {
 	}
 	
 	// Executes a specific code.
-	public function execute(code) {
-		_root.textManager.send('message', '');
+	public function execute(command) {
+		//_root.textManager.send('message', '');
+    //_root.textManager.send('message', command);
 		var i = 0;
 		for (i = 0; i < this.codeList.length; i = i + 1) {
-			this.codeList[i].execute(code);
+			this.codeList[i].execute(command);
 		}
 		// To avoid infinite loops/recursion, we prevent setting the last code
 		// if the last command executed was 'last'.
-		if (code != 'last' && code != 'l') {
-			this.lastCode = code;
+    // Doesn't work if the 'last' command gets an argument.
+		if (command != 'last' && command != 'l') {
+			this.lastCode = command;
 		}
 		_root.PauseGame = false;
 	}
@@ -2250,6 +2276,67 @@ class SaveState {
 
 }
 
+class HotkeyCommand {
+
+  private var key;
+  private var command;
+
+  public function HotkeyCommand(_key, _command) {
+    this.key = _key;
+    this.command = _command;
+  }
+
+  public function getKey() {
+    return this.key;
+  }
+
+  public function getCommand() {
+    return this.command;
+  }
+
+}
+
+class HotkeyManager {
+
+  private var hotkeyCommandList;
+
+  public function HotkeyManager() {
+    this.hotkeyCommandList = new Array();
+  }
+
+  public function add(key, command) {
+    this.remove(key);
+    this.hotkeyCommandList.push(new HotkeyCommand(key, command));
+  }
+
+  public function remove(key) {
+    var i = 0;
+
+    var newArray = new Array();
+
+    for (i = 0; i < this.hotkeyCommandList.length; i++) {
+      if (key != this.hotkeyCommandList[i].getKey()) {
+        newArray.push(this.hotkeyCommandList[i]);
+      }
+    }
+
+    this.hotkeyCommandList = newArray.slice();
+  }
+
+  public function execute(key) {
+    if (!_root.utils.isGamePaused()) {
+      var i = 0;
+
+      for (i = 0; i < this.hotkeyCommandList.length; i++) {
+        if (key == this.hotkeyCommandList[i].getKey()) {
+          _root.codeManager.execute(this.hotkeyCommandList[i].getCommand());
+          break;
+        }
+      }
+    }
+  }
+}
+
 
 
 // KoopaShell
@@ -2612,3 +2699,4 @@ _root.codeManager = new CodeManager();
 _root.betaQuest = new BetaQuest();
 _root.event = new Event();
 _root.saveStateManager = new SaveStateManager();
+_root.hotkeyManager = new HotkeyManager();
