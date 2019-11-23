@@ -114,7 +114,9 @@ class Utils {
 	private var flags;
 	
 	private var waterInterval;
+  private var infiniteWater;
 	private var healthInterval;
+  private var infiniteHealth;
 	
 	// Constructor of the Utils class.
 	public function Utils() {
@@ -124,7 +126,9 @@ class Utils {
 		this.latestWarpPosition = [0, 0, 0, 0];
 		
 		this.waterInterval = null;
+    this.infiniteWater = false;
 		this.healthInterval = null;
+    this.infiniteHealth = false;
 		
 		this.initWorlds();
 	}
@@ -580,29 +584,43 @@ class Utils {
 	public function setHealth(value) {
 		_root.CharHP = value;
 	}
+
+  // Sets the current character the player is using.
+  public function setCharacter(character) {
+
+    // Ensures the new character is either Mario or Luigi.
+    var newCharacter = 'Mario';
+    if (character == 'Luigi') {
+      newCharacter = 'Luigi';
+    }
+
+    _root.CurrentPlayer = newCharacter;
+  }
 	
 	// Defines if the water is infinite or not.
 	public function setInfiniteWater(bool) {
+    clearInterval(this.waterInterval);
+
 		if (bool == true) {
 			this.waterInterval = setInterval(function() {
 				_root.WaterAmount = _root.TotalWater;
 			}, 200);
 		}
-		else {
-			clearInterval(this.waterInterval);
-		}
+
+    this.infiniteWater = bool;
 	}
 	
 	// Defines if the health is infinite or not.
 	public function setInfiniteHealth(bool) {
+    clearInterval(this.healthInterval);
+
 		if (bool == true) {
 			this.healthInterval = setInterval(function() {
 				_root.utils.setHealth(8);
 			}, 200);
 		}
-		else {
-			clearInterval(this.healthInterval);
-		}
+
+    this.infiniteHealth = bool;
 	}
 
 	
@@ -700,6 +718,11 @@ class Utils {
 		return _root.Fluddpow;
 	}
 
+  // Returns the current character the player is using.
+  public function getCharacter() {
+    return _root.CurrentPlayer;
+  }
+
   // Returns the game's current framerate.
   public function getFramerate() {
     return _root.framerate;
@@ -723,12 +746,12 @@ class Utils {
 	
 	// Returns if the water is infinite or not.
 	public function isWaterInfinite() {
-		return (this.waterInterval != null);
+		return this.infiniteWater;
 	}
 	
 	// Returns if the health is infinite or not.
 	public function isHealthInfinite() {
-		return (this.healthInterval != null);
+		return (this.infiniteHealth);
 	}
 	
 }
@@ -1641,9 +1664,11 @@ class CodeManager {
 			if (command[1] == 'infinite') {
 				_root.WaterAmount = _root.TotalWater;
 				_root.utils.setInfiniteWater(true);
+        _root.textManager.send('message', 'Water is now infinite.');
 			}
 			else {
 				_root.utils.setInfiniteWater(false);
+        _root.textManager.send('message', 'Water is not infinite anymore.');
 			}
 		}));
 
@@ -2174,6 +2199,7 @@ class SaveState {
 	
 	private var name;
 	
+  private var char;
 	private var warp;
 	private var position;
 	private var fludd;
@@ -2191,14 +2217,15 @@ class SaveState {
 	
 	// Sets the current world data into the save state.
 	public function retrieveData() {
+    this.char = _root.utils.getCharacter();
 		this.warp = _root.utils.getLevelName();
 		this.position = _root.utils.getLatestWarpPosition();
 		this.fludd = _root.utils.getSaveFludd();
 		this.water = _root.utils.getWater();
 		this.health = _root.utils.getHealth();
 		this.fluddpow = _root.utils.getFluddPow();
-		//this.infiniteWater = _root.utils.isWaterInfinite();
-		//this.infiniteHealth = _root.utils.isHealthInfinite();
+		this.infiniteWater = _root.utils.isWaterInfinite();
+		this.infiniteHealth = _root.utils.isHealthInfinite();
 	}
 	
 	// Loads a save state in the game.
@@ -2209,12 +2236,13 @@ class SaveState {
 						this.position[0],
 						this.position[1]);
 		
+    _root.utils.setCharacter(this.char);
 		_root.utils.setSaveFludd(this.fludd.h, this.fludd.r, this.fludd.t);
 		_root.utils.setWater(this.water);
 		_root.utils.setHealth(this.health);
 		_root.utils.setFluddPow(this.fluddpow);
-		//_root.utils.setInfiniteWater(this.infiniteWater);
-		//_root.utils.setInfiniteHealth(this.infiniteHealth);
+		_root.utils.setInfiniteWater(this.infiniteWater);
+		_root.utils.setInfiniteHealth(this.infiniteHealth);
 		
 		// cap & cap timer
 		// infinite water & health
