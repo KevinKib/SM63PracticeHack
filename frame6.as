@@ -300,15 +300,10 @@ class Utils {
 	// Warps the player to a certain course.
 	public function warp(title, playerX, playerY, cameraX, cameraY) {
 		
-		/* This command used to glitch when executed instantly.
-		To fix this problem, a timeout of 100 ms was added to execute the command.
-		It, for some reason, fixed the problem. No one has any idea why it did fix it.
-		First problems have been detected with a timeout of 10ms, so the default has been
-		set to 100ms for now.*/
 		setTimeout(function() {
 			//_root.Restartcoins();
 			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, true);
-		}, 100);
+		}, this.getWarpTimeout());
 		
 	}
 	
@@ -704,6 +699,27 @@ class Utils {
 	public function getFluddPow() {
 		return _root.Fluddpow;
 	}
+
+  // Returns the game's current framerate.
+  public function getFramerate() {
+    return _root.framerate;
+  }
+
+  // Returns the necessary timeout for a warp to happen.
+  public function getWarpTimeout() {
+    /* The warp command used to glitch when executed instantly.
+		To fix this problem, a timeout of 100 ms was added to execute the command.
+		It, for some reason, fixed the problem. No one has any idea why it did fix it.
+		First problems have been detected with a timeout of 10ms, so the default has been
+		set to 100ms for now.*/
+
+    return 100;
+  }
+
+  // Returns the necessary timeout for an action to happen after a warp.
+  public function getAfterWarpTimeout() {
+    return 150;
+  }
 	
 	// Returns if the water is infinite or not.
 	public function isWaterInfinite() {
@@ -721,7 +737,6 @@ class Utils {
 class TextManager {
 	
 	// Could be coded significantly better using an array.
-	
 	private var row1;
 	private var row2;
 	private var row3;
@@ -729,6 +744,10 @@ class TextManager {
 	private var row5;
 	private var row6;
 
+  // Manages the life cycle of a message.
+  private var messageDelay;
+
+  // Constructor
 	public function TextManager() {
 		this.row1 = "";
 		this.row2 = "";
@@ -736,9 +755,12 @@ class TextManager {
 		this.row4 = "";
 		this.row5 = "";
 		this.row6 = "";
+
+    this.messageDelay = 0;
 	}
 	
-	public function write(row, text) {
+  // Writes a message on the console.
+	private function write(row, text) {
 		switch(row) {
 			case 1: this.row1 = text; break;
 			case 2: this.row2 = text; break;
@@ -755,6 +777,59 @@ class TextManager {
 						+ this.row5 + "\n" 
 						+ this.row6;
 	}
+
+  // Sends a message to the console
+  // that will be written by the class on the accurate row.
+  public function send(type, text) {
+    var row = this.getRow(type);
+
+    if (type == 'message') {
+      this.messageDelay = this.getMessageLength();
+    }
+
+    if (row != 0) {
+      this.write(row, text);
+    }
+  }
+
+  // Manages every action that happens on each frame.
+  public function onEachFrame() {
+    if (this.messageDelay > 0) {
+      this.messageDelay--;
+
+      if (this.messageDelay == 0) {
+        this.write(this.getRow('message'), "");
+      }
+    }
+  }
+
+  // Returns the row where a specific type of text has to be displayed.
+  private function getRow(type) {
+    var row = 0;
+
+    switch(type) {
+      case 'code':
+        row = 1;
+        break;
+      case 'message':
+        row = 2;
+        break;
+      case 'timer':
+        row = 4;
+        break;
+      case 'segment_timer':
+        row = 5;
+        break;
+    }
+
+    return row;
+  }
+
+  // Returns the length where a message will be displayed on screen.
+  private function getMessageLength() {
+    var SECONDS_DISPLAYED = 4;
+    return _root.utils.getFramerate() * SECONDS_DISPLAYED;
+  }
 	
 }
 
@@ -764,9 +839,17 @@ class Event {
 	// Triggers code that happens on each frame.
 	public function onEachFrame() {
 		_root.timer.onEachFrame();
-		_root.timer.update();
 		_root.codeManager.onEachFrame();
-		_root.textManager.write(1, _root.timer.getDisplay());
+    _root.textManager.onEachFrame();
+
+    if (_root.timer.isDisplayed()) {
+      _root.textManager.send('timer', _root.timer.getDisplay());
+    }
+    else {
+      _root.textManager.send('timer', "");
+      _root.textManager.send('segment_timer', "");
+    }
+		
 		
 		// KoopaShell
 		if(_root.KeySlash())
@@ -780,8 +863,12 @@ class Event {
 	// Triggers code that happens on every loading zone.
 	public function onLoadingZone() {
 		_root.timer.onLoadingZone();
-		_root.textManager.write(3, "");
-		_root.textManager.write(4, _root.timer.getDisplay());
+		_root.textManager.send('message', "");
+
+    if (_root.timer.isDisplayed()) {
+      _root.textManager.send('segment_timer', _root.timer.getDisplay());
+    }
+		
 	}
 	
 	// Triggers code that happens when the star is collected.
@@ -978,6 +1065,9 @@ class TimeCounter {
 // Class that manages a full chronometer.
 class Timer {
 	
+  // Defines if the timer is displayed on screen or not.
+  private var displayed;
+
 	// Defines if the timer is going or not.
 	private var started;
 	
@@ -995,6 +1085,7 @@ class Timer {
 	public function Timer() {
 		this.reset();
 		this.start();
+    this.displayed = true;
 	}
 	
 	// Resets the timer.
@@ -1019,12 +1110,19 @@ class Timer {
 	public function update() {
 		this.lastUpdatedTime = this.realTime.clone();
 	}
+
+  // Sets if the timer is displayed onscreen or not.
+  public function setDisplay(bool) {
+    this.displayed = bool;
+    _root.textManager.send('segment_timer', this.getDisplay());
+  }
 	
 	// Manages the code that happens on each frame.
 	public function onEachFrame() {
 		if (this.started == true) {
 			this.realTime.addFrame();
 		}
+    this.update();
 	}
 	
 	// Manages the code that happens when entering a loading zone.
@@ -1035,6 +1133,11 @@ class Timer {
 		}
 	}
 	
+  // Returns if the timer is displayed on screen or not.
+  public function isDisplayed() {
+    return this.displayed;
+  }
+
 	// Returns a string displaying the current time.
 	public function getDisplay() {
 		return this.lastUpdatedTime.getDisplay();
@@ -1162,11 +1265,11 @@ class CodeManager {
 			switch(bool) {
 				case 'true':  
 					_root.utils.setWorldStars(level, true, number); 
-					_root.textManager.write(5, 'Stars from worlds have been updated.');
+					_root.textManager.send('message', 'Stars from worlds have been updated.');
 					break;
 				case 'false': 
 					_root.utils.setWorldStars(level, false, number); 
-					_root.textManager.write(5, 'Stars from worlds have been updated.');
+					_root.textManager.send('message', 'Stars from worlds have been updated.');
 					break;
 			}
 		}));
@@ -1178,11 +1281,11 @@ class CodeManager {
 			switch(bool) {
 				case 'true':  
 					_root.utils.setWorldStarCoins(level, true, number); 
-					_root.textManager.write(5, 'Star Coins from worlds have been updated.');
+					_root.textManager.send('message', 'Star Coins from worlds have been updated.');
 					break;
 				case 'false': 
 					_root.utils.setWorldStarCoins(level, false, number); 
-					_root.textManager.write(5, 'Star Coins from worlds have been updated.');
+					_root.textManager.send('message', 'Star Coins from worlds have been updated.');
 					break;
 			}
 			
@@ -1193,11 +1296,11 @@ class CodeManager {
 			var nozzle = command[2];
 			var bool = command[3];
 			if (world === undefined || nozzle === undefined || bool === undefined) {
-				_root.textManager.write(5, 'Invalid syntax.');
+				_root.textManager.send('message', 'Invalid syntax.');
 				return;
 			}
 			_root.utils.setWorldNozzle(world, nozzle, bool);
-			_root.textManager.write(5, 'Saved nozzles from worlds have been updated.');
+			_root.textManager.send('message', 'Saved nozzles from worlds have been updated.');
 		}));
 
 		this.add(new Code('doorwarp', function(command) {
@@ -1205,16 +1308,16 @@ class CodeManager {
 		}));
 
 		this.add(new Code('position pos', function(command) {
-			//_root.textManager.write(5, _root.utils.getPositionString() + ' | | '  + _root.Course.Char._x + ' ' + _root.Course.Char._y + ' | ' + _root.Course.FrontGFX._x + ' ' + _root.Course.FrontGFX._y + ' | ' +_root.Course.Char._X + ' ' + _root.Course.Char._Y);
-			_root.textManager.write(5, _root.utils.getPositionString());
+			//_root.textManager.send('message', _root.utils.getPositionString() + ' | | '  + _root.Course.Char._x + ' ' + _root.Course.Char._y + ' | ' + _root.Course.FrontGFX._x + ' ' + _root.Course.FrontGFX._y + ' | ' +_root.Course.Char._X + ' ' + _root.Course.Char._Y);
+			_root.textManager.send('message', _root.utils.getPositionString());
 		}));
 
 		this.add(new Code('latestwarpposition lwp', function(command) {
-			_root.textManager.write(5, _root.utils.getLevelName() + ' ' + _root.utils.getLatestWarpPositionString());
+			_root.textManager.send('message', _root.utils.getLevelName() + ' ' + _root.utils.getLatestWarpPositionString());
 		}));
 
 		this.add(new Code('levelname ln', function(command) {
-			_root.textManager.write(5, _root.utils.getLevelName() );
+			_root.textManager.send('message', _root.utils.getLevelName() );
 		}));
 		
 		this.add(new Code('individuallevel il', function(command) {
@@ -1231,7 +1334,7 @@ class CodeManager {
 			existingTypes.push('all', '100', 'starsfludd', 'stars', 'starfludd', 'star', 'starcoins', 'starcoin');
 			
 			if (existingTypes.indexOf(type) == -1) {
-				_root.textManager.write(5, 'Invalid IL command.');
+				_root.textManager.send('message', 'Invalid IL command.');
 				return;
 			}
 			
@@ -1334,7 +1437,10 @@ class CodeManager {
 			_root.WaterAmount = _root.TotalWater;
 			_root.utils.setInfiniteWater(false);
 			
-			_root.textManager.write(5, 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
+      setTimeout(function() {
+			  _root.textManager.send('message', 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
+      }, _root.utils.getAfterWarpTimeout());
+
 			_root.utils.warp(startingLevel, posX, posY, posX, posY);
 			IL.start(level);
 		}));
@@ -1354,7 +1460,11 @@ class CodeManager {
 				if (param_4 == undefined) param_4 = 0;
 				
 				_root.utils.warp(command[1], param_1, param_2, param_3, param_4);
-				_root.textManager.write(5, 'Player has been warped to '+command[1]+'.');
+
+        setTimeout(function() {
+          _root.textManager.send('message', 'Player has been warped to '+command[1]+'.');
+        }, _root.utils.getAfterWarpTimeout());
+
 			}
 			
 		}));
@@ -1367,7 +1477,7 @@ class CodeManager {
 					_root.utils.setStarCoins(true);
 					_root.utils.setBowserKeys(true);
 					_root.utils.setFluddArray(true);
-					_root.textManager.write(5, 'Current file is now a 100% file.');
+					_root.textManager.send('message', 'Current file is now a 100% file.');
 					break;
 				case 'essentials':
 					_root.utils.setStars(false);
@@ -1380,14 +1490,14 @@ class CodeManager {
 					_root.Star[51] = true;
 					_root.Star[36] = true;
 					_root.CalculateStars();
-					_root.textManager.write(5, 'Current file now has every storyline star.');
+					_root.textManager.send('message', 'Current file now has every storyline star.');
 					break;
 				case 'empty':
 					_root.utils.setStars(false);
 					_root.utils.setStarCoins(false);
 					_root.utils.setBowserKeys(false);
 					_root.utils.setFluddArray(false);
-					_root.textManager.write(5, 'Current file has been emptied.');
+					_root.textManager.send('message', 'Current file has been emptied.');
 					break;
 			}
 			
@@ -1398,16 +1508,22 @@ class CodeManager {
 			switch(command[1]) {
 				case 'start':
 					_root.timer.start();
-					_root.textManager.write(5, 'Timer has been started.');
+					_root.textManager.send('message', 'Timer has been started.');
 					break;
 				case 'stop':
 					_root.timer.stop();
-					_root.textManager.write(5, 'Timer has been stopped.');
+					_root.textManager.send('message', 'Timer has been stopped.');
 					break;
 				case 'reset':
 					_root.timer.reset();
-					_root.textManager.write(5, 'Timer has been reset. It will start on the next loading zone.');
+					_root.textManager.send('message', 'Timer has been reset. It will start on the next loading zone.');
 					break;
+        case 'on':
+          _root.timer.setDisplay(true);
+          break;
+        case 'off':
+          _root.timer.setDisplay(false);
+          break;
 			}
 			
 		}));
@@ -1416,11 +1532,11 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setBowserKey(int(command[1]), true);
-				_root.textManager.write(5, 'BowserKey #'+command[1]+' has been set to true.');
+				_root.textManager.send('message', 'BowserKey #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setBowserKey(int(command[1]), false);
-				_root.textManager.write(5, 'BowserKey #'+command[1]+' has been set to false.');
+				_root.textManager.send('message', 'BowserKey #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setBowserKey(int(command[1]));
@@ -1432,11 +1548,11 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setStar(command[1], true);
-				_root.textManager.write(5, 'Star #'+command[1]+' has been set to true.');
+				_root.textManager.send('message', 'Star #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setStar(command[1], false);
-				_root.textManager.write(5, 'Star #'+command[1]+' has been set to false.');
+				_root.textManager.send('message', 'Star #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setStar(command[1]);
@@ -1448,11 +1564,11 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setStarCoin(command[1], true);
-				_root.textManager.write(5, 'StarCoin #'+command[1]+' has been set to true.');
+				_root.textManager.send('message', 'StarCoin #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setStarCoin(command[1], false);
-				_root.textManager.write(5, 'StarCoin #'+command[1]+' has been set to false.');
+				_root.textManager.send('message', 'StarCoin #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setStarCoin(command[1]);
@@ -1469,26 +1585,26 @@ class CodeManager {
 					_root.SaveFluddH = true;
 					_root.SaveFluddR = true;
 					_root.SaveFluddT = true;
-					_root.textManager.write(5, 'All FLUDD nozzles have been given to Mario.');
+					_root.textManager.send('message', 'All FLUDD nozzles have been given to Mario.');
 					break;
 				case 'H': case 'h': case 'Hover': case 'hover':
 					_root.SaveFluddH = !_root.SaveFluddH;
-					_root.textManager.write(5, 'Hover FLUDD has been set to '+_root.SaveFluddH+'.');
+					_root.textManager.send('message', 'Hover FLUDD has been set to '+_root.SaveFluddH+'.');
 					break;
 				case 'R': case 'r': case 'Rocket': case 'rocket':
 					_root.SaveFluddR = !_root.SaveFluddR;
-					_root.textManager.write(5, 'Rocket FLUDD has been set to '+_root.SaveFluddR+'.');
+					_root.textManager.send('message', 'Rocket FLUDD has been set to '+_root.SaveFluddR+'.');
 					break;
 				case 'T': case 't': case 'Turbo': case 'turbo':
 					_root.SaveFluddT = !_root.SaveFluddT;
-					_root.textManager.write(5, 'Turbo FLUDD has been set to '+_root.SaveFluddT+'.');
+					_root.textManager.send('message', 'Turbo FLUDD has been set to '+_root.SaveFluddT+'.');
 					break;
 				case 'none':
 					_root.SaveFluddH = false;
 					_root.SaveFluddR = false;
 					_root.SaveFluddT = false;
 					_root.Fluddpow = "";
-					_root.textManager.write(5, 'All FLUDD nozzles have been removed from Mario.');
+					_root.textManager.send('message', 'All FLUDD nozzles have been removed from Mario.');
 					break;
 			}
 		}));
@@ -1496,30 +1612,30 @@ class CodeManager {
 		this.add(new Code('lives', function(command) {
 			if (command[1] == 'infinite') {
 				_root.CharLives = NaN;
-				_root.textManager.write(5, 'Lives are now infinite.');
+				_root.textManager.send('message', 'Lives are now infinite.');
 			}
 			else {
 				_root.CharLives = Number(command[1]);
-				_root.textManager.write(5, 'Lives have been set to '+_root.CharLives+'.');
+				_root.textManager.send('message', 'Lives have been set to '+_root.CharLives+'.');
 			}
 		}));
 
 		this.add(new Code('water', function(command) {
 			if (command[1] == 'refill') {
 				_root.WaterAmount = _root.TotalWater;
-				_root.textManager.write(5, 'Water has been refilled.');
+				_root.textManager.send('message', 'Water has been refilled.');
 			}
 			else if (command[1] == 'half') {
 				_root.WaterAmount = 5000;
-				_root.textManager.write(5, 'Water has been set to half.');
+				_root.textManager.send('message', 'Water has been set to half.');
 			}
 			else if (command[1] == 'empty') {
 				_root.WaterAmount = 0;
-				_root.textManager.write(5, 'Water container is now empty.');
+				_root.textManager.send('message', 'Water container is now empty.');
 			}
 			else {
 				_root.WaterAmount = command[1];
-				_root.textManager.write(5, 'Water has been set to '+_root.WaterAmount+'.');
+				_root.textManager.send('message', 'Water has been set to '+_root.WaterAmount+'.');
 			}
 			
 			if (command[1] == 'infinite') {
@@ -1534,19 +1650,19 @@ class CodeManager {
 		this.add(new Code('health', function(command) {
 			if (command[1] == 'refill') {
 				_root.CharHP = 8;
-				_root.textManager.write(5, 'Health has been refilled.');
+				_root.textManager.send('message', 'Health has been refilled.');
 			}
 			else if (command[1] == 'empty') {
 				_root.CharHP = 1;
-				_root.textManager.write(5, 'Health has been set to 1.');
+				_root.textManager.send('message', 'Health has been set to 1.');
 			}
 			else if (command[1] == 'death') {
 				_root.CharHP = 0;
-				_root.textManager.write(5, 'Death has been provoked.');
+				_root.textManager.send('message', 'Death has been provoked.');
 			}
 			else {
 				_root.CharHP = command[1];
-				_root.textManager.write(5, 'Health has been set to '+_root.CharHP+'.');
+				_root.textManager.send('message', 'Health has been set to '+_root.CharHP+'.');
 			}
 			
 			if (command[1] == 'infinite') {
@@ -1563,21 +1679,21 @@ class CodeManager {
 			switch(command[1]) {
 				case 'mario' : case 'Mario':
 					_root.CurrentPlayer = 'Mario';
-					_root.textManager.write(5, 'Character switched to Mario.');
+					_root.textManager.send('message', 'Character switched to Mario.');
 					break;
 				case 'luigi' : case 'Luigi':
 					_root.CurrentPlayer = 'Luigi';
-					_root.textManager.write(5, 'Character switched to Luigi.');
+					_root.textManager.send('message', 'Character switched to Luigi.');
 					break;
 				case 'toggle' :
 					if(_root.CurrentPlayer == "Mario")
 					{
 						_root.CurrentPlayer = "Luigi";
-						_root.textManager.write(5, 'Character switched to Luigi.');
+						_root.textManager.send('message', 'Character switched to Luigi.');
 					}
 					else {
 						_root.CurrentPlayer = "Mario";
-						_root.textManager.write(5, 'Character switched to Mario.');
+						_root.textManager.send('message', 'Character switched to Mario.');
 					}
 					break;
 			}
@@ -1594,7 +1710,7 @@ class CodeManager {
 		this.add(new Code('cap', function(command) {
 			_root.utils.setCap(command[1], command[2]);
 			
-			_root.textManager.write(5, 'Current cap updated.');
+			_root.textManager.send('message', 'Current cap updated.');
 		}));
 		
 		this.add(new Code('betaquest bq', function(command) {
@@ -1625,31 +1741,34 @@ class CodeManager {
 				if (param_4 == undefined) param_4 = 0;
 				
 				_root.utils.warp(command[1], param_1, param_2, param_3, param_4);
-				_root.textManager.write(5, 'Player has been warped to '+command[1]+'.');
+				_root.textManager.send('message', 'Player has been warped to '+command[1]+'.');
 			}
 				
 			setTimeout(function() {
 				_root.betaQuest.start();
-			}, 100);
+			}, _root.utils.getWarpTimeout());
 			
 		}));
 		
 		this.add(new Code('setpos', function(command) {
 			_root.utils.setPosition(command[1], command[2]);
 			
-			_root.textManager.write(5, 'Current position updated.');
+			_root.textManager.send('message', 'Current position updated.');
 		}));
 	
 		this.add(new Code('savestate ss', function(command) {
 			var name = command[1];
 			_root.saveStateManager.save(name);
-			_root.textManager.write(3, "State "+name+" saved.");
+			_root.textManager.send('message', "State "+name+" saved.");
 		}));
 		
 		this.add(new Code('loadstate ls', function(command) {
 			var name = command[1];
 			_root.saveStateManager.load(name);
-			//_root.textManager.write(3, "State "+name+" loaded.");
+			
+			if (command[2] == '-t') {
+				_root.timer.reset();
+			}
 		}));
 		
 	}
@@ -1661,7 +1780,7 @@ class CodeManager {
 	
 	// Executes a specific code.
 	public function execute(code) {
-		_root.textManager.write(5, '');
+		_root.textManager.send('message', '');
 		var i = 0;
 		for (i = 0; i < this.codeList.length; i = i + 1) {
 			this.codeList[i].execute(code);
@@ -1681,11 +1800,11 @@ class CodeManager {
 	
 	// Defines the code that happens on each frame.
 	public function onEachFrame() {
-		_root.textManager.write(2, this.currentCode);
+		_root.textManager.send('code', this.currentCode);
 		
 		if (_root.KeySlash()) {
 			this.resetDelay();
-			_root.textManager.write(5, 'Enter your command!');
+			_root.textManager.send('message', 'Enter your command!');
 			_root.PauseGame = true;
 		}
 		else if (this.delay > 0) {
@@ -1693,6 +1812,7 @@ class CodeManager {
 			if (this.delay <= 0) {
 				this.currentCode = "";
 				// Delay equals 0, we cancel the PauseGame effect.
+        _root.textManager.send('message', "");
 				_root.PauseGame = false;
 			}
 		}
@@ -1941,7 +2061,7 @@ class BetaQuest {
 	// Returns the new zone the player will be warped in.
 	public function getCorrespondingArea(warpArea) {
 		var index = this.indexOf(this.warpList, warpArea);
-		//_root.textManager.write(5, this.indexOf(this.warpList, warpArea));
+		//_root.textManager.send('message', this.indexOf(this.warpList, warpArea));
 		//var index = 2;
 		var newWarp;
 		
@@ -1952,7 +2072,7 @@ class BetaQuest {
 			newWarp = warpArea;
 		}
 		
-		// _root.textManager.write(3, 'Warp area ' + warpArea + ' | New warp : ' + newWarp);
+		// _root.textManager.send('message', 'Warp area ' + warpArea + ' | New warp : ' + newWarp);
 		
 		var warpCoordinates = this.getWarpCoordinates(newWarp);
 		
