@@ -1,8 +1,20 @@
-StartChar = function(a, b, c, d, e, f, g, h, i, resetmusic)
+StartChar = function(a, b, c, d, e, f, g, h, i, resetmusic, isCommand)
 {
-	// We save the variables b, c, d, e for the lwp command
+	
+	if (isCommand == true || _root.betaQuest.isStarted()) {
+		var warpArray = _root.betaQuest.getCorrespondingArea(a);
+	
+		a = warpArray[0];
+		b = warpArray[1];
+		c = warpArray[2];
+		d = warpArray[1];
+		e = warpArray[2];
+	}
+
+  // We save the variables b, c, d, e for the lwp command
 	_root.utils.setLatestWarpPosition(b, c, d, e);
 	
+	//_root.textManager.write(5, a);
    _root.playingcourse = a;
    if(_root.Starnamenum == 0)
    {

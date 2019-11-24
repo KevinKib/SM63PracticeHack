@@ -34,6 +34,21 @@ _root.gotoMiniCourseSelect = function(level)
    // On mini course select
    _root.event.onMiniCourseSelect();
 };
+_root.changecourse = function(transition, level, a, b, c, d, e, isCommand)
+{
+	_root.RemoveCourse();
+	_root.gotoAndStop("Courseframe");
+	if(e == undefined)
+	{
+		e = false;
+	}
+	_root.StartChar(level,a,b,c,d,100,_root.CurrentPlayer,_root.Fluddpow,transition,e, isCommand);
+	_root.onEnterFrame = function()
+	{
+		_root.CharCode();
+	};
+	e = false;
+};
 
 // Defines the informations from a world
 class World {
@@ -98,12 +113,28 @@ class Utils {
 	private var worldList;
 	private var flags;
 	
+	private var waterInterval;
+  private var infiniteWater;
+	private var healthInterval;
+  private var infiniteHealth;
+	
 	// Constructor of the Utils class.
 	public function Utils() {
 		this.worldList = new Array();
 		this.flags = new Array();
 		this.flags.push(false, false);
 		this.latestWarpPosition = [0, 0, 0, 0];
+		
+		this.waterInterval = null;
+    this.infiniteWater = false;
+		this.healthInterval = null;
+    this.infiniteHealth = false;
+		
+		this.initWorlds();
+	}
+	
+	// Initializes the worlds.
+	public function initWorlds() {
 		this.worldList.push(new World(1, 'bob', 'Bom-Omb Battlefield', "C-2",
 							[-174.1, 9.35],
 							[1, 2, 3, 4, 5],
@@ -191,12 +222,12 @@ class Utils {
 							[]),
 							new World(0, 'coe', "Cave of Empuzzlement", "C-10",
 							[311.05, 7.35],
-							[53],
+							[52],
 							[],
 							[]),
 							new World(0, 'mm', "Magma Maze", "C-10",
 							[-442.55, -724.45],
-							[52],
+							[53],
 							[55],
 							[]),
 							new World(0, 'gos', "Galaxy of Stars", "C-12",
@@ -204,6 +235,21 @@ class Utils {
 							[54],
 							[],
 							[]),
+              new World(0, 'b1reds', "Bowser 1 Reds", "C-5",
+							[-316.85, 7.25],
+							[40],
+							[],
+							[56]),
+              new World(0, 'b2reds', "Bowser 2 Reds", "C-7",
+							[619.85, 57.35],
+							[42],
+							[],
+							[57]),
+              new World(0, 'b3reds', "Bowser 3 Reds", "C-13",
+							[971.85, -159.2],
+							[37],
+							[],
+							[52, 53]),
 							new World(0, 'space', "Space", "8-12",
 							[0, 0],
 							[],
@@ -225,21 +271,13 @@ class Utils {
 							[64],
 							[])
 							);
-		
 	}
 	
-	// Returns a specific world using its name.
-	public function getWorld(name) {
-		var world;
-		var i = 0;
-		for (i = 0; i < _root.utils.worldList.length; i++) {
-			if (this.worldList[i].getName() == name) {
-				world = this.worldList[i];
-				break;
-			}
-		}
-		return world;
-	}
+	
+	
+	/// --- SETTERS --- ///
+	
+	
 	
 	// Sets stars of a certain world in a certain state.
 	public function setWorldStars(name, bool, number) {
@@ -279,17 +317,15 @@ class Utils {
 	}
 	
 	// Warps the player to a certain course.
-	public function warp(title, playerX, playerY, cameraX, cameraY) {
+	public function warp(title, playerX, playerY, cameraX, cameraY, isCommand) {
+    if (isCommand == undefined) {
+      isCommand = true;
+    }
 		
-		/* This command used to glitch when executed instantly.
-		To fix this problem, a timeout of 100 ms was added to execute the command.
-		It, for some reason, fixed the problem. No one has any idea why it did fix it.
-		First problems have been detected with a timeout of 10ms, so the default has been
-		set to 100ms for now.*/
 		setTimeout(function() {
-			_root.Restartcoins();
-			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, false);
-		}, 100);
+			//_root.Restartcoins();
+			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
+		}, this.getWarpTimeout());
 		
 	}
 	
@@ -305,27 +341,22 @@ class Utils {
 		this.latestWarpPosition = lwp.slice();
 	}
 	
-	// Returns Mario's current position.
-	public function getPosition() {
-		var pos = new Array();
-		pos.push(_root.Course.Char._x - _root.Course.FrontGFX._x);
-		pos.push(_root.Course.Char._y - _root.Course.FrontGFX._y);
-		return pos;
+	// Sets Mario's current x position.
+	public function setX(value) {
+		this.setPosition(value, this.getPosition()[1]);
 	}
 	
-	// Returns Mario's current position, with a string.
-	public function getPositionString() {
-		return this.getPosition()[0] + ' ' + this.getPosition()[1];
+	// Sets Mario's current y position.
+	public function setY(value) {
+		this.setPosition(this.getPosition()[0], y);
 	}
 	
-	// Returns the latest warp position.
-	public function getLatestWarpPosition() {
-		return this.latestWarpPosition;
-	}
-	
-	// Returns the latest warp position.
-	public function getLatestWarpPositionString() {
-		return this.latestWarpPosition[0] +  ' ' + this.latestWarpPosition[1] +  ' ' + this.latestWarpPosition[2] +  ' ' + this.latestWarpPosition[3];
+	// Sets Mario's current position to a new value.
+	public function setPosition(x, y) {
+		// _root.Course.Char._x = x - (_root.Course.Char._x - _root.Course.FrontGFX._x);
+		// _root.Course.Char._y = y - (_root.Course.Char._y - _root.Course.FrontGFX._y);
+		
+		this.warp(this.getLevelName(), x, y, x, y);
 	}
 	
 	// Sets the state of every star coin.
@@ -422,25 +453,18 @@ class Utils {
 		}
 	}
 	
-	// Returns the state of a flag, used for IL timings.
-	public function getFlag(name, bool) {
-		var flag;
-		switch(name) {
-			case 'bt3':
-				flag = this.flags[0];
-				break;
-			case 'space':
-				flag = this.flags[1];
-				break;
-		}
-		return flag;
-	}
-	
 	// Sets the state of the current saved fludd nozzles.
-	public function setSaveFludd(bool) {
-	   _root.SaveFluddH = bool;
-	   _root.SaveFluddR = bool;
-	   _root.SaveFluddT = bool;
+	public function setSaveFludd(bool, bool2, bool3) {
+		if (bool2 == undefined || bool3 == undefined) {
+			_root.SaveFluddH = bool;
+			_root.SaveFluddR = bool;
+			_root.SaveFluddT = bool;
+		}
+		else {
+			_root.SaveFluddH = bool;
+			_root.SaveFluddR = bool2;
+			_root.SaveFluddT = bool3;
+		}
 	}
 	
 	// Sets the state of every fludd stored in levels.
@@ -457,6 +481,17 @@ class Utils {
 		["", bool, bool, bool],
 		["", bool, bool, bool],
 		["",bool,bool,bool]];
+	}
+	
+	// Sets the current fludd the player is holding.
+	public function setFluddPow(value) {
+		// "" for nothing, "h" for hover, "r" for rocket and "t" for turbo.
+		/*
+		if (value != "" && value != "h" && value != "r" && value != "t") {
+			value = "";
+		}
+		*/
+		_root.Fluddpow = value;
 	}
 	
 	// Sets the saved nozzles for a chosen world.
@@ -520,6 +555,112 @@ class Utils {
 		_root.FluddArray[playingLevel][3] = bool;
 	}
 
+	// Sets the player's current cap (invisible, invincible, wing cap or metal).
+	public function setCap(cap, boolText, time) {
+    if (time == undefined) time = 10000;
+		var capTime = time;
+		this.setCapTimer(capTime);
+		
+		var bool = true;
+		if (boolText == 'false') {
+			bool = false;
+		}
+		
+		switch(cap) {
+			case 'invincible':
+				_root.StartNewMusicAndIntroNoVar("WingCap - Intro","WingCap - Repeat");
+				_root.Invincible = bool;
+				break;
+			case 'invisible':
+				_root.StartNewMusicAndIntroNoVar("WingCap - Intro","WingCap - Repeat");
+				_root.Invisible = bool;
+				break;
+			case 'metal':
+				_root.StartNewMusicAndIntroNoVar("MetalCap - Intro","MetalCap - Repeat");
+				_root.Metal = bool;
+				break;
+			case 'wingcap': case 'wing':
+				_root.StartNewMusicAndIntroNoVar("WingCap - Intro","WingCap - Repeat");
+				_root.WingCap = bool;
+				break;
+			case 'none':
+				this.setCapTimer( -1);
+				break;
+		}
+	}
+	
+	// Defines for how long the cap will be used.
+	public function setCapTimer(time) {
+		_root.PowerTimer = time;
+	}
+	
+	// Sets the current amount of water, between 0 and 10000.
+	public function setWater(value) {
+		_root.WaterAmount = value;
+	}
+	
+	// Sets the current amount of health.
+	public function setHealth(value) {
+		_root.CharHP = value;
+	}
+
+  // Sets the current character the player is using.
+  public function setCharacter(character) {
+
+    // Ensures the new character is either Mario or Luigi.
+    var newCharacter = 'Mario';
+    if (character == 'Luigi') {
+      newCharacter = 'Luigi';
+    }
+
+    _root.CurrentPlayer = newCharacter;
+  }
+	
+	// Defines if the water is infinite or not.
+	public function setInfiniteWater(bool) {
+    clearInterval(this.waterInterval);
+
+		if (bool == true) {
+			this.waterInterval = setInterval(function() {
+				_root.WaterAmount = _root.TotalWater;
+			}, 200);
+		}
+
+    this.infiniteWater = bool;
+	}
+	
+	// Defines if the health is infinite or not.
+	public function setInfiniteHealth(bool) {
+    clearInterval(this.healthInterval);
+
+		if (bool == true) {
+			this.healthInterval = setInterval(function() {
+				_root.utils.setHealth(8);
+			}, 200);
+		}
+
+    this.infiniteHealth = bool;
+	}
+
+	
+	
+	/// --- GETTERS --- ///
+	
+	
+	
+	// Returns a specific world using its name.
+	public function getWorld(name) {
+		var world;
+		var i = 0;
+		for (i = 0; i < _root.utils.worldList.length; i++) {
+			if (this.worldList[i].getName() == name) {
+				world = this.worldList[i];
+				break;
+			}
+		}
+		return world;
+	}
+	
 	// Returns the state of a star.
 	public function getStar(index) {
 		return _root.Star[index];
@@ -535,13 +676,114 @@ class Utils {
 		return _root.playingcourse;
 	}
 	
+	// Returns the state of a flag, used for IL timings.
+	public function getFlag(name, bool) {
+		var flag;
+		switch(name) {
+			case 'bt3':
+				flag = this.flags[0];
+				break;
+			case 'space':
+				flag = this.flags[1];
+				break;
+		}
+		return flag;
+	}
+	
+	// Returns Mario's current position.
+	public function getPosition() {
+		var pos = new Array();
+		pos.push(_root.Course.Char._x - _root.Course.FrontGFX._x);
+		pos.push(_root.Course.Char._y - _root.Course.FrontGFX._y);
+		return pos;
+	}
+	
+	// Returns Mario's current position, with a string.
+	public function getPositionString() {
+		return this.getPosition()[0] + ' ' + this.getPosition()[1];
+	}
+	
+	// Returns the latest warp position.
+	public function getLatestWarpPosition() {
+		return this.latestWarpPosition;
+	}
+	
+	// Returns the latest warp position.
+	public function getLatestWarpPositionString() {
+		return this.latestWarpPosition[0] +  ' ' + this.latestWarpPosition[1] +  ' ' + this.latestWarpPosition[2] +  ' ' + this.latestWarpPosition[3];
+	}
+	
+	// Returns the current state of the saved fludd.
+	public function getSaveFludd() {
+		return {
+			h: _root.SaveFluddH,
+			r: _root.SaveFluddR,
+			t: _root.SaveFluddT
+		}
+	}
+
+	// Returns the current amount of water.
+	public function getWater() {
+		return _root.WaterAmount;
+	}
+	
+	// Returns the current amount of health.
+	public function getHealth() {
+		return _root.CharHP;
+	}
+
+	// Returns the current fludd nozzle the player is holding.
+	public function getFluddPow() {
+		return _root.Fluddpow;
+	}
+
+  // Returns the current character the player is using.
+  public function getCharacter() {
+    return _root.CurrentPlayer;
+  }
+
+  // Returns the game's current framerate.
+  public function getFramerate() {
+    return _root.framerate;
+  }
+
+  // Returns the necessary timeout for a warp to happen.
+  public function getWarpTimeout() {
+    /* The warp command used to glitch when executed instantly.
+		To fix this problem, a timeout of 100 ms was added to execute the command.
+		It, for some reason, fixed the problem. No one has any idea why it did fix it.
+		First problems have been detected with a timeout of 10ms, so the default has been
+		set to 100ms for now.*/
+
+    return 100;
+  }
+
+  // Returns the necessary timeout for an action to happen after a warp.
+  public function getAfterWarpTimeout() {
+    return 150;
+  }
+	
+	// Returns if the water is infinite or not.
+	public function isWaterInfinite() {
+		return this.infiniteWater;
+	}
+	
+	// Returns if the health is infinite or not.
+	public function isHealthInfinite() {
+		return (this.infiniteHealth);
+	}
+
+  // Returns true if the game is currently paused.
+  public function isGamePaused() {
+    return !_root.PauseGame;
+  }
+	
 }
 
 // Class that manages everything related to displayed text.
 class TextManager {
 	
 	// Could be coded significantly better using an array.
-	
 	private var row1;
 	private var row2;
 	private var row3;
@@ -549,6 +791,10 @@ class TextManager {
 	private var row5;
 	private var row6;
 
+  // Manages the life cycle of a message.
+  private var messageDelay;
+
+  // Constructor
 	public function TextManager() {
 		this.row1 = "";
 		this.row2 = "";
@@ -556,9 +802,12 @@ class TextManager {
 		this.row4 = "";
 		this.row5 = "";
 		this.row6 = "";
+
+    this.messageDelay = 0;
 	}
 	
-	public function write(row, text) {
+  // Writes a message on the console.
+	private function write(row, text) {
 		switch(row) {
 			case 1: this.row1 = text; break;
 			case 2: this.row2 = text; break;
@@ -575,6 +824,59 @@ class TextManager {
 						+ this.row5 + "\n" 
 						+ this.row6;
 	}
+
+  // Sends a message to the console
+  // that will be written by the class on the accurate row.
+  public function send(type, text) {
+    var row = this.getRow(type);
+
+    if (type == 'message') {
+      this.messageDelay = this.getMessageLength();
+    }
+
+    if (row != 0) {
+      this.write(row, text);
+    }
+  }
+
+  // Manages every action that happens on each frame.
+  public function onEachFrame() {
+    if (this.messageDelay > 0) {
+      this.messageDelay--;
+
+      if (this.messageDelay == 0) {
+        this.write(this.getRow('message'), "");
+      }
+    }
+  }
+
+  // Returns the row where a specific type of text has to be displayed.
+  private function getRow(type) {
+    var row = 0;
+
+    switch(type) {
+      case 'code':
+        row = 1;
+        break;
+      case 'message':
+        row = 2;
+        break;
+      case 'timer':
+        row = 4;
+        break;
+      case 'segment_timer':
+        row = 5;
+        break;
+    }
+
+    return row;
+  }
+
+  // Returns the length where a message will be displayed on screen.
+  private function getMessageLength() {
+    var SECONDS_DISPLAYED = 4;
+    return _root.utils.getFramerate() * SECONDS_DISPLAYED;
+  }
 	
 }
 
@@ -584,9 +886,17 @@ class Event {
 	// Triggers code that happens on each frame.
 	public function onEachFrame() {
 		_root.timer.onEachFrame();
-		_root.timer.update();
 		_root.codeManager.onEachFrame();
-		_root.textManager.write(1, _root.timer.getDisplay());
+    _root.textManager.onEachFrame();
+
+    if (_root.timer.isDisplayed()) {
+      _root.textManager.send('timer', _root.timer.getDisplay());
+    }
+    else {
+      _root.textManager.send('timer', "");
+      _root.textManager.send('segment_timer', "");
+    }
+		
 		
 		// KoopaShell
 		if(_root.KeySlash())
@@ -600,7 +910,12 @@ class Event {
 	// Triggers code that happens on every loading zone.
 	public function onLoadingZone() {
 		_root.timer.onLoadingZone();
-		_root.textManager.write(4, _root.timer.getDisplay());
+		_root.textManager.send('message', "");
+
+    if (_root.timer.isDisplayed()) {
+      _root.textManager.send('segment_timer', _root.timer.getDisplay());
+    }
+		
 	}
 	
 	// Triggers code that happens when the star is collected.
@@ -797,6 +1112,9 @@ class TimeCounter {
 // Class that manages a full chronometer.
 class Timer {
 	
+  // Defines if the timer is displayed on screen or not.
+  private var displayed;
+
 	// Defines if the timer is going or not.
 	private var started;
 	
@@ -813,6 +1131,8 @@ class Timer {
 	// Constructor
 	public function Timer() {
 		this.reset();
+		this.start();
+    this.displayed = true;
 	}
 	
 	// Resets the timer.
@@ -837,12 +1157,19 @@ class Timer {
 	public function update() {
 		this.lastUpdatedTime = this.realTime.clone();
 	}
+
+  // Sets if the timer is displayed onscreen or not.
+  public function setDisplay(bool) {
+    this.displayed = bool;
+    _root.textManager.send('segment_timer', this.getDisplay());
+  }
 	
 	// Manages the code that happens on each frame.
 	public function onEachFrame() {
 		if (this.started == true) {
 			this.realTime.addFrame();
 		}
+    this.update();
 	}
 	
 	// Manages the code that happens when entering a loading zone.
@@ -853,6 +1180,11 @@ class Timer {
 		}
 	}
 	
+  // Returns if the timer is displayed on screen or not.
+  public function isDisplayed() {
+    return this.displayed;
+  }
+
 	// Returns a string displaying the current time.
 	public function getDisplay() {
 		return this.lastUpdatedTime.getDisplay();
@@ -881,14 +1213,14 @@ class Code {
 	}
 	
 	// Executes the code, if the index is valid.
-	public function execute(code) {
+	public function execute(command) {
 		
 		var i = 0;
-		var command = code.split(' ');
+		var splitCommand = command.split(' ');
 		
 		for (i = 0; i < this.indexList.length; i++) {
-			if (this.indexList[i] == command[0]) {
-				this.func(command);
+			if (this.indexList[i] == splitCommand[0]) {
+				this.func(splitCommand);
 				break;
 			}
 		}
@@ -920,6 +1252,7 @@ class CodeManager {
 		this.currentCode = "";
 		this.lastCode = "";
 		this.delay = 0;
+		
 		this.il = new IndividualLevel();
 		
 		this.initKeyListener();
@@ -928,7 +1261,7 @@ class CodeManager {
 	
 	// Creates the key listener.
 	public function initKeyListener() {
-		var allowedKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_:/.,\\\'%;*+\" [](){}=";
+		var allowedKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_:/.,\\\'%;*+\" [](){}=$";
 		var keyListener = new Object();
 		keyListener.onKeyDown = function()
 		{
@@ -965,6 +1298,8 @@ class CodeManager {
 					}
 				}
 			}
+
+      _root.hotkeyManager.execute(chr(Key.getAscii()));
 		}
 		Key.addListener(keyListener);
 	}
@@ -979,11 +1314,11 @@ class CodeManager {
 			switch(bool) {
 				case 'true':  
 					_root.utils.setWorldStars(level, true, number); 
-					_root.textManager.write(5, 'Stars from worlds have been updated.');
+					_root.textManager.send('message', 'Stars from worlds have been updated.');
 					break;
 				case 'false': 
 					_root.utils.setWorldStars(level, false, number); 
-					_root.textManager.write(5, 'Stars from worlds have been updated.');
+					_root.textManager.send('message', 'Stars from worlds have been updated.');
 					break;
 			}
 		}));
@@ -995,11 +1330,11 @@ class CodeManager {
 			switch(bool) {
 				case 'true':  
 					_root.utils.setWorldStarCoins(level, true, number); 
-					_root.textManager.write(5, 'Star Coins from worlds have been updated.');
+					_root.textManager.send('message', 'Star Coins from worlds have been updated.');
 					break;
 				case 'false': 
 					_root.utils.setWorldStarCoins(level, false, number); 
-					_root.textManager.write(5, 'Star Coins from worlds have been updated.');
+					_root.textManager.send('message', 'Star Coins from worlds have been updated.');
 					break;
 			}
 			
@@ -1010,11 +1345,11 @@ class CodeManager {
 			var nozzle = command[2];
 			var bool = command[3];
 			if (world === undefined || nozzle === undefined || bool === undefined) {
-				_root.textManager.write(5, 'Invalid syntax.');
+				_root.textManager.send('message', 'Invalid syntax.');
 				return;
 			}
 			_root.utils.setWorldNozzle(world, nozzle, bool);
-			_root.textManager.write(5, 'Saved nozzles from worlds have been updated.');
+			_root.textManager.send('message', 'Saved nozzles from worlds have been updated.');
 		}));
 
 		this.add(new Code('doorwarp', function(command) {
@@ -1022,33 +1357,36 @@ class CodeManager {
 		}));
 
 		this.add(new Code('position pos', function(command) {
-			//_root.textManager.write(5, _root.utils.getPositionString() + ' | | '  + _root.Course.Char._x + ' ' + _root.Course.Char._y + ' | ' + _root.Course.FrontGFX._x + ' ' + _root.Course.FrontGFX._y + ' | ' +_root.Course.Char._X + ' ' + _root.Course.Char._Y);
-			_root.textManager.write(5, _root.utils.getPositionString());
+			//_root.textManager.send('message', _root.utils.getPositionString() + ' | | '  + _root.Course.Char._x + ' ' + _root.Course.Char._y + ' | ' + _root.Course.FrontGFX._x + ' ' + _root.Course.FrontGFX._y + ' | ' +_root.Course.Char._X + ' ' + _root.Course.Char._Y);
+			_root.textManager.send('message', _root.utils.getPositionString());
 		}));
 
 		this.add(new Code('latestwarpposition lwp', function(command) {
-			_root.textManager.write(5, _root.utils.getLevelName() + ' ' + _root.utils.getLatestWarpPositionString());
+			_root.textManager.send('message', _root.utils.getLevelName() + ' ' + _root.utils.getLatestWarpPositionString());
 		}));
 
 		this.add(new Code('levelname ln', function(command) {
-			_root.textManager.write(5, _root.utils.getLevelName() );
+			_root.textManager.send('message', _root.utils.getLevelName() );
 		}));
 		
 		this.add(new Code('individuallevel il', function(command) {
-			// Would be easier to maintain with OOP for worlds
-			
+      // This code is disgusting as a whole and needs to be fixed as soon as possible
+
+			// IL data options
+			_root.WaterAmount = _root.TotalWater;
+			_root.Restartcoins();
+      _root.utils.setInfiniteWater(false);
+      _root.utils.setInfiniteHealth(false);
+
 			var IL = _root.codeManager.getIL();
-			
 			var level = command[1];
 			var type = command[2];
-			//var starnum = command[3];
 			var starnum = parseInt(command[3]);
 			
 			var existingTypes = new Array();
-			existingTypes.push('all', '100', 'starsfludd', 'stars', 'starfludd', 'star', 'starcoins', 'starcoin');
-			
+			existingTypes.push('all', '100', 'star', 'allstars', 'nms', 'starcoin', 'allstarcoins');
 			if (existingTypes.indexOf(type) == -1) {
-				_root.textManager.write(5, 'Invalid IL command.');
+				_root.textManager.send('message', 'Invalid IL command.');
 				return;
 			}
 			
@@ -1056,7 +1394,6 @@ class CodeManager {
 			var mode = 'none';
 			
 			// World info
-			
 			var selectedWorld = _root.utils.getWorld(level);
 			var levelTitle = selectedWorld.getName();
 			var startingLevel = selectedWorld.getStartingLevel();
@@ -1071,8 +1408,7 @@ class CodeManager {
 			
 			// Exception :If star coins do not matter in the goal,
 			// we want them to already be collected
-			if (type == 'starsfludd' || type == 'sf' || type == 'stars'
-				|| type == 'starfludd' || type == 'star') {
+			if (type == 'allstars' || type == 'star') {
 				_root.utils.setWorldStarCoins(level, true);
 			}
 			else {
@@ -1081,91 +1417,122 @@ class CodeManager {
 			
 			// Exceptions
 			setTimeout(function() {
-				if (level == 'bt3' || level == 'endgame' ) {
-					_root.SaveFluddH = false;
-					_root.SaveFluddR = true;
-					_root.SaveFluddT = true;
+				if (level == 'bt3' || level == 'endgame' || level == 'b2reds' || level == 'b3reds') {
+					_root.utils.setSaveFludd(false, true, true);
 					_root.utils.setWorldNozzle('bt3', 'h', 'false');
 				}
-			}, 150);
+				if (level == 'space') {
+					_root.utils.setSaveFludd(true, true, true);
+				}
+				if (level == 'escape') {
+					_root.utils.setFluddPow("");
+					_root.utils.setSaveFludd(true, true, true);
+				}
+			}, _root.utils.getAfterWarpTimeout());
 			
 			// Clean this code pls
+      IL.setRequiredStars(requiredStars);
+      IL.setRequiredStarCoins(requiredStarCoins);
+      IL.setRequiredFlags(emptyArray);
+      IL.setNbRequiredStars(requiredStars.length);
+      IL.setNbRequiredStarCoins(requiredStarCoins.length);
 
 			switch(type) {
 				case '100': case 'all':
-					_root.utils.setWorldNozzle(level, 'all', 'false');
-					IL.setRequiredStars(requiredStars);
-					IL.setRequiredStarCoins(requiredStarCoins);
-					IL.setRequiredFlags(requiredFlags);
+          IL.setRequiredFlags(requiredFlags);
 					mode = '100%';
 					break;
-				case 'starsfludd': case 'sf':
-					_root.utils.setWorldNozzle(level, 'all', 'true');
-					IL.setRequiredStars(requiredStars);
+				case 'allstars':
 					IL.setRequiredStarCoins(emptyArray);
-					mode = 'All Stars with Fludd';
-					break;
-				case 'stars':
-					_root.utils.setWorldNozzle(level, 'all', 'false');
-					IL.setRequiredStars(requiredStars);
-					IL.setRequiredStarCoins(emptyArray);
-					mode = 'Stars';
-					break;
-				case 'starfludd':
-					if (!isNaN(starnum) && (starnum >= 1 && starnum <= 5)) {
-						_root.utils.setWorldNozzle(level, 'all', 'true');
-						
-						var arr = new Array();
-						arr.push(requiredStars[starnum - 1]);
-						IL.setRequiredStars(arr);
-						IL.setRequiredStarCoins(emptyArray);
-						mode = 'Star '+starnum+' with Fludd';
-					}
+          IL.setNbRequiredStarCoins(0);
+					mode = 'All Stars';
 					break;
 				case 'star':
 					if (!isNaN(starnum) && (starnum >= 1 && starnum <= 5)) {
-						_root.utils.setWorldNozzle(level, 'all', 'false');
 						var arr = new Array();
 						arr.push(requiredStars[starnum - 1]);
+
 						IL.setRequiredStars(arr);
 						IL.setRequiredStarCoins(emptyArray);
+
+            IL.setNbRequiredStars(requiredStars.length);
+            IL.setNbRequiredStarCoins(requiredStarCoins.length);
 						mode = 'Star '+starnum;
 					}
 					break;
-				case 'starcoins': case 'starcoin':
-					_root.utils.setWorldNozzle(level, 'all', 'false');
+        case 'nms':
+          var nbStars = parseInt(command[3]);
+          var nbStarCoins = parseInt(command[4]);
+          IL.setNbRequiredStars(nbStars);
+          IL.setNbRequiredStarCoins(nbStarCoins);
+					mode = 'No Major Skips : '+nbStars+' stars, '+nbStarCoins+' star coins';
+					break;
+        case 'allstarcoins':
 					IL.setRequiredStars(emptyArray);
-					IL.setRequiredStarCoins(requiredStarCoins);
-					mode = 'Star Coins';
+          IL.setNbRequiredStars(0);
+					mode = 'All Star Coins';
+					break;
+        case 'starcoin':
+          if (!isNaN(starnum) && (starnum >= 1 && starnum <= 6)) {
+            var arr = new Array();
+						arr.push(requiredStarCoins[starnum - 1]);
+            IL.setRequiredStars(emptyArray);
+
+            IL.setRequiredStars(emptyArray);
+						IL.setRequiredStarCoins(arr);
+
+            IL.setNbRequiredStars(requiredStars.length);
+            IL.setNbRequiredStarCoins(requiredStarCoins.length);
+            mode = 'Star Coin '+starnum;
+          }
 					break;
 				default:
 					mode = 'None';
 			}
 			
-			// Water recharge
-			_root.WaterAmount = _root.TotalWater;
-			
-			_root.textManager.write(5, 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
-			_root.utils.warp(startingLevel, posX, posY, posX, posY);
+      // -f option
+      _root.utils.setWorldNozzle(level, 'all', 'false');
+      var i = 0;
+      for (i = 0; i < command.length; i++) {
+        if (command[i] == '-f' || command[i] == '-fludd') {
+          _root.utils.setWorldNozzle(level, 'all', 'true');
+          mode = mode + ' + Fludd';
+        }
+      }
+
+      setTimeout(function() {
+			  _root.textManager.send('message', 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
+      }, _root.utils.getAfterWarpTimeout());
+
+			_root.utils.warp(startingLevel, posX, posY, posX, posY, false);
 			IL.start(level);
 		}));
 		
 		this.add(new Code('warp w', function(command) {
 			
 			var level = command[1];
-			var param_1 = command[2];
-			var param_2 = command[3];
-			var param_3 = command[4];
-			var param_4 = command[5];
+			var player_x = command[2];
+			var player_y = command[3];
+			var camera_x = command[4];
+			var camera_y = command[5];
 			
 			if (level != undefined) {
-				if (param_1 == undefined) param_1 = 0;
-				if (param_2 == undefined) param_2 = 0;
-				if (param_3 == undefined) param_3 = 0;
-				if (param_4 == undefined) param_4 = 0;
-				
-				_root.utils.warp(command[1], param_1, param_2, param_3, param_4);
-				_root.textManager.write(5, 'Player has been warped to '+command[1]+'.');
+
+        var definedCoordinates = (player_x != undefined && player_y != undefined);
+
+        if (definedCoordinates) {
+          if (camera_x == undefined) camera_x = player_x;
+          if (camera_y == undefined) camera_y = player_y;
+          _root.utils.warp(command[1], player_x, player_y, camera_x, camera_y, false);
+        }
+        else {
+          _root.utils.warp(command[1], 0, 0, 0, 0, true);
+        }
+
+        setTimeout(function() {
+          _root.textManager.send('message', 'Player has been warped to '+command[1]+'.');
+        }, _root.utils.getAfterWarpTimeout());
+
 			}
 			
 		}));
@@ -1178,7 +1545,7 @@ class CodeManager {
 					_root.utils.setStarCoins(true);
 					_root.utils.setBowserKeys(true);
 					_root.utils.setFluddArray(true);
-					_root.textManager.write(5, 'Current file is now a 100% file.');
+					_root.textManager.send('message', 'Current file is now a 100% file.');
 					break;
 				case 'essentials':
 					_root.utils.setStars(false);
@@ -1191,14 +1558,14 @@ class CodeManager {
 					_root.Star[51] = true;
 					_root.Star[36] = true;
 					_root.CalculateStars();
-					_root.textManager.write(5, 'Current file now has every storyline star.');
+					_root.textManager.send('message', 'Current file now has every storyline star.');
 					break;
 				case 'empty':
 					_root.utils.setStars(false);
 					_root.utils.setStarCoins(false);
 					_root.utils.setBowserKeys(false);
 					_root.utils.setFluddArray(false);
-					_root.textManager.write(5, 'Current file has been emptied.');
+					_root.textManager.send('message', 'Current file has been emptied.');
 					break;
 			}
 			
@@ -1209,16 +1576,22 @@ class CodeManager {
 			switch(command[1]) {
 				case 'start':
 					_root.timer.start();
-					_root.textManager.write(5, 'Timer has been started.');
+					_root.textManager.send('message', 'Timer has been started.');
 					break;
 				case 'stop':
 					_root.timer.stop();
-					_root.textManager.write(5, 'Timer has been stopped.');
+					_root.textManager.send('message', 'Timer has been stopped.');
 					break;
 				case 'reset':
 					_root.timer.reset();
-					_root.textManager.write(5, 'Timer has been reset. It will start on the next loading zone.');
+					_root.textManager.send('message', 'Timer has been reset. It will start on the next loading zone.');
 					break;
+        case 'on':
+          _root.timer.setDisplay(true);
+          break;
+        case 'off':
+          _root.timer.setDisplay(false);
+          break;
 			}
 			
 		}));
@@ -1227,11 +1600,11 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setBowserKey(int(command[1]), true);
-				_root.textManager.write(5, 'BowserKey #'+command[1]+' has been set to true.');
+				_root.textManager.send('message', 'BowserKey #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setBowserKey(int(command[1]), false);
-				_root.textManager.write(5, 'BowserKey #'+command[1]+' has been set to false.');
+				_root.textManager.send('message', 'BowserKey #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setBowserKey(int(command[1]));
@@ -1243,11 +1616,11 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setStar(command[1], true);
-				_root.textManager.write(5, 'Star #'+command[1]+' has been set to true.');
+				_root.textManager.send('message', 'Star #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setStar(command[1], false);
-				_root.textManager.write(5, 'Star #'+command[1]+' has been set to false.');
+				_root.textManager.send('message', 'Star #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setStar(command[1]);
@@ -1259,11 +1632,11 @@ class CodeManager {
 			
 			if (command[2] == 'true') {
 				_root.utils.setStarCoin(command[1], true);
-				_root.textManager.write(5, 'StarCoin #'+command[1]+' has been set to true.');
+				_root.textManager.send('message', 'StarCoin #'+command[1]+' has been set to true.');
 			}
 			else if (command[2] == 'false') {
 				_root.utils.setStarCoin(command[1], false);
-				_root.textManager.write(5, 'StarCoin #'+command[1]+' has been set to false.');
+				_root.textManager.send('message', 'StarCoin #'+command[1]+' has been set to false.');
 			}
 			else {
 				_root.utils.setStarCoin(command[1]);
@@ -1280,26 +1653,26 @@ class CodeManager {
 					_root.SaveFluddH = true;
 					_root.SaveFluddR = true;
 					_root.SaveFluddT = true;
-					_root.textManager.write(5, 'All FLUDD nozzles have been given to Mario.');
+					_root.textManager.send('message', 'All FLUDD nozzles have been given to Mario.');
 					break;
 				case 'H': case 'h': case 'Hover': case 'hover':
 					_root.SaveFluddH = !_root.SaveFluddH;
-					_root.textManager.write(5, 'Hover FLUDD has been set to '+_root.SaveFluddH+'.');
+					_root.textManager.send('message', 'Hover FLUDD has been set to '+_root.SaveFluddH+'.');
 					break;
 				case 'R': case 'r': case 'Rocket': case 'rocket':
 					_root.SaveFluddR = !_root.SaveFluddR;
-					_root.textManager.write(5, 'Rocket FLUDD has been set to '+_root.SaveFluddR+'.');
+					_root.textManager.send('message', 'Rocket FLUDD has been set to '+_root.SaveFluddR+'.');
 					break;
 				case 'T': case 't': case 'Turbo': case 'turbo':
 					_root.SaveFluddT = !_root.SaveFluddT;
-					_root.textManager.write(5, 'Turbo FLUDD has been set to '+_root.SaveFluddT+'.');
+					_root.textManager.send('message', 'Turbo FLUDD has been set to '+_root.SaveFluddT+'.');
 					break;
 				case 'none':
 					_root.SaveFluddH = false;
 					_root.SaveFluddR = false;
 					_root.SaveFluddT = false;
 					_root.Fluddpow = "";
-					_root.textManager.write(5, 'All FLUDD nozzles have been removed from Mario.');
+					_root.textManager.send('message', 'All FLUDD nozzles have been removed from Mario.');
 					break;
 			}
 		}));
@@ -1307,49 +1680,67 @@ class CodeManager {
 		this.add(new Code('lives', function(command) {
 			if (command[1] == 'infinite') {
 				_root.CharLives = NaN;
-				_root.textManager.write(5, 'Lives are now infinite.');
+				_root.textManager.send('message', 'Lives are now infinite.');
 			}
 			else {
 				_root.CharLives = Number(command[1]);
-				_root.textManager.write(5, 'Lives have been set to '+_root.CharLives+'.');
+				_root.textManager.send('message', 'Lives have been set to '+_root.CharLives+'.');
 			}
 		}));
 
 		this.add(new Code('water', function(command) {
 			if (command[1] == 'refill') {
 				_root.WaterAmount = _root.TotalWater;
-				_root.textManager.write(5, 'Water has been refilled.');
+				_root.textManager.send('message', 'Water has been refilled.');
 			}
 			else if (command[1] == 'half') {
 				_root.WaterAmount = 5000;
-				_root.textManager.write(5, 'Water has been set to half.');
+				_root.textManager.send('message', 'Water has been set to half.');
 			}
 			else if (command[1] == 'empty') {
 				_root.WaterAmount = 0;
-				_root.textManager.write(5, 'Water container is now empty.');
+				_root.textManager.send('message', 'Water container is now empty.');
 			}
 			else {
 				_root.WaterAmount = command[1];
-				_root.textManager.write(5, 'Water has been set to '+_root.WaterAmount+'.');
+				_root.textManager.send('message', 'Water has been set to '+_root.WaterAmount+'.');
+			}
+			
+			if (command[1] == 'infinite') {
+				_root.WaterAmount = _root.TotalWater;
+				_root.utils.setInfiniteWater(true);
+        _root.textManager.send('message', 'Water is now infinite.');
+			}
+			else {
+				_root.utils.setInfiniteWater(false);
+        _root.textManager.send('message', 'Water is not infinite anymore.');
 			}
 		}));
 
 		this.add(new Code('health', function(command) {
 			if (command[1] == 'refill') {
 				_root.CharHP = 8;
-				_root.textManager.write(5, 'Health has been refilled.');
+				_root.textManager.send('message', 'Health has been refilled.');
 			}
 			else if (command[1] == 'empty') {
 				_root.CharHP = 1;
-				_root.textManager.write(5, 'Health has been set to 1.');
+				_root.textManager.send('message', 'Health has been set to 1.');
 			}
 			else if (command[1] == 'death') {
 				_root.CharHP = 0;
-				_root.textManager.write(5, 'Death has been provoked.');
+				_root.textManager.send('message', 'Death has been provoked.');
 			}
 			else {
 				_root.CharHP = command[1];
-				_root.textManager.write(5, 'Health has been set to '+_root.CharHP+'.');
+				_root.textManager.send('message', 'Health has been set to '+_root.CharHP+'.');
+			}
+			
+			if (command[1] == 'infinite') {
+				_root.utils.setHealth(8);
+				_root.utils.setInfiniteHealth(true);
+			}
+			else {
+				_root.utils.setInfiniteHealth(false);
 			}
 		}));
 
@@ -1358,33 +1749,118 @@ class CodeManager {
 			switch(command[1]) {
 				case 'mario' : case 'Mario':
 					_root.CurrentPlayer = 'Mario';
-					_root.textManager.write(5, 'Character switched to Mario.');
+					_root.textManager.send('message', 'Character switched to Mario.');
 					break;
 				case 'luigi' : case 'Luigi':
 					_root.CurrentPlayer = 'Luigi';
-					_root.textManager.write(5, 'Character switched to Luigi.');
+					_root.textManager.send('message', 'Character switched to Luigi.');
 					break;
 				case 'toggle' :
 					if(_root.CurrentPlayer == "Mario")
 					{
 						_root.CurrentPlayer = "Luigi";
-						_root.textManager.write(5, 'Character switched to Luigi.');
+						_root.textManager.send('message', 'Character switched to Luigi.');
 					}
 					else {
 						_root.CurrentPlayer = "Mario";
-						_root.textManager.write(5, 'Character switched to Mario.');
+						_root.textManager.send('message', 'Character switched to Mario.');
 					}
 					break;
 			}
 			
-			
-			
-			
 		}));
 
-		this.add(new Code('last', function(command) {
+		this.add(new Code('last l', function(command) {
 			_root.codeManager.executeLastCode();
 		}));
+	
+		this.add(new Code('cap', function(command) {
+      var time = parseInt(command[3]);
+			_root.utils.setCap(command[1], command[2], time);
+			
+			_root.textManager.send('message', 'Current cap updated.');
+		}));
+		
+		this.add(new Code('betaquest bq', function(command) {
+			if (command[1] == 'stop') {
+				_root.betaQuest.stop();
+        _root.textManager.send('message', 'BetaQuest was stopped.');
+			}
+			else if (command[1] == 'start') {
+				var seed = Number(command[2]);
+				_root.betaQuest.start(seed);
+        _root.textManager.send('message', 'BetaQuest was started.');
+			}
+		}));
+		
+		this.add(new Code('forcewarp fw', function(command) {
+			
+			_root.betaQuest.stop();
+			
+			// Copy of the warp code, might clean later
+			var level = command[1];
+			var param_1 = command[2];
+			var param_2 = command[3];
+			var param_3 = command[4];
+			var param_4 = command[5];
+			
+			if (level != undefined) {
+				if (param_1 == undefined) param_1 = 0;
+				if (param_2 == undefined) param_2 = 0;
+				if (param_3 == undefined) param_3 = 0;
+				if (param_4 == undefined) param_4 = 0;
+				
+				_root.utils.warp(command[1], param_1, param_2, param_3, param_4);
+				_root.textManager.send('message', 'Player has been warped to '+command[1]+'.');
+			}
+				
+			setTimeout(function() {
+				_root.betaQuest.start();
+			}, _root.utils.getWarpTimeout());
+			
+		}));
+		
+		this.add(new Code('setpos', function(command) {
+			_root.utils.setPosition(command[1], command[2]);
+			
+			_root.textManager.send('message', 'Current position updated.');
+		}));
+	
+		this.add(new Code('savestate ss', function(command) {
+			var name = command[1];
+			_root.saveStateManager.save(name);
+			_root.textManager.send('message', "State "+name+" saved.");
+		}));
+		
+		this.add(new Code('loadstate ls', function(command) {
+			var name = command[1];
+			_root.saveStateManager.load(name);
+			
+			if (command[2] == '-t') {
+				_root.timer.reset();
+			}
+		}));
+
+    this.add(new Code('hotkey htk', function(command) {
+      var newArray = command.slice();
+      newArray.shift();
+      newArray.shift();
+
+      var key = command[1];
+      var unsplitCommand = newArray.join(" ");
+
+      _root.hotkeyManager.add(key, unsplitCommand);
+
+      _root.textManager.send('message', 'The hotkey '+key+' was succesfully binded.');
+    }));
+
+    this.add(new Code('clearhotkey clhtk', function(command) {
+      var key = command[1];
+
+      _root.hotkeyManager.remove(key);
+      _root.textManager.send('message', 'The hotkey '+key+'\'s bind was succesfully removed.');
+    }));
+		
 	}
 	
 	// Adds a new code to the code list.
@@ -1393,16 +1869,18 @@ class CodeManager {
 	}
 	
 	// Executes a specific code.
-	public function execute(code) {
-		_root.textManager.write(5, '');
+	public function execute(command) {
+		//_root.textManager.send('message', '');
+    //_root.textManager.send('message', command);
 		var i = 0;
 		for (i = 0; i < this.codeList.length; i = i + 1) {
-			this.codeList[i].execute(code);
+			this.codeList[i].execute(command);
 		}
 		// To avoid infinite loops/recursion, we prevent setting the last code
 		// if the last command executed was 'last'.
-		if (code != 'last') {
-			this.lastCode = code;
+    // Doesn't work if the 'last' command gets an argument.
+		if (command != 'last' && command != 'l') {
+			this.lastCode = command;
 		}
 		_root.PauseGame = false;
 	}
@@ -1414,11 +1892,11 @@ class CodeManager {
 	
 	// Defines the code that happens on each frame.
 	public function onEachFrame() {
-		_root.textManager.write(2, this.currentCode);
+		_root.textManager.send('code', this.currentCode);
 		
 		if (_root.KeySlash()) {
 			this.resetDelay();
-			_root.textManager.write(5, 'Enter your command!');
+			_root.textManager.send('message', 'Enter your command!');
 			_root.PauseGame = true;
 		}
 		else if (this.delay > 0) {
@@ -1426,6 +1904,7 @@ class CodeManager {
 			if (this.delay <= 0) {
 				this.currentCode = "";
 				// Delay equals 0, we cancel the PauseGame effect.
+        _root.textManager.send('message', "");
 				_root.PauseGame = false;
 			}
 		}
@@ -1470,6 +1949,7 @@ class CodeManager {
 	public function getIL() {
 		return this.il;
 	}
+
 }
 
 // Class that manages the start and end of individual levels.
@@ -1479,11 +1959,16 @@ class IndividualLevel {
 	private var requiredStars;
 	private var requiredStarCoins;
 	private var requiredFlags;
+  private var nbRequiredStars;
+  private var nbRequiredStarCoins;
 	
 	public function IndividualLevel() {
 		this.stop();
 		this.requiredStars = new Array();
 		this.requiredStarCoins = new Array();
+    this.requiredFlags = new Array();
+    this.nbRequiredStars = 0;
+    this.nbRequiredStarCoins = 0;
 	}
 	
 	// Getter for the required stars.
@@ -1510,40 +1995,55 @@ class IndividualLevel {
 	public function setRequiredFlags(array) {
 		this.requiredFlags = array.slice();
 	}
+
+  // Setter for the amount of required stars.
+  public function setNbRequiredStars(nb) {
+    this.nbRequiredStars = nb;
+  }
+
+  // Setter for the amount of required stars.
+  public function setNbRequiredStarCoins(nb) {
+    this.nbRequiredStarCoins = nb;
+  }
 	
-	
+	// Checks if the IL is finished.
 	public function check() {
-		var bool = true;
+    
 		var i = 0;		
 		var j = 0;
+
+    var nbStars = 0;
+    var nbStarCoins = 0;
 		
 		for (i = 0; i < this.requiredStars.length; i++) {
 			var index = this.requiredStars[i];
-			if (_root.utils.getStar(index) === false) {
-				bool = false;
-				break;
+			if (_root.utils.getStar(index) === true) {
+				nbStars++;
 			}
 		}
 		
 		for (j = 0; j < this.requiredStarCoins.length; j++) {
 			var index = this.requiredStarCoins[j];
-			if (_root.utils.getStarCoin(index) === false) {
-				bool = false;
-				break;
+			if (_root.utils.getStarCoin(index) === true) {
+				nbStarCoins++;
 			}
 		}
+
+    _root.textManager.send('message', '('+nbStars+','+nbStarCoins+')'+' => '+'('+this.nbRequiredStars+','+this.nbRequiredStarCoins+')');
+    var bool = (nbStars >= this.nbRequiredStars) && (nbStarCoins >= this.nbRequiredStarCoins);
 		
 		return bool;
 	}
 	
-	
+	// Code that is executed when a star is collected.
 	public function onStarCollected() {
+    _root.textManager.send('message', 'Object collected');
 		if (this.check() === true) {
 			this.stop();
 		}
 	}
 	
-	
+	// Starts an IL.
 	public function start(level) {
 		this.level = level;
 		setTimeout(function() {
@@ -1551,18 +2051,407 @@ class IndividualLevel {
 		}, 200);
 	}
 	
-	
+	// Stops an IL.
 	public function stop() {
 		this.level = 'none';
 		_root.timer.stop();
 	}
 	
-	
+	// Returns true if an IL is currently in the way.
 	public function isGoing() {
 		return (this.level != 'none');
 	}
 	
 }
+
+// Class that manages the warps for Beta Quest mode.
+class BetaQuest {
+
+	private var seed;
+	private var rngValue;
+	private var started;
+	private var warpList;
+	private var newWarpList;
+	
+	// Constructor of the Beta Quest class.
+	public function BetaQuest() {
+		
+		this.seed = undefined;
+		this.rngValue = undefined;
+		this.started = false;
+		this.warpList = new Array();
+		this.newWarpList = new Array();
+		this.initWarpList();
+		
+		this.generateWarpList();
+	}
+	
+	// Generates a new warp list.
+	private function generateWarpList() {
+		this.newWarpList = this.shuffle(this.warpList);
+	}
+	
+	// Inits the warp list, with a list of all the different warps.
+	private function initWarpList() {
+		this.warpList.push(
+		
+		// Course warps
+		"1-1", "1-2", "1-3", "1-4", "1-5",
+		"2-1", "2-2", "2-2A", "2-3", "2-4", "2-5",
+		"3-1", "3-2", "3-3", "3-4", "3-5", "3-6", "3-7", "3-8",
+		"4-1", "4-2", "4-3", "4-4", "4-5", "4-6", "4-7", "4-8", "4-9", "4-10", "4-11",
+		"5-1", "5-2", "5-3", "5-4", "5-5", "5-6", "5-7", "5-8", "5-9",
+		"6-1", "6-2", "6-3", "6-4", "6-5", "6-6", "6-1-2",
+		"7-1", "7-2", "7-3", "7-4", "7-5", "7-6",
+		
+		// Bowser 3 warps
+		"8-1", "8-2", "8-3", "8-4", "8-5", "8-6", "8-7", "8-8", "8-9",
+		"8-10", "8-10-b", "8-11", "8-12", "8-13", "8-14", "8-15", "8-16",
+		"BC-1", "BC-2", "BC-3",
+		
+		// Mini-course & CSS warps
+		"8-E1-1", "8-E1-1-2", "8-E1-2", "8-E1-2-2", "8-E3-1", "8-E3-2",
+		"8-E2-1", "8-E2-2", "8-E5-1", "8-E5-2", "8-E5-3", "8-E5-4",
+		"9-01", "9-02", "9-03", "9-03-D", "9-03-2", "9-04",
+		"9-05", "9-06", "9-07", "9-08", "9-10", "9-10-2", "9-11",
+		"M1-1", "M1-2", "M2-1", "M2-2", "M3-3",
+		"K-1", "K-2",
+		
+		// Castle warps
+		"C-1", "C-2", "C-2-2", "C-3", "C-3-2", "C-4",
+		"C-5", "C-6", "C-O", "C-7", "C-8", "C-4H",
+		"C-9", "C-10", "C-11", "C-12", "C-13",
+		"16SCPrize", "48SCPrize", "Mush-room", "Castle"
+		
+		);
+	}
+	
+	// Shuffles an array.
+	private function shuffle(array) {
+		var newArray = array.slice();
+		newArray.sort(this.randomSort);
+		return newArray;
+	}
+	
+	// Method that simulates a 1/2 chance aiming to sort arrays.
+	private function randomSort(a, b) {
+		
+		var self = _root.betaQuest;
+		
+		var value;
+		if (self.isSeeded()) value = self.RNG();
+		else value = Math.random();
+		
+		if (value < 0.5) return -1;
+		else return 1;
+	}
+	
+	// Method that generates a random number, based on a seed.
+	private function randomSeed(seed) {
+		return ((seed * 1664525) + 1013904223) % 4294967296;
+	}
+	
+	// RNG function.
+	private function RNG() {
+		this.rngValue = this.randomSeed(this.rngValue);
+		return this.rngValue / 4294967296;
+	}
+	
+	// Returns the index of an element in an array.
+	private function indexOf(array, value) {
+		var i = 0;
+		
+		for (i = 0; i < array.length; i++) {
+			if (array[i] === value) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	// Returns the new zone the player will be warped in.
+	public function getCorrespondingArea(warpArea) {
+		var index = this.indexOf(this.warpList, warpArea);
+		//_root.textManager.send('message', this.indexOf(this.warpList, warpArea));
+		//var index = 2;
+		var newWarp;
+		
+		if ((index != undefined && index != -1 ) && (this.started === true)) {
+			newWarp = this.newWarpList[index];
+		}
+		else {
+			newWarp = warpArea;
+		}
+		
+		//_root.textManager.send('message', 'Warp area ' + warpArea + ' | New warp : ' + newWarp);
+		
+		var warpCoordinates = this.getWarpCoordinates(newWarp);
+		
+		return [warpCoordinates.level, warpCoordinates.x, warpCoordinates.y];
+	}
+	
+	
+	// Returns special warp coordinates, in case 0,0 isn't the ideal position.
+	public function getWarpCoordinates(warp) {
+		
+    var level = warp;
+		var x = 0;
+		var y = 0;
+		
+		switch(warp)
+		{
+      case "16SCPrize":
+        level = "C-4-SC1";
+				x = 0;
+				y = 0;
+				break;
+      case "48SCPrize":
+        level = "C-4-SC1";
+				x = 0;
+				y = -260;
+				break;
+      case "Mush-room":
+        level = "C-4-SC1";
+				x = -674;
+				y = -60;
+				break;
+			case "8-10":
+				x = -290;
+				y = 0;
+				break;
+			case "8-10-b":
+				x = 500;
+				y = -10;
+				break;
+      case "6-1-2":
+				x = 2171;
+				y = -163;
+				break;
+      case "9-07":
+        _root.BossCheckpoint = false;
+				x = 0;
+				y = 0;
+				break;
+      case "M1-2":
+				x = -1465;
+				y = -320;
+				break;
+      case "4-5":
+				x = -1300;
+				y = 52.4;
+				break;
+      case "8-E5-1":
+				x = -1693;
+				y = -60;
+				break;
+      case "8-E5-2":
+				x = 1115;
+				y = 127;
+				break;
+      case "9-11":
+				x = -560;
+				y = -160;
+				break;
+      case "9-03-2":
+				x = -270;
+				y = -990;
+				break;
+			default:
+				break;
+		}
+		
+		return {level: level, x: x, y: y}
+	}
+	
+	// Returns the new, updated, warp list.
+	public function getNewWarpList() {
+		return this.newWarpList;
+	}
+	
+	// Activates Beta Quest.
+	public function start(seed) {
+		if (seed != undefined) this.setSeed(seed);
+		this.started = true;
+		this.generateWarpList();
+	}
+	
+	// Deactivates Beta Quest.
+	public function stop() {
+		this.started = false;
+	}
+	
+	// Defines a new seed.
+	public function setSeed(s) {
+		this.seed = s;
+		this.rngValue = this.seed;
+	}
+	
+	// Getter of the seed.
+	public function getSeed() {
+		return this.seed;
+	}
+	
+	// Returns if the current BQ is seeded or not.
+	public function isSeeded() {
+		return (this.seed != undefined)
+	}
+
+  // Returns if BetaQuest has been started.
+  public function isStarted() {
+    return this.started;
+  }
+	
+}
+
+// Class that manages the behaviour of all save states and their actions.
+class SaveStateManager {
+	
+	private var saveStateList;
+	
+	// Constructor of the SaveStateManager class.
+	public function SaveStateManager() {
+		this.saveStateList = new Array();
+	}
+	
+	public function save(name) {
+		var state = new SaveState(name);
+		this.saveStateList.push(state);
+	}
+	
+	public function load(name) {
+		
+		var state = null;
+		var i = 0;
+		
+		for (i = 0; i < this.saveStateList.length; i++) {
+			if (this.saveStateList[i].name == name) {
+				state = this.saveStateList[i];
+			}
+		}
+		
+		state.load();
+	}
+	
+}
+
+// Class that manages the data that a savestate holds.
+class SaveState {
+	
+	private var name;
+	
+  private var char;
+	private var warp;
+	private var position;
+	private var fludd;
+	private var water;
+	private var health;
+	private var fluddpow;
+	private var infiniteWater;
+	private var infiniteHealth;
+	
+	// Constructor of the SaveState class.
+	public function SaveState(name) {
+		this.name = name;
+		this.retrieveData();
+	}
+	
+	// Sets the current world data into the save state.
+	public function retrieveData() {
+    this.char = _root.utils.getCharacter();
+		this.warp = _root.utils.getLevelName();
+		this.position = _root.utils.getLatestWarpPosition();
+		this.fludd = _root.utils.getSaveFludd();
+		this.water = _root.utils.getWater();
+		this.health = _root.utils.getHealth();
+		this.fluddpow = _root.utils.getFluddPow();
+		this.infiniteWater = _root.utils.isWaterInfinite();
+		this.infiniteHealth = _root.utils.isHealthInfinite();
+	}
+	
+	// Loads a save state in the game.
+	public function load() {
+		_root.utils.warp(this.warp,
+						this.position[0],
+						this.position[1],
+						this.position[0],
+						this.position[1]);
+		
+    _root.utils.setCharacter(this.char);
+		_root.utils.setSaveFludd(this.fludd.h, this.fludd.r, this.fludd.t);
+		_root.utils.setWater(this.water);
+		_root.utils.setHealth(this.health);
+		_root.utils.setFluddPow(this.fluddpow);
+		_root.utils.setInfiniteWater(this.infiniteWater);
+		_root.utils.setInfiniteHealth(this.infiniteHealth);
+		
+		// cap & cap timer
+	}
+
+}
+
+class HotkeyCommand {
+
+  private var key;
+  private var command;
+
+  public function HotkeyCommand(_key, _command) {
+    this.key = _key;
+    this.command = _command;
+  }
+
+  public function getKey() {
+    return this.key;
+  }
+
+  public function getCommand() {
+    return this.command;
+  }
+
+}
+
+class HotkeyManager {
+
+  private var hotkeyCommandList;
+
+  public function HotkeyManager() {
+    this.hotkeyCommandList = new Array();
+  }
+
+  public function add(key, command) {
+    this.remove(key);
+    this.hotkeyCommandList.push(new HotkeyCommand(key, command));
+  }
+
+  public function remove(key) {
+    var i = 0;
+
+    var newArray = new Array();
+
+    for (i = 0; i < this.hotkeyCommandList.length; i++) {
+      if (key != this.hotkeyCommandList[i].getKey()) {
+        newArray.push(this.hotkeyCommandList[i]);
+      }
+    }
+
+    this.hotkeyCommandList = newArray.slice();
+  }
+
+  public function execute(key) {
+    if (!_root.utils.isGamePaused()) {
+      var i = 0;
+
+      for (i = 0; i < this.hotkeyCommandList.length; i++) {
+        if (key == this.hotkeyCommandList[i].getKey()) {
+          _root.codeManager.execute(this.hotkeyCommandList[i].getCommand());
+          break;
+        }
+      }
+    }
+  }
+}
+
+
 
 // KoopaShell
 setCollision = function()
@@ -1918,8 +2807,10 @@ _root.Save_StarCoin = new Array();
 _root.Save_FluddArray = new Array();
 
 _root.timer = new Timer();
-_root.timer.start();
 _root.textManager = new TextManager();
 _root.utils = new Utils();
 _root.codeManager = new CodeManager();
+_root.betaQuest = new BetaQuest();
 _root.event = new Event();
+_root.saveStateManager = new SaveStateManager();
+_root.hotkeyManager = new HotkeyManager();
