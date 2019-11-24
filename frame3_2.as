@@ -1,7 +1,7 @@
 StartChar = function(a, b, c, d, e, f, g, h, i, resetmusic, isCommand)
 {
 	
-	if (isCommand == true) {
+	if (isCommand == true || _root.betaQuest.isStarted()) {
 		var warpArray = _root.betaQuest.getCorrespondingArea(a);
 	
 		a = warpArray[0];

@@ -222,12 +222,12 @@ class Utils {
 							[]),
 							new World(0, 'coe', "Cave of Empuzzlement", "C-10",
 							[311.05, 7.35],
-							[53],
+							[52],
 							[],
 							[]),
 							new World(0, 'mm', "Magma Maze", "C-10",
 							[-442.55, -724.45],
-							[52],
+							[53],
 							[55],
 							[]),
 							new World(0, 'gos', "Galaxy of Stars", "C-12",
@@ -556,8 +556,9 @@ class Utils {
 	}
 
 	// Sets the player's current cap (invisible, invincible, wing cap or metal).
-	public function setCap(cap, boolText) {
-		var capTime = 10000;
+	public function setCap(cap, boolText, time) {
+    if (time == undefined) time = 10000;
+		var capTime = time;
 		this.setCapTimer(capTime);
 		
 		var bool = true;
@@ -1369,17 +1370,21 @@ class CodeManager {
 		}));
 		
 		this.add(new Code('individuallevel il', function(command) {
-			// Would be easier to maintain with OOP for worlds
+      // This code is disgusting as a whole and needs to be fixed as soon as possible
+
+			// IL data options
+			_root.WaterAmount = _root.TotalWater;
 			_root.Restartcoins();
+      _root.utils.setInfiniteWater(false);
+      _root.utils.setInfiniteHealth(false);
+
 			var IL = _root.codeManager.getIL();
-			
 			var level = command[1];
 			var type = command[2];
 			var starnum = parseInt(command[3]);
 			
 			var existingTypes = new Array();
-			existingTypes.push('all', '100', 'starsfludd', 'stars', 'starfludd', 'star', 'starcoins', 'starcoin', 'nms');
-			
+			existingTypes.push('all', '100', 'star', 'allstars', 'nms', 'starcoin', 'allstarcoins');
 			if (existingTypes.indexOf(type) == -1) {
 				_root.textManager.send('message', 'Invalid IL command.');
 				return;
@@ -1389,7 +1394,6 @@ class CodeManager {
 			var mode = 'none';
 			
 			// World info
-			
 			var selectedWorld = _root.utils.getWorld(level);
 			var levelTitle = selectedWorld.getName();
 			var startingLevel = selectedWorld.getStartingLevel();
@@ -1404,8 +1408,7 @@ class CodeManager {
 			
 			// Exception :If star coins do not matter in the goal,
 			// we want them to already be collected
-			if (type == 'starsfludd' || type == 'sf' || type == 'stars'
-				|| type == 'starfludd' || type == 'star') {
+			if (type == 'allstars' || type == 'star') {
 				_root.utils.setWorldStarCoins(level, true);
 			}
 			else {
@@ -1425,88 +1428,78 @@ class CodeManager {
 					_root.utils.setFluddPow("");
 					_root.utils.setSaveFludd(true, true, true);
 				}
-			}, 150);
+			}, _root.utils.getAfterWarpTimeout());
 			
 			// Clean this code pls
+      IL.setRequiredStars(requiredStars);
+      IL.setRequiredStarCoins(requiredStarCoins);
+      IL.setRequiredFlags(emptyArray);
+      IL.setNbRequiredStars(requiredStars.length);
+      IL.setNbRequiredStarCoins(requiredStarCoins.length);
 
 			switch(type) {
 				case '100': case 'all':
-					_root.utils.setWorldNozzle(level, 'all', 'false');
-					IL.setRequiredStars(requiredStars);
-					IL.setRequiredStarCoins(requiredStarCoins);
-					IL.setRequiredFlags(requiredFlags);
-          IL.setNbRequiredStars(requiredStars.length);
-          IL.setNbRequiredStarCoins(requiredStarCoins.length);
+          IL.setRequiredFlags(requiredFlags);
 					mode = '100%';
 					break;
-				case 'starsfludd': case 'sf':
-					_root.utils.setWorldNozzle(level, 'all', 'true');
-					IL.setRequiredStars(requiredStars);
+				case 'allstars':
 					IL.setRequiredStarCoins(emptyArray);
-          IL.setNbRequiredStars(requiredStars.length);
-          IL.setNbRequiredStarCoins(requiredStarCoins.length);
-					mode = 'All Stars with Fludd';
-					break;
-				case 'stars':
-					_root.utils.setWorldNozzle(level, 'all', 'false');
-					IL.setRequiredStars(requiredStars);
-					IL.setRequiredStarCoins(emptyArray);
-          IL.setNbRequiredStars(requiredStars.length);
-          IL.setNbRequiredStarCoins(requiredStarCoins.length);
-					mode = 'Stars';
-					break;
-				case 'starfludd':
-					if (!isNaN(starnum) && (starnum >= 1 && starnum <= 5)) {
-						_root.utils.setWorldNozzle(level, 'all', 'true');
-						
-						var arr = new Array();
-						arr.push(requiredStars[starnum - 1]);
-						IL.setRequiredStars(arr);
-						IL.setRequiredStarCoins(emptyArray);
-            IL.setNbRequiredStars(requiredStars.length);
-            IL.setNbRequiredStarCoins(requiredStarCoins.length);
-						mode = 'Star '+starnum+' with Fludd';
-					}
+          IL.setNbRequiredStarCoins(0);
+					mode = 'All Stars';
 					break;
 				case 'star':
 					if (!isNaN(starnum) && (starnum >= 1 && starnum <= 5)) {
-						_root.utils.setWorldNozzle(level, 'all', 'false');
 						var arr = new Array();
 						arr.push(requiredStars[starnum - 1]);
+
 						IL.setRequiredStars(arr);
 						IL.setRequiredStarCoins(emptyArray);
+
             IL.setNbRequiredStars(requiredStars.length);
             IL.setNbRequiredStarCoins(requiredStarCoins.length);
 						mode = 'Star '+starnum;
 					}
 					break;
-				case 'starcoins': case 'starcoin':
-					_root.utils.setWorldNozzle(level, 'all', 'false');
-					IL.setRequiredStars(emptyArray);
-					IL.setRequiredStarCoins(requiredStarCoins);
-          IL.setNbRequiredStars(requiredStars.length);
-          IL.setNbRequiredStarCoins(requiredStarCoins.length);
-					mode = 'Star Coins';
-					break;
         case 'nms':
-					_root.utils.setWorldNozzle(level, 'all', 'false');
-					IL.setRequiredStars(emptyArray);
-					IL.setRequiredStarCoins(requiredStarCoins);
-
           var nbStars = parseInt(command[3]);
           var nbStarCoins = parseInt(command[4]);
           IL.setNbRequiredStars(nbStars);
           IL.setNbRequiredStarCoins(nbStarCoins);
 					mode = 'No Major Skips : '+nbStars+' stars, '+nbStarCoins+' star coins';
 					break;
+        case 'allstarcoins':
+					IL.setRequiredStars(emptyArray);
+          IL.setNbRequiredStars(0);
+					mode = 'All Star Coins';
+					break;
+        case 'starcoin':
+          if (!isNaN(starnum) && (starnum >= 1 && starnum <= 6)) {
+            var arr = new Array();
+						arr.push(requiredStarCoins[starnum - 1]);
+            IL.setRequiredStars(emptyArray);
+
+            IL.setRequiredStars(emptyArray);
+						IL.setRequiredStarCoins(arr);
+
+            IL.setNbRequiredStars(requiredStars.length);
+            IL.setNbRequiredStarCoins(requiredStarCoins.length);
+            mode = 'Star Coin '+starnum;
+          }
+					break;
 				default:
 					mode = 'None';
 			}
 			
-			// Water recharge
-			_root.WaterAmount = _root.TotalWater;
-			_root.utils.setInfiniteWater(false);
-			
+      // -f option
+      _root.utils.setWorldNozzle(level, 'all', 'false');
+      var i = 0;
+      for (i = 0; i < command.length; i++) {
+        if (command[i] == '-f' || command[i] == '-fludd') {
+          _root.utils.setWorldNozzle(level, 'all', 'true');
+          mode = mode + ' + Fludd';
+        }
+      }
+
       setTimeout(function() {
 			  _root.textManager.send('message', 'Current IL : ' + selectedWorld.getFullName() +' | ' + mode);
       }, _root.utils.getAfterWarpTimeout());
@@ -1782,7 +1775,8 @@ class CodeManager {
 		}));
 	
 		this.add(new Code('cap', function(command) {
-			_root.utils.setCap(command[1], command[2]);
+      var time = parseInt(command[3]);
+			_root.utils.setCap(command[1], command[2], time);
 			
 			_root.textManager.send('message', 'Current cap updated.');
 		}));
@@ -1790,10 +1784,12 @@ class CodeManager {
 		this.add(new Code('betaquest bq', function(command) {
 			if (command[1] == 'stop') {
 				_root.betaQuest.stop();
+        _root.textManager.send('message', 'BetaQuest was stopped.');
 			}
 			else if (command[1] == 'start') {
 				var seed = Number(command[2]);
 				_root.betaQuest.start(seed);
+        _root.textManager.send('message', 'BetaQuest was started.');
 			}
 		}));
 		
@@ -2012,6 +2008,7 @@ class IndividualLevel {
 	
 	// Checks if the IL is finished.
 	public function check() {
+    
 		var i = 0;		
 		var j = 0;
 
@@ -2022,7 +2019,6 @@ class IndividualLevel {
 			var index = this.requiredStars[i];
 			if (_root.utils.getStar(index) === true) {
 				nbStars++;
-				break;
 			}
 		}
 		
@@ -2030,10 +2026,10 @@ class IndividualLevel {
 			var index = this.requiredStarCoins[j];
 			if (_root.utils.getStarCoin(index) === true) {
 				nbStarCoins++;
-				break;
 			}
 		}
 
+    _root.textManager.send('message', '('+nbStars+','+nbStarCoins+')'+' => '+'('+this.nbRequiredStars+','+this.nbRequiredStarCoins+')');
     var bool = (nbStars >= this.nbRequiredStars) && (nbStarCoins >= this.nbRequiredStarCoins);
 		
 		return bool;
@@ -2041,6 +2037,7 @@ class IndividualLevel {
 	
 	// Code that is executed when a star is collected.
 	public function onStarCollected() {
+    _root.textManager.send('message', 'Object collected');
 		if (this.check() === true) {
 			this.stop();
 		}
@@ -2124,7 +2121,7 @@ class BetaQuest {
 		"C-1", "C-2", "C-2-2", "C-3", "C-3-2", "C-4",
 		"C-5", "C-6", "C-O", "C-7", "C-8", "C-4H",
 		"C-9", "C-10", "C-11", "C-12", "C-13",
-		"C-4-SC1", "Castle"
+		"16SCPrize", "48SCPrize", "Mush-room", "Castle"
 		
 		);
 	}
@@ -2187,22 +2184,38 @@ class BetaQuest {
 			newWarp = warpArea;
 		}
 		
-		// _root.textManager.send('message', 'Warp area ' + warpArea + ' | New warp : ' + newWarp);
+		//_root.textManager.send('message', 'Warp area ' + warpArea + ' | New warp : ' + newWarp);
 		
 		var warpCoordinates = this.getWarpCoordinates(newWarp);
 		
-		return [newWarp, warpCoordinates.x, warpCoordinates.y];
+		return [warpCoordinates.level, warpCoordinates.x, warpCoordinates.y];
 	}
 	
 	
 	// Returns special warp coordinates, in case 0,0 isn't the ideal position.
 	public function getWarpCoordinates(warp) {
 		
+    var level = warp;
 		var x = 0;
 		var y = 0;
 		
 		switch(warp)
 		{
+      case "16SCPrize":
+        level = "C-4-SC1";
+				x = 0;
+				y = 0;
+				break;
+      case "48SCPrize":
+        level = "C-4-SC1";
+				x = 0;
+				y = -260;
+				break;
+      case "Mush-room":
+        level = "C-4-SC1";
+				x = -674;
+				y = -60;
+				break;
 			case "8-10":
 				x = -290;
 				y = 0;
@@ -2211,11 +2224,44 @@ class BetaQuest {
 				x = 500;
 				y = -10;
 				break;
+      case "6-1-2":
+				x = 2171;
+				y = -163;
+				break;
+      case "9-07":
+        _root.BossCheckpoint = false;
+				x = 0;
+				y = 0;
+				break;
+      case "M1-2":
+				x = -1465;
+				y = -320;
+				break;
+      case "4-5":
+				x = -1300;
+				y = 52.4;
+				break;
+      case "8-E5-1":
+				x = -1693;
+				y = -60;
+				break;
+      case "8-E5-2":
+				x = 1115;
+				y = 127;
+				break;
+      case "9-11":
+				x = -560;
+				y = -160;
+				break;
+      case "9-03-2":
+				x = -270;
+				y = -990;
+				break;
 			default:
 				break;
 		}
 		
-		return {x: x, y: y}
+		return {level: level, x: x, y: y}
 	}
 	
 	// Returns the new, updated, warp list.
@@ -2250,6 +2296,11 @@ class BetaQuest {
 	public function isSeeded() {
 		return (this.seed != undefined)
 	}
+
+  // Returns if BetaQuest has been started.
+  public function isStarted() {
+    return this.started;
+  }
 	
 }
 
@@ -2335,7 +2386,6 @@ class SaveState {
 		_root.utils.setInfiniteHealth(this.infiniteHealth);
 		
 		// cap & cap timer
-		// infinite water & health
 	}
 
 }
