@@ -323,7 +323,6 @@ class Utils {
     }
 		
 		setTimeout(function() {
-			//_root.Restartcoins();
 			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
 		}, this.getWarpTimeout());
 		
@@ -453,34 +452,62 @@ class Utils {
 		}
 	}
 	
-	// Sets the state of the current saved fludd nozzles.
+  /* Sets the state of the current saved fludd nozzles.
+   * Usage:
+   * - 1. setSaveFludd(bool)
+   * 
+   * - 2. setSaveFludd(bool, bool, bool)
+   */
 	public function setSaveFludd(bool, bool2, bool3) {
 		if (bool2 == undefined || bool3 == undefined) {
+      // 1.
 			_root.SaveFluddH = bool;
 			_root.SaveFluddR = bool;
 			_root.SaveFluddT = bool;
 		}
 		else {
-			_root.SaveFluddH = bool;
-			_root.SaveFluddR = bool2;
-			_root.SaveFluddT = bool3;
+      // 2.
+      _root.SaveFluddH = bool;
+      _root.SaveFluddR = bool2;
+      _root.SaveFluddT = bool3;
 		}
+
+    _root.utils.setSaveOneFludd('h', bool);
+    _root.utils.setSaveOneFludd('r', bool);
+    _root.utils.setSaveOneFludd('t', bool);
+	}
+
+  public function setSaveOneFludd(nozzle, bool) {
+    switch(nozzle) {
+      case 'h':
+        _root.SaveFluddH = bool;
+        _root.utils.setOneFludd(_root.utils.getPlayingLevel(), 'h', bool);
+        break;
+      case 'r':
+        _root.SaveFluddR = bool;
+        _root.utils.setOneFludd(_root.utils.getPlayingLevel(), 'r', bool);
+        break;
+      case 't':
+        _root.SaveFluddT = bool;
+        _root.utils.setOneFludd(_root.utils.getPlayingLevel(), 't', bool);
+        break;
+    }
 	}
 	
 	// Sets the state of every fludd stored in levels.
 	public function setFluddArray(bool) {
 		_root.FluddArray = ["",
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["", bool, bool, bool],
-		["",bool,bool,bool]];
+		["", bool, bool, bool],  // BoB
+		["", bool, bool, bool],  // SL
+		["", bool, bool, bool],  // HMC
+		["", bool, bool, bool],  // BM
+		["", bool, bool, bool],  // LLL
+		["", bool, bool, bool],  // TTM
+		["", bool, bool, bool],  // RR
+		["", bool, bool, bool],  // BT3
+		["", bool, bool, bool],  // SSL
+		["", bool, bool, bool],  // WDW
+		["", bool, bool, bool]]; // TTC
 	}
 	
 	// Sets the current fludd the player is holding.
@@ -549,11 +576,75 @@ class Utils {
 		
 		if (playingLevel < 1) playingLevel = 1;
 		if (playingLevel > 11) playingLevel = 11;
-		
-		_root.FluddArray[playingLevel][1] = bool;
+
+    _root.FluddArray[playingLevel][1] = bool;
 		_root.FluddArray[playingLevel][2] = bool;
 		_root.FluddArray[playingLevel][3] = bool;
+		
 	}
+
+  // Sets the state of one fludd in one specific playing level.
+  public function setOneFludd(playingLevel, nozzle, bool) {
+		
+		if (playingLevel < 1) playingLevel = 1;
+		if (playingLevel > 11) playingLevel = 11;
+
+    switch(nozzle) {
+      case 'h':
+        _root.FluddArray[playingLevel][1] = bool;
+        break;
+      case 'r':
+        _root.FluddArray[playingLevel][2] = bool;
+        break;
+      case 't':
+        _root.FluddArray[playingLevel][3] = bool;
+        break;
+    }
+	}
+
+  public function updatePlayingLevel(ln) {
+    if (ln == undefined) {
+      ln = this.getLevelName();
+    }
+
+    if (ln.indexOf('1-') == 0) {
+      _root.Playinglevel = 1;
+    }
+    else if (ln.indexOf('2-') == 0) {
+      _root.Playinglevel = 2;
+    }
+    else if (ln.indexOf('3-') == 0) {
+      _root.Playinglevel = 3;
+    }
+    else if (ln.indexOf('4-') == 0) {
+      _root.Playinglevel = 4;
+    }
+    else if (ln.indexOf('5-') == 0) {
+      _root.Playinglevel = 5;
+    }
+    else if (ln.indexOf('6-') == 0) {
+      _root.Playinglevel = 6;
+    }
+    else if (ln.indexOf('7-') == 0) {
+      _root.Playinglevel = 7;
+    }
+    else if (ln.indexOf('8-') == 0) {
+      _root.Playinglevel = 8;
+    }
+    else if (ln.indexOf('M1-') == 0) {
+      _root.Playinglevel = 9;
+    }
+    else if (ln.indexOf('M2-') == 0) {
+      _root.Playinglevel = 10;
+    }
+    else if (ln.indexOf('M3-') == 0) {
+      _root.Playinglevel = 11;
+    }
+    else {
+      _root.Playinglevel = 0;
+    }
+    
+  }
 
 	// Sets the player's current cap (invisible, invincible, wing cap or metal).
 	public function setCap(cap, boolText, time) {
@@ -742,6 +833,11 @@ class Utils {
   // Returns the current character the player is using.
   public function getCharacter() {
     return _root.CurrentPlayer;
+  }
+
+  // Returns the number of the current world the player is standing in.
+  public function getPlayingLevel() {
+    return _root.Playinglevel;
   }
 
   // Returns the game's current framerate.
@@ -1657,35 +1753,33 @@ class CodeManager {
 			
 		}));
 
-		this.add(new Code('fludd', function(command) {
+		this.add(new Code('fludd', function(command) { 
 			
 			switch(command[1]) {
 				case 'all':
-					_root.SaveFluddH = true;
-					_root.SaveFluddR = true;
-					_root.SaveFluddT = true;
+					_root.utils.setSaveFludd(true);
 					_root.textManager.send('message', 'All FLUDD nozzles have been given to Mario.');
 					break;
 				case 'H': case 'h': case 'Hover': case 'hover':
-					_root.SaveFluddH = !_root.SaveFluddH;
-					_root.textManager.send('message', 'Hover FLUDD has been set to '+_root.SaveFluddH+'.');
+          _root.utils.setSaveOneFludd('h', !_root.utils.getSaveFludd().h);
+					_root.textManager.send('message', 'Hover FLUDD has been set to '+_root.utils.getSaveFludd().h+'.');
 					break;
 				case 'R': case 'r': case 'Rocket': case 'rocket':
-					_root.SaveFluddR = !_root.SaveFluddR;
-					_root.textManager.send('message', 'Rocket FLUDD has been set to '+_root.SaveFluddR+'.');
+          _root.utils.setSaveOneFludd('r', !_root.utils.getSaveFludd().r);
+					_root.textManager.send('message', 'Rocket FLUDD has been set to '+_root.utils.getSaveFludd().r+'.');
 					break;
 				case 'T': case 't': case 'Turbo': case 'turbo':
-					_root.SaveFluddT = !_root.SaveFluddT;
-					_root.textManager.send('message', 'Turbo FLUDD has been set to '+_root.SaveFluddT+'.');
+          _root.utils.setSaveOneFludd('t', !_root.utils.getSaveFludd().t);
+					_root.textManager.send('message', 'Turbo FLUDD has been set to '+_root.utils.getSaveFludd().t+'.');
 					break;
 				case 'none':
-					_root.SaveFluddH = false;
-					_root.SaveFluddR = false;
-					_root.SaveFluddT = false;
-					_root.Fluddpow = "";
+					_root.utils.setSaveFludd(false);
+					_root.utils.setFluddPow("");
 					_root.textManager.send('message', 'All FLUDD nozzles have been removed from Mario.');
 					break;
 			}
+
+
 		}));
 
 		this.add(new Code('lives', function(command) {
@@ -2565,6 +2659,7 @@ if(_root.installed != true)
             break;
          case "out":
             trace(_root.acc);
+            _root.textManager.send('message', _root.acc);
             _root.out = _root.acc;
             break;
          case "num":
