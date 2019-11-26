@@ -557,6 +557,8 @@ class Utils {
 
 	// Sets the player's current cap (invisible, invincible, wing cap or metal).
 	public function setCap(cap, boolText, time) {
+    // TODO: Make sure falcultative time parameter works
+
     if (time == undefined) time = 10000;
 		var capTime = time;
 		this.setCapTimer(capTime);
@@ -1314,13 +1316,12 @@ class CodeManager {
 			switch(bool) {
 				case 'true':  
 					_root.utils.setWorldStars(level, true, number); 
-					_root.textManager.send('message', 'Stars from worlds have been updated.');
 					break;
 				case 'false': 
 					_root.utils.setWorldStars(level, false, number); 
-					_root.textManager.send('message', 'Stars from worlds have been updated.');
 					break;
 			}
+      _root.textManager.send('message', 'Stars from worlds have been updated.');
 		}));
 		
 		this.add(new Code('worldstarcoin wsc', function(command) {
@@ -1330,14 +1331,12 @@ class CodeManager {
 			switch(bool) {
 				case 'true':  
 					_root.utils.setWorldStarCoins(level, true, number); 
-					_root.textManager.send('message', 'Star Coins from worlds have been updated.');
 					break;
 				case 'false': 
 					_root.utils.setWorldStarCoins(level, false, number); 
-					_root.textManager.send('message', 'Star Coins from worlds have been updated.');
 					break;
 			}
-			
+      _root.textManager.send('message', 'Star Coins from worlds have been updated.');
 		}));
 
 		this.add(new Code('nozzle', function(command) {
@@ -1490,14 +1489,26 @@ class CodeManager {
 					mode = 'None';
 			}
 			
-      // -f option
+      
       _root.utils.setWorldNozzle(level, 'all', 'false');
+
+      // Options
       var i = 0;
       for (i = 0; i < command.length; i++) {
-        if (command[i] == '-f' || command[i] == '-fludd') {
-          _root.utils.setWorldNozzle(level, 'all', 'true');
-          mode = mode + ' + Fludd';
+
+        switch(command[i]) {
+          case '-f': case '-fludd':
+            _root.utils.setWorldNozzle(level, 'all', 'true');
+            mode = mode + ' + Fludd';
+            break;
+          case '-nosc':
+            _root.utils.setWorldStarCoins(level, false);
+            break;
+          case '-sc':
+            _root.utils.setWorldStarCoins(level, true);
+            break;
         }
+
       }
 
       setTimeout(function() {
@@ -1738,9 +1749,11 @@ class CodeManager {
 			if (command[1] == 'infinite') {
 				_root.utils.setHealth(8);
 				_root.utils.setInfiniteHealth(true);
+        _root.textManager.send('message', 'Health is now infinite.');
 			}
 			else {
 				_root.utils.setInfiniteHealth(false);
+        _root.textManager.send('message', 'Health is not infinite anymore.');
 			}
 		}));
 
@@ -1843,6 +1856,9 @@ class CodeManager {
 
     this.add(new Code('hotkey htk', function(command) {
       var newArray = command.slice();
+
+      // We remove the two first parameters of the array
+      // (htk [key])
       newArray.shift();
       newArray.shift();
 
@@ -2029,7 +2045,6 @@ class IndividualLevel {
 			}
 		}
 
-    _root.textManager.send('message', '('+nbStars+','+nbStarCoins+')'+' => '+'('+this.nbRequiredStars+','+this.nbRequiredStarCoins+')');
     var bool = (nbStars >= this.nbRequiredStars) && (nbStarCoins >= this.nbRequiredStarCoins);
 		
 		return bool;
@@ -2037,7 +2052,6 @@ class IndividualLevel {
 	
 	// Code that is executed when a star is collected.
 	public function onStarCollected() {
-    _root.textManager.send('message', 'Object collected');
 		if (this.check() === true) {
 			this.stop();
 		}
@@ -2271,7 +2285,7 @@ class BetaQuest {
 	
 	// Activates Beta Quest.
 	public function start(seed) {
-		if (seed != undefined) this.setSeed(seed);
+		if (!isNaN(seed)) this.setSeed(seed);
 		this.started = true;
 		this.generateWarpList();
 	}
