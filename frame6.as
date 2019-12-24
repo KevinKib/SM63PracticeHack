@@ -2070,7 +2070,12 @@ class CodeManager {
                 _root.textManager.send('message', 'BetaQuest was started using seed '+_root.betaQuest.getSeed()+'.');
 			}
             else if (command[1] == 'seed') {
-                _root.textManager.send('message', 'BetaQuest is currently using seed '+_root.betaQuest.getSeed()+'.');
+				if (_root.betaQuest.isStarted()) {
+                	_root.textManager.send('message', 'BetaQuest is currently using seed '+_root.betaQuest.getSeed()+'.');
+				}
+				else {
+					_root.textManager.send('message', 'BetaQuest is not currently running. Last seed was '+_root.betaQuest.getSeed()+'.');
+				}
 			}
 		}));
 		
