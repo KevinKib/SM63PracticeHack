@@ -2200,7 +2200,10 @@ class CodeManager {
 		// To avoid infinite loops/recursion, we prevent setting the last code
 		// if the last command executed was 'last'.
         // Doesn't work if the 'last' command gets an argument.
-		if (command != 'last' && command != 'l') {
+		
+		var splitCmd = command.split(' ');
+
+		if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
 			this.lastCode = command;
 		}
 		_root.PauseGame = false;
