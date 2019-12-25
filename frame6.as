@@ -302,7 +302,7 @@ class Utils {
 			}
 		}
 		else {
-			this.setStar(selectedWorld[number-1], bool);
+			this.setStar(selectedWorld.getStars()[number-1], bool);
 		}
 	}
 	
@@ -331,15 +331,21 @@ class Utils {
 	
 	// Warps the player to a certain course.
 	public function warp(title, playerX, playerY, cameraX, cameraY, isCommand) {
-    if (isCommand == undefined) {
-        isCommand = true;
-    }
+		if (isCommand == undefined) {
+			isCommand = true;
+		}
 		
 		setTimeout(function() {
 			_root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
 		}, this.getWarpTimeout());
 		
 	}
+
+	// Resets the stats of the coins. Makes all collected coins re-appear.
+	public function resetCoins() {
+		_root.Restartcoins();
+	}
+	
 	
 	// Warps the player to a certain course using the door transition function.
 	public function warpDoor(title) {
@@ -1569,36 +1575,6 @@ class CodeManager {
 	
 	// Creates the codes and adds them to the code list.
 	public function initCodes() {
-		
-		this.add(new Code('worldstar ws', function(command) {
-			var level = command[1];
-			var bool = command[2];
-			var number = command[3];
-			switch(bool) {
-				case 'true':  
-					_root.utils.setWorldStars(level, true, number); 
-					break;
-				case 'false': 
-					_root.utils.setWorldStars(level, false, number); 
-					break;
-			}
-            _root.textManager.send('message', 'Stars from worlds have been updated.');
-		}));
-		
-		this.add(new Code('worldstarcoin wsc', function(command) {
-			var level = command[1];
-			var bool = command[2];
-			var number = command[3];
-			switch(bool) {
-				case 'true':  
-					_root.utils.setWorldStarCoins(level, true, number); 
-					break;
-				case 'false': 
-					_root.utils.setWorldStarCoins(level, false, number); 
-					break;
-			}
-            _root.textManager.send('message', 'Star Coins from worlds have been updated.');
-		}));
 
 		this.add(new Code('nozzle', function(command) {
 			var world = command[1];
@@ -1893,35 +1869,77 @@ class CodeManager {
 		}));
 		
 		this.add(new Code('star s', function(command) {
-			
-			if (command[2] == 'true') {
-				_root.utils.setStar(command[1], true);
-				_root.textManager.send('message', 'Star #'+command[1]+' has been set to true.');
-			}
-			else if (command[2] == 'false') {
-				_root.utils.setStar(command[1], false);
-				_root.textManager.send('message', 'Star #'+command[1]+' has been set to false.');
+
+			if (isNaN(Number(command[1])) == false) {
+				if (command[2] == 'true') {
+					_root.utils.setStar(command[1], true);
+					_root.textManager.send('message', 'Star '+command[1]+' has been set to true.');
+				}
+				else if (command[2] == 'false') {
+					_root.utils.setStar(command[1], false);
+					_root.textManager.send('message', 'Star '+command[1]+' has been set to false.');
+				}
+				else {
+					_root.utils.setStar(command[1]);
+					_root.textManager.send('message', 'Star '+command[1]+' has been toggled.');
+				}
 			}
 			else {
-				_root.utils.setStar(command[1]);
+				var level = command[1];
+				var number = Number(command[2]);
+				var bool = command[3];
+				switch(bool) {
+					case 'true':  
+						_root.utils.setWorldStars(level, true, number);
+						_root.textManager.send('message', 'Star '+number+' from '+level+' has been set to true.');
+						break;
+					case 'false': 
+						_root.utils.setWorldStars(level, false, number); 
+						_root.textManager.send('message', 'Star '+number+' from '+level+' has been set to false.');
+						break;
+					default:
+						_root.utils.setWorldStars(level, undefined, number);
+						_root.textManager.send('message', 'Star '+number+' from '+level+' has been toggled.');
+						break;
+				}
 			}
-			
 		}));
 		
 		this.add(new Code('starcoin sc', function(command) {
-			
-			if (command[2] == 'true') {
-				_root.utils.setStarCoin(command[1], true);
-				_root.textManager.send('message', 'StarCoin #'+command[1]+' has been set to true.');
-			}
-			else if (command[2] == 'false') {
-				_root.utils.setStarCoin(command[1], false);
-				_root.textManager.send('message', 'StarCoin #'+command[1]+' has been set to false.');
+
+			if (isNaN(Number(command[1])) == false) {
+				if (command[2] == 'true') {
+					_root.utils.setStarCoin(command[1], true);
+					_root.textManager.send('message', 'Star coin '+command[1]+' has been set to true.');
+				}
+				else if (command[2] == 'false') {
+					_root.utils.setStarCoin(command[1], false);
+					_root.textManager.send('message', 'Star coin '+command[1]+' has been set to false.');
+				}
+				else {
+					_root.utils.setStarCoin(command[1]);
+					_root.textManager.send('message', 'Star coin '+command[1]+' has been toggled.');
+				}
 			}
 			else {
-				_root.utils.setStarCoin(command[1]);
+				var level = command[1];
+				var number = Number(command[2]);
+				var bool = command[3];
+				switch(bool) {
+					case 'true':  
+						_root.utils.setWorldStarCoins(level, true, number); 
+						_root.textManager.send('message', 'Star coin '+number+' from '+level+' has been set to true.');
+						break;
+					case 'false': 
+						_root.utils.setWorldStarCoins(level, false, number); 
+						_root.textManager.send('message', 'Star coin '+number+' from '+level+' has been set to false.');
+						break;
+					default:
+						_root.utils.setWorldStarCoins(level, undefined, number);
+						_root.textManager.send('message', 'Star coin '+number+' from '+level+' has been set toggled.');
+				}
 			}
-		
+
 		}));
 
 		this.add(new Code('fludd', function(command) { 
@@ -2186,6 +2204,11 @@ class CodeManager {
                 _root.textManager.send('message', 'Cutscenes have been disabled.');
             }
         }));
+
+		this.add(new Code('resetcoins restartcoins', function(command) {
+			_root.utils.resetCoins();
+			_root.textManager.send('message', 'Coins will be reset on the next loading zone.');
+		}));
 		
 	}
 	
