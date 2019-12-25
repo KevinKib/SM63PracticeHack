@@ -2207,6 +2207,11 @@ class CodeManager {
 			_root.utils.resetCoins();
 			_root.textManager.send('message', 'Coins will be reset on the next loading zone.');
 		}));
+
+		this.add(new Code('kill', function(command) {
+			_root.CharHP = 0;
+			_root.textManager.send('message', 'Death has been provoked.');
+		}))
 		
 	}
 	
