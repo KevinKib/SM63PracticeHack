@@ -676,8 +676,6 @@ class Utils {
 	// Sets the player's current cap (invisible, invincible, wing cap or metal).
     // Uses text for the boolean variable (can be messy).
 	public function setCap(cap, boolText, time) {
-        // TODO: Make sure falcultative time parameter works
-
         if (time == undefined || isNaN(time)) time = 10000;
 		var capTime = time;
 		this.setCapTimer(capTime);
@@ -2043,15 +2041,15 @@ class CodeManager {
 		this.add(new Code('char', function(command) {
 			
 			switch(command[1]) {
-				case 'mario' : case 'Mario':
+				case 'mario' : case 'Mario': case 'm': case 'M':
 					_root.CurrentPlayer = 'Mario';
 					_root.textManager.send('message', 'Character switched to Mario.');
 					break;
-				case 'luigi' : case 'Luigi':
+				case 'luigi' : case 'Luigi': case 'l': case 'L':
 					_root.CurrentPlayer = 'Luigi';
 					_root.textManager.send('message', 'Character switched to Luigi.');
 					break;
-				case 'toggle' :
+				case 'toggle' : case '': case undefined:
 					if(_root.CurrentPlayer == "Mario")
 					{
 						_root.CurrentPlayer = "Luigi";
@@ -2718,10 +2716,6 @@ class SaveState {
 
     private var starArray;
     private var starCoinArray;
-
-
-    // TODO : Stars / SC arrays
-    // TODO : Caps & cap timer
 	
 	// Constructor of the SaveState class.
 	public function SaveState(name) {
