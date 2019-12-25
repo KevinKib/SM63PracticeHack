@@ -16,6 +16,7 @@ StartChar = function(a, b, c, d, e, f, g, h, i, resetmusic, isCommand)
 	
 	//_root.textManager.write(5, a);
    _root.playingcourse = a;
+   _root.utils.updatePlayingLevel(a);
    if(_root.Starnamenum == 0)
    {
       _root.AreaTextAppear = true;
