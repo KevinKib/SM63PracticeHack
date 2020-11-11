@@ -280,8 +280,9 @@ CharCode = function() {
         _root.currentCamY = _root.Camcenter._y;
         _root.currentCamX = _root.Camcenter._x;
     } else {
-        camYspeed = (-_root.Camcenter._y + _root.Camcenter._parent._y) / _root.Camspeed;
-        camXspeed = (-_root.Camcenter._x + _root.Camcenter._parent._x) / _root.Camspeed;
+        camYspeed = (-1 * (_root.Camcenter._parent._y + _root.Camcenter._y )) / _root.Camspeed;
+        camXspeed = (-1 * (_root.Camcenter._parent._x + _root.Camcenter._x )) / _root.Camspeed;
+        
         _root.currentCamY = _root.Camcenter._y + _root.Camcenter._parent._y;
         _root.currentCamX = _root.Camcenter._x + _root.Camcenter._parent._x;
     }
