@@ -1,3 +1,5 @@
+// FPS Code
+
 // Triggers event that happens whenever a loading zone is entered
 _root.event.onLoadingZone();
 
