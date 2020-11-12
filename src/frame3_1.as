@@ -1,9 +1,21 @@
-// Considering the camera glitch problem comes from the CharCode function,
-// we're able to fix it by moving the StartChar definition to frame3_2
-// (which should be executed right after).
+StartChar = function(a, b, c, d, e, f, g, h, i, resetmusic, isCommand) {
 
-StartChar = function(a, b, c, d, e, f, g, h, i, resetmusic) {
+    if (isCommand == true || _root.betaQuest.isStarted()) {
+        var warpArray = _root.betaQuest.getCorrespondingArea(a);
+
+        a = warpArray[0];
+        b = warpArray[1];
+        c = warpArray[2];
+        d = warpArray[1];
+        e = warpArray[2];
+    }
+
+    // We save the variables b, c, d, e for the lwp command
+    _root.utils.setLatestWarpPosition(b, c, d, e);
+
+    //_root.textManager.write(5, a);
     _root.playingcourse = a;
+    _root.utils.updatePlayingLevel(a);
     if (_root.Starnamenum == 0) {
         _root.AreaTextAppear = true;
     }
@@ -280,9 +292,9 @@ CharCode = function() {
         _root.currentCamY = _root.Camcenter._y;
         _root.currentCamX = _root.Camcenter._x;
     } else {
-        camYspeed = (-1 * (_root.Camcenter._parent._y + _root.Camcenter._y )) / _root.Camspeed;
-        camXspeed = (-1 * (_root.Camcenter._parent._x + _root.Camcenter._x )) / _root.Camspeed;
-        
+        camYspeed = (-1 * (_root.Camcenter._parent._y + _root.Camcenter._y)) / _root.Camspeed;
+        camXspeed = (-1 * (_root.Camcenter._parent._x + _root.Camcenter._x)) / _root.Camspeed;
+
         _root.currentCamY = _root.Camcenter._y + _root.Camcenter._parent._y;
         _root.currentCamX = _root.Camcenter._x + _root.Camcenter._parent._x;
     }
