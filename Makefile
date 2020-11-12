@@ -1,2 +1,2 @@
 frame6:
-	python3 src/_generator.py
+	python src/_generator.py
