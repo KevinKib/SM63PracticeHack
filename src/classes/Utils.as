@@ -19,6 +19,7 @@ class Utils {
         this.flags = new Array();
         this.flags.push(false, false);
         this.cutscenes = false;
+        this.camLock = true;
 
         this.waterInterval = null;
         this.infiniteWater = false;
@@ -526,6 +527,10 @@ class Utils {
         _root.lvl8keyE = bool;
     }
 
+	// Sets whether the camera is edge locked or not.
+	public function setCamLock(bool) {
+        this.camLock = bool;
+    }
 
 
     /// --- GETTERS --- ///
@@ -718,4 +723,8 @@ class Utils {
         return !_root.PauseGame;
     }
 
+	 // Returns true if the camera is edge locked or not.
+    public function isCamLocked() {
+        return this.camLock;
+    }
 }
