@@ -340,8 +340,6 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 ***
 </details>
 
-***
-
 <details>
 <summary>showwarps</summary>
 
