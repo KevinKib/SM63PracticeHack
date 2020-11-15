@@ -1,16 +1,14 @@
-// Class that communicates with the IG variables
+// Class that communicates with the in-game variables
 class Utils {
 
     private var latestWarpPosition;
     private var worldList;
     private var flags;
     private var cutscenes;
-
     private var waterInterval;
     private var infiniteWater;
     private var healthInterval;
     private var infiniteHealth;
-
 
     // Constructor of the Utils class.
     public function Utils() {
@@ -526,11 +524,12 @@ class Utils {
         _root.lvl8keyE = bool;
     }
 
-
+    // Sets whether the game is paused or not.
+    public function setPause(bool) {
+        return _root.PauseGame = bool;
+    }
 
     /// --- GETTERS --- ///
-
-
 
     // Returns a specific world using its name.
     public function getWorld(name) {

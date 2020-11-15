@@ -69,22 +69,20 @@ class CodeManager {
 
     // Executes a specific code.
     public function execute(command) {
-        //_root.textManager.send('message', '');
-        //_root.textManager.send('message', command);
         var i = 0;
         for (i = 0; i < this.codeList.length; i = i + 1) {
             this.codeList[i].execute(command);
         }
+
         // To avoid infinite loops/recursion, we prevent setting the last code
         // if the last command executed was 'last'.
         // Doesn't work if the 'last' command gets an argument.
-
         var splitCmd = command.split(' ');
-
         if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
             this.lastCode = command;
         }
-        _root.PauseGame = false;
+
+        _root.utils.setPause(false);
     }
 
     // Executes the last command that was executed by the player.
@@ -99,14 +97,14 @@ class CodeManager {
         if (_root.KeySlash()) {
             this.resetDelay();
             _root.textManager.send('message', 'Enter your command!');
-            _root.PauseGame = true;
+            _root.utils.setPause(true);
         } else if (this.delay > 0) {
             this.reduceDelay();
             if (this.delay <= 0) {
                 this.currentCode = "";
-                // Delay equals 0, we cancel the PauseGame effect.
                 _root.textManager.send('message', "");
-                _root.PauseGame = false;
+                // Delay equals 0, we un-pause the game.
+                _root.utils.setPause(false);
             }
         }
     }
