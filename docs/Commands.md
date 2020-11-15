@@ -323,7 +323,6 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 **Note :** Currently, this applies to both the player AND objects, so enemies that use collision will through the ground.
 
-***
 </details>
 
 ***
@@ -369,7 +368,6 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 **Syntax :** zoomlock / zl [on|off]
 
-***
 </details>
 
 ***
