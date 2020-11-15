@@ -80,7 +80,6 @@ class CodeManager {
         if (isCommandExecuted) {
             // To avoid infinite loops/recursion, we prevent setting the last code
             // if the last command executed was 'last'.
-            // Doesn't work if the 'last' command gets an argument.
             var splitCmd = command.split(' ');
             if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
                 this.lastCode = command;
