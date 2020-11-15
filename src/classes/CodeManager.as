@@ -68,17 +68,26 @@ class CodeManager {
 
     // Executes a specific code.
     public function execute(command) {
+        var isCommandExecuted = false;
         var i = 0;
         for (i = 0; i < this.codeList.length; i = i + 1) {
-            this.codeList[i].execute(command);
+            isCommandExecuted = this.codeList[i].execute(command);
+            if (isCommandExecuted) {
+                break;
+            }
         }
 
-        // To avoid infinite loops/recursion, we prevent setting the last code
-        // if the last command executed was 'last'.
-        // Doesn't work if the 'last' command gets an argument.
-        var splitCmd = command.split(' ');
-        if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
-            this.lastCode = command;
+        if (isCommandExecuted) {
+            // To avoid infinite loops/recursion, we prevent setting the last code
+            // if the last command executed was 'last'.
+            // Doesn't work if the 'last' command gets an argument.
+            var splitCmd = command.split(' ');
+            if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
+                this.lastCode = command;
+            }
+        }
+        else {
+            _root.textManager.send('message', 'The command entered is invalid.');
         }
 
         _root.utils.setPause(false);
