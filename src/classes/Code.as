@@ -13,18 +13,21 @@ class Code {
         this.func = func;
     }
 
-    // Executes the code, if the index is valid.
+    // Executes the code, if the command entered by the user matches with to this one.
     public function execute(command) {
-
+        var isValid = false;
         var i = 0;
         var splitCommand = command.split(' ');
 
         for (i = 0; i < this.indexList.length; i++) {
             if (this.indexList[i] == splitCommand[0]) {
                 this.func(splitCommand);
+                isValid = true;
                 break;
             }
         }
+
+        return isValid;
     }
 
     // Executes the code, no matter what.
