@@ -300,6 +300,82 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 ***
 
+### Movement
+
+<details>
+<summary>gravity</summary>
+
+> Enables or disables noclip (ignoring collision)
+
+**Syntax :** gravity / grav [number]
+
+* **number:** Gravity value (1 is default, 0.8 is space 1-2, and 0.75 is space 3, true bowser, and GoS).
+
+***
+</details>
+
+<details>
+<summary>noclip</summary>
+
+> Enables or disables noclip (ignoring collision)
+
+**Syntax :** noclip / nc [on|off]
+
+**Note :** Currently, this applies to both the player AND objects, so enemies that use collision will through the ground.
+
+***
+</details>
+
+***
+
+### Display
+
+<details>
+<summary>camlock</summary>
+
+> Enables or disables camera edge locking - meaning when the player reaches the edge of the stage, the camera will stop panning.
+
+**Syntax :** camlock / cl [on|off]
+
+***
+</details>
+
+***
+
+<details>
+<summary>showwarps</summary>
+
+> Shows or hides warps (displayed as a black rectangle).
+
+**Syntax :** showwarps / sw [on|off]
+
+***
+</details>
+
+<details>
+<summary>zoom</summary>
+
+> Zooms to a certain value.
+
+**Syntax :** zoom [number]
+
+* **number:** Zoom value (default zoom range is 50-200, with 50 being the furthest outward zoom possible, and 200 being the furthest inward zoom possible).
+
+***
+</details>
+
+<details>
+<summary>zoomlock</summary>
+
+> Enables or disables the default zoom locking - meaning the player can only zoom in/out to a certain distance.
+
+**Syntax :** zoomlock / zl [on|off]
+
+***
+</details>
+
+***
+
 ### Other
 
 <details>
