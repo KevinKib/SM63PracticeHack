@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('forcewarp fw', function(command) {
+_root.codeManager.add(new Code('forcewarp fw', '', function(command) {
 
     _root.betaQuest.stop();
 

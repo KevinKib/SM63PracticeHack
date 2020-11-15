@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('water', function(command) {
+_root.codeManager.add(new Code('water', '', function(command) {
     if (command[1] == 'refill') {
         _root.WaterAmount = _root.TotalWater;
         _root.textManager.send('message', 'Water has been refilled.');

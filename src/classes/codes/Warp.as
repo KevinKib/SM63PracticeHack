@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('warp w', function(command) {
+_root.codeManager.add(new Code('warp w', '', function(command) {
 
     var level = command[1];
     var player_x = command[2];

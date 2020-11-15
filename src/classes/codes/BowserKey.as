@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('bowserkey bk', function(command) {
+_root.codeManager.add(new Code('bowserkey bk', '', function(command) {
 
     if (command[2] == 'true') {
         _root.utils.setBowserKey(int(command[1]), true);

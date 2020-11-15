@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('nozzle', function(command) {
+_root.codeManager.add(new Code('nozzle', '', function(command) {
     var world = command[1];
     var nozzle = command[2];
     var bool = command[3];

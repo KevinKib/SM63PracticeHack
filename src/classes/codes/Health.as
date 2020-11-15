@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('health', function(command) {
+_root.codeManager.add(new Code('health', '', function(command) {
     if (command[1] == 'refill') {
         _root.CharHP = 8;
         _root.textManager.send('message', 'Health has been refilled.');

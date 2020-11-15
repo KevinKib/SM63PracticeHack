@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('individuallevel il', function(command) {
+_root.codeManager.add(new Code('individuallevel il', '', function(command) {
     // This code is disgusting as a whole and needs to be fixed as soon as possible
 
     // IL data options

@@ -4,12 +4,16 @@ class Code {
     // Identifier of the code
     private var indexList;
 
+    // Description and syntax of the command.
+    private var description;
+
     // Function sent as a callback that will be executed
     private var func;
 
     // Constructor
-    public function Code(index, func) {
+    public function Code(index, desc, func) {
         this.indexList = index.split(' ');
+        this.description = desc;
         this.func = func;
     }
 
@@ -28,6 +32,11 @@ class Code {
         }
 
         return isValid;
+    }
+
+    // Returns the description and syntax of the command.
+    public function getDescription() {
+        return this.description;
     }
 
     // Executes the code, no matter what.

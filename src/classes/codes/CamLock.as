@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('camlock cl', function(command) {
+_root.codeManager.add(new Code('camlock cl', '', function(command) {
     if (command[1] == 'on') {
         if (_root.utils.isCamLocked())
         {
