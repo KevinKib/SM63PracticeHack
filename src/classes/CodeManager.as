@@ -6,7 +6,6 @@ class CodeManager {
     private var input;
     private var currentCode;
     private var lastCode;
-
     private var il;
 
     // Constructor.
@@ -27,7 +26,7 @@ class CodeManager {
         var allowedKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_:/.,\\\'%;*+\" [](){}=$";
         var keyListener = new Object();
         keyListener.onKeyDown = function() {
-            if (_root.codeManager.delay > 0) {
+            if (_root.codeManager.getDelay() > 0) {
                 if (_root.codeManager.getInput()) {
                     if (allowedKeys.indexOf(chr(Key.getAscii())) != -1) {
                         _root.codeManager.setCurrentCode(_root.codeManager.getCurrentCode() + chr(Key.getAscii()));
@@ -69,22 +68,28 @@ class CodeManager {
 
     // Executes a specific code.
     public function execute(command) {
-        //_root.textManager.send('message', '');
-        //_root.textManager.send('message', command);
+        var isCommandExecuted = false;
         var i = 0;
         for (i = 0; i < this.codeList.length; i = i + 1) {
-            this.codeList[i].execute(command);
+            isCommandExecuted = this.codeList[i].execute(command);
+            if (isCommandExecuted) {
+                break;
+            }
         }
-        // To avoid infinite loops/recursion, we prevent setting the last code
-        // if the last command executed was 'last'.
-        // Doesn't work if the 'last' command gets an argument.
 
-        var splitCmd = command.split(' ');
-
-        if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
-            this.lastCode = command;
+        if (isCommandExecuted) {
+            // To avoid infinite loops/recursion, we prevent setting the last code
+            // if the last command executed was 'last'.
+            var splitCmd = command.split(' ');
+            if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
+                this.lastCode = command;
+            }
         }
-        _root.PauseGame = false;
+        else {
+            _root.textManager.send('message', 'The command entered is invalid.');
+        }
+
+        _root.utils.setPause(false);
     }
 
     // Executes the last command that was executed by the player.
@@ -99,18 +104,17 @@ class CodeManager {
         if (_root.KeySlash()) {
             this.resetDelay();
             _root.textManager.send('message', 'Enter your command!');
-            _root.PauseGame = true;
+            _root.utils.setPause(true);
         } else if (this.delay > 0) {
             this.reduceDelay();
             if (this.delay <= 0) {
                 this.currentCode = "";
-                // Delay equals 0, we cancel the PauseGame effect.
                 _root.textManager.send('message', "");
-                _root.PauseGame = false;
+                // Delay equals 0, we un-pause the game.
+                _root.utils.setPause(false);
             }
         }
     }
-
 
     // Getters & setters
 
