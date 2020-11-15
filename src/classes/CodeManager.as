@@ -6,7 +6,6 @@ class CodeManager {
     private var input;
     private var currentCode;
     private var lastCode;
-
     private var il;
 
     // Constructor.
@@ -27,7 +26,7 @@ class CodeManager {
         var allowedKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_:/.,\\\'%;*+\" [](){}=$";
         var keyListener = new Object();
         keyListener.onKeyDown = function() {
-            if (_root.codeManager.delay > 0) {
+            if (_root.codeManager.getDelay() > 0) {
                 if (_root.codeManager.getInput()) {
                     if (allowedKeys.indexOf(chr(Key.getAscii())) != -1) {
                         _root.codeManager.setCurrentCode(_root.codeManager.getCurrentCode() + chr(Key.getAscii()));
@@ -108,7 +107,6 @@ class CodeManager {
             }
         }
     }
-
 
     // Getters & setters
 
