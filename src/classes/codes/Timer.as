@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('timer t', '', function(command) {
+_root.codeManager.add(new Code('timer t', '', '', function(command) {
 
     switch (command[1]) {
         case 'start':

@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('loadstate ls', '', function(command) {
+_root.codeManager.add(new Code('loadstate ls', '', '', function(command) {
     var name = command[1];
     _root.saveStateManager.load(name);
 

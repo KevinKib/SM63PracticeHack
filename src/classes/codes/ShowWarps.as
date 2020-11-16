@@ -1,4 +1,4 @@
-﻿_root.codeManager.add(new Code('showwarps sw', '', function(command) {
+﻿_root.codeManager.add(new Code('showwarps sw', '', '', function(command) {
 	if (command[1] == 'on') {
         _root.Course.BackGFX.warp1._visible = true;
         _root.Course.BackGFX.warp2._visible = true;

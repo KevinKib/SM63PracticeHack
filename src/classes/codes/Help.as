@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('help', '', function(command) {
+_root.codeManager.add(new Code('help', '', '', function(command) {
     var newArray = command.slice();
 
     // We remove the first parameter of the array

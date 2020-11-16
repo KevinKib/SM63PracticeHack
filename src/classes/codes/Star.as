@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('star s', '', function(command) {
+_root.codeManager.add(new Code('star s', '', '', function(command) {
 
     if (isNaN(Number(command[1])) == false) {
         if (command[2] == 'true') {

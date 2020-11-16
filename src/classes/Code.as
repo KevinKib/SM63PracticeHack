@@ -4,16 +4,20 @@ class Code {
     // Identifier of the code
     private var indexList;
 
-    // Description and syntax of the command.
+    // Overall description of the command.
     private var description;
+
+    // Syntax of the command.
+    private var syntax;
 
     // Function sent as a callback that will be executed by the CodeManager
     private var callback;
 
     // Constructor
-    public function Code(index, desc, callback) {
+    public function Code(index, description, syntax, callback) {
         this.indexList = index.split(' ');
-        this.description = desc;
+        this.description = description;
+        this.syntax = syntax;
         this.callback = callback;
     }
 
@@ -42,8 +46,13 @@ class Code {
         this.callback(command);
     }
 
-    // Returns the description and syntax of the command.
+    // Returns the description of the command.
     public function getDescription() {
         return this.description;
+    }
+
+    // Returns the syntax of the command.
+    public function getSyntax() {
+        return this.syntax;
     }
 }

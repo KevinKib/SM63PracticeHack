@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('hotkey htk', '', function(command) {
+_root.codeManager.add(new Code('hotkey htk', '', '', function(command) {
     var newArray = command.slice();
 
     // We remove the two first parameters of the array

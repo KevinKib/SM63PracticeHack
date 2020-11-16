@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('clearhotkey clhtk', '', function(command) {
+_root.codeManager.add(new Code('clearhotkey clhtk', '', '', function(command) {
     var key = command[1];
 
     _root.hotkeyManager.remove(key);

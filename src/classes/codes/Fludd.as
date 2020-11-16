@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('fludd', '', function(command) {
+_root.codeManager.add(new Code('fludd', '', '', function(command) {
 
     switch (command[1]) {
         case 'all':

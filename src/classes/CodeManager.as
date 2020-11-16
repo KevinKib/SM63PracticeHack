@@ -96,6 +96,7 @@ class CodeManager {
 
         if (index != -1) {
             _root.textManager.send('message', this.codeList[index].getDescription());
+            _root.textManager.send('debug', this.codeList[index].getSyntax());
         }
         else {
             _root.textManager.send('message', 'Wrong command as help');
