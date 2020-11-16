@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('warp w', '', '', function(command) {
+_root.codeManager.add(new Code('warp w', 'Warps the player to a specific section.', 'warp / w NAME PLAYER_X PLAYER_Y [CAMERA_X] [CAMERA_Y]', function(command) {
 
     var level = command[1];
     var player_x = command[2];

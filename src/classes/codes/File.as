@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('file f', '', '', function(command) {
+_root.codeManager.add(new Code('file f', 'Setups a file setting.', 'file / f {complete|essentials|empty}', function(command) {
 
     switch (command[1]) {
         case 'complete':

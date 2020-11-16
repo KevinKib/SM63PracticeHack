@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('water', '', '', function(command) {
+_root.codeManager.add(new Code('water', 'Sets a certain amount of water to the player. From 0 to 10000.', 'water {refill|half|empty|NUMBER}', function(command) {
     if (command[1] == 'refill') {
         _root.WaterAmount = _root.TotalWater;
         _root.textManager.send('message', 'Water has been refilled.');

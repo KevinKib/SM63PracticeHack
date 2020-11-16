@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('cutscenes cts', '', '', function(command) {
+_root.codeManager.add(new Code('cutscenes cts', 'Enables or disables cutscenes.', 'cutscenes / cts {on|off}', function(command) {
     if (command[1] == 'on') {
         _root.utils.setCutscenes(true);
         _root.textManager.send('message', 'Cutscenes have been enabled.');

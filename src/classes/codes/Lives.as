@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('lives', '', '', function(command) {
+_root.codeManager.add(new Code('lives', 'Sets a certain number of lives to the life counter.', 'lives {NUMBER|infinite}', function(command) {
     if (command[1] == 'infinite') {
         _root.CharLives = NaN;
         _root.textManager.send('message', 'Lives are now infinite.');

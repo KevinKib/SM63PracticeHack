@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('zoomlock zl', '', '', function(command) {
+_root.codeManager.add(new Code('zoomlock zl', 'Enables or disables the default zoom locking.', 'zoomlock / zl {on|off}', function(command) {
 	if (command[1] == 'on') {
         if (_root.Maxzoomin == Infinity)
         {
