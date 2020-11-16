@@ -120,6 +120,15 @@ Can be either:
   - **starcoin** : Collect one specific star coin from the world. Number of the star has to be precised right after. Example : "il ssl starcoin 2"
   - **nms** : Collect a certain amount of stars and star coins from the world. Example : "il ssl nms 2 1" means that you need to collect 2 stars and 1 star coin in SSL for the timer to end.
 
+***
+</details>
+
+<details>
+<summary>restartcoins</summary>
+
+> Resets the coins position on the next loading zone.
+
+**Syntax :** resetcoins / restartcoins
 
 </details>
 
@@ -277,9 +286,27 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 * **NUMBER**: Any number.
 
+***
 </details>
 
+<details>
+<summary>fakebowser</summary>
 
+> Enables or disables Fake Bowser.
+
+**Syntax :** fakebowser / fb {on|off}
+
+***
+</details>
+
+<details>
+<summary>cutscenes</summary>
+
+> Enables or disables cutscenes.
+
+**Syntax :** cutscenes / cts {on|off}
+
+</details>
 
 ***
 
@@ -450,6 +477,38 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 </details>
 
 ***
+
+### Beta Quest
+
+<details>
+<summary>betaquest</summary>
+
+> Manages the Beta Quest hack.
+
+**Syntax** : betaquest / bq {start [SEED]|stop|seed}
+
+- **start** [SEED] : Starts a new seed of Beta Quest. A seed can be specified as a number; if no seed is specified, a random seed is taken.
+
+- **stop** : Stops the current seed of Beta Quest.
+
+- **seed** : Displays the current Beta Quest seed.
+
+***
+</details>
+
+<details>
+<summary>forcewarp</summary>
+
+> Warps the player to a certain location without taking in account if Beta Quest is started or not.
+
+**Syntax** : forcewarp / fw NAME PLAYER_X PLAYER_Y [CAMERA_X] [CAMERA_Y]
+
+* **NAME**: Name of that specific section. A list of the sections is available [here](https://docs.google.com/spreadsheets/d/1FLYArXZ4g_c7-L8tu4j_GyHaQ-BDFCvdqIluxmHcKkU/edit#gid=559521057).
+
+* **coordinates**: Coordinates of the starting location of the player (4 parameters).
+
+***
+</details>
 
 ### Other
 
