@@ -27,11 +27,49 @@ A savestate saves in-game data, such as the amount of health and water, current 
 
 * **NAME** : Name of the savestate.
 
+***
+</details>
+
+<details>
+<summary>hotkey</summary>
+
+> Binds a certain command to a key.
+
+**Syntax :** hotkey / htk KEY COMMAND
+
+* **KEY**: Any key of the keyboard that will be binded to the command.
+
+* **COMMAND**: Any command, which will be executed whenever the key is pressed.
+
+***
+</details>
+
+<details>
+<summary>clearhotkey</summary>
+
+> Clears a bind that to a hotkey that was precedently set.
+
+**Syntax :** clearhotkey / clhtk KEY
+
+* **KEY**: Any key of the keyboard that will be cleared
+
+***
 </details>
 
 ***
 
 ### Tools
+
+<details>
+<summary>help</summary>
+
+> Displays help on screen for a certain command.
+
+**Syntax :** help COMMAND_NAME
+
+* **COMMAND_NAME**: Name of the command that the help will be displayed for.
+
+</details>
 
 <details>
 <summary>timer</summary>
@@ -75,12 +113,12 @@ A savestate saves in-game data, such as the amount of health and water, current 
 
 * **TYPE**: The type of individual level that will be performed.
 Can be either:
-- **100 / all** : Starts a world from scratch. Collect every star and star coin from the world.
-- **allstars** : Collect every star from the world.
-- **allstarcoins** : Collect every star coin from the world.
-- **star** : Collect one specific from the world. Number of the star has to be precised right after. Example : "il bob star 4"
-- **starcoin** : Collect one specific star coin from the world. Number of the star has to be precised right after. Example : "il ssl starcoin 2"
-- **nms** : Collect a certain amount of stars and star coins from the world. Example : "il ssl nms 2 1" means that you need to collect 2 stars and 1 star coin in SSL for the timer to end.
+  - **100 / all** : Starts a world from scratch. Collect every star and star coin from the world.
+  - **allstars** : Collect every star from the world.
+  - **allstarcoins** : Collect every star coin from the world.
+  - **star** : Collect one specific from the world. Number of the star has to be precised right after. Example : "il bob star 4"
+  - **starcoin** : Collect one specific star coin from the world. Number of the star has to be precised right after. Example : "il ssl starcoin 2"
+  - **nms** : Collect a certain amount of stars and star coins from the world. Example : "il ssl nms 2 1" means that you need to collect 2 stars and 1 star coin in SSL for the timer to end.
 
 
 </details>
@@ -101,8 +139,6 @@ The "toggle" option switches to Luigi if Mario is the current character, and vic
 ***
 </details>
 
-
-
 <details>
 <summary>lives</summary>
 
@@ -120,7 +156,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Sets a certain amount of health to the player. Health count goes from 0 to 8.
 
-**Syntax :** health {refill|empty|death|number}
+**Syntax :** health {refill|empty|death|NUMBER}
 
 * **refill**: Heals the player, to the value 8.
 
@@ -128,7 +164,17 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 * **death**: Kills the player by setting health to the value 0
 
-* **number**: Any number between 0 and 8.
+* **NUMBER**: Any number between 0 and 8.
+
+***
+</details>
+
+<details>
+<summary>kill</summary>
+
+> Kills the player.
+
+**Syntax :** kill
 
 ***
 </details>
@@ -138,7 +184,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Sets a certain amount of water to the player. Water count goes from 0 to 10000.
 
-**Syntax :** water {refill|half|empty|number}
+**Syntax :** water {refill|half|empty|NUMBER}
 
 * **refill**: Fills the water, to the value 10000.
 
@@ -146,7 +192,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 * **empty**: Empties the water, to the value 0.
 
-* **number**: Any number between 0 and 10000.
+* **NUMBER**: Any number between 0 and 10000.
 
 ***
 </details>
@@ -199,6 +245,41 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 * **time**: Decides for how long the cap will be enabled.
 
 </details>
+
+<details>
+<summary>silver</summary>
+
+> Sets the silver star count.
+
+**Syntax :** silvers / silver NUMBER
+
+* **NUMBER**: Any number.
+
+</details>
+
+<details>
+<summary>coin</summary>
+
+> Sets the coin count.
+
+**Syntax :** coins / coin NUMBER
+
+* **NUMBER**: Any number.
+
+</details>
+
+<details>
+<summary>redcoin</summary>
+
+> Sets the red coin count.
+
+**Syntax :** reds / red / redcoins / redcoin NUMBER
+
+* **NUMBER**: Any number.
+
+</details>
+
+
 
 ***
 
@@ -303,7 +384,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 <details>
 <summary>gravity</summary>
 
-> Enables or disables noclip (ignoring collision)
+> Modifies the gravity of the current room.
 
 **Syntax :** gravity / grav NUMBER
 
@@ -398,6 +479,20 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 > Returns the current position of the player.
 
 **Syntax :** position / pos
+
+***
+</details>
+
+<details>
+<summary>setposition</summary>
+
+> Sets the player to a certain coordinate.
+
+**Syntax :** setposition / setpos PLAYER_X PLAYER_Y
+
+* **PLAYER_X :** Integer that represents the X coordinate of the player.
+
+* **PLAYER_Y :** Integer that represents the Y coordinate of the player.
 
 ***
 </details>
