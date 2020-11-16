@@ -535,6 +535,15 @@ class Utils {
         return _root.PauseGame = bool;
     }
 
+    // Displays a sign message on the screen for a certain duration.
+    public function displaySignMessage(message, duration) {
+        _root.PlayMessage(message);
+
+        setTimeout(function() {
+            _root.StopMessage();
+        }, duration);
+    }
+
     /// --- GETTERS --- ///
 
     // Returns a specific world using its name.

@@ -7,6 +7,10 @@ _root.codeManager.add(new Code('help', 'Displays help on screen for a certain co
 
     var unsplitCommand = newArray.join(" ");
 
-    _root.textManager.send('message', unsplitCommand);
-    _root.codeManager.readDescription(unsplitCommand);
+    if (unsplitCommand != '') {
+        _root.codeManager.readDescription(unsplitCommand);
+    }
+    else {
+        _root.utils.displaySignMessage('test coucou', 5000);
+    }
 }));
