@@ -1,4 +1,5 @@
 This page documentates every existing command, and how to use them.
+
 The documentation syntax follows [these guidelines](https://developers.google.com/style/code-syntax).
 
 ### Savestates
