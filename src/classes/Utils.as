@@ -527,10 +527,10 @@ class Utils {
     }
 
     public function setCollisionVisible(bool) {
-        _root.collision.back = true;
-        _root.collision.front = true;
-        _root.collision.plats = true;
-        _root.collision.hurt = true;
+        _root.collision.back = bool;
+        _root.collision.front = bool;
+        _root.collision.plats = bool;
+        _root.collision.hurt = bool;
     }
 
     /// --- GETTERS --- ///
