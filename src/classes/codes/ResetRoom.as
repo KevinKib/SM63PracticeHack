@@ -1,5 +1,5 @@
 _root.codeManager.add(new Code('resetroom rr', function(command) {
-    if (command[1] == 'p')
+    if (command[1] == 'p' || command[1] == 'pos' || command[1] == 'position')
     {
         _root.utils.resetRoom(true);
         _root.textManager.send('message', 'Room has been reset.');
