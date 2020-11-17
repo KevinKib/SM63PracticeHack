@@ -127,7 +127,7 @@ class Utils {
     public function resetRoom(stay) {
         if (stay)
         {
-            this.warp(this.getLevelName(), this.getPosition()[0], this.getPosition()[1], this.getPosition()[0], this.getPosition()[1]);
+            this.warp(this.getLevelName(), this.getPosition()[0], this.getPosition()[1], this.getPosition()[0], this.getPosition()[1], false);
         }
         else
         {
