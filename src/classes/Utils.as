@@ -123,6 +123,18 @@ class Utils {
         this.warp(this.getLevelName(), x, y, x, y);
     }
 
+    // Resets the room, keeping Mario in the same place if stay = true.
+    public function resetRoom(stay) {
+        if (stay)
+        {
+            this.warp(this.getLevelName(), this.getPosition()[0], this.getPosition()[1], this.getPosition()[0], this.getPosition()[1]);
+        }
+        else
+        {
+            this.warp(this.getLevelName());
+        }
+    }
+
     // Sets the state of every star coin.
     public function setStarCoins(bool) {
         i = 1;
