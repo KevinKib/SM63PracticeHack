@@ -6,9 +6,9 @@ import os
 import pyperclip
 
 # Constants
-FILE_NAME = "./src/frame6.as"
-SCRIPT_FOLDER = "./src/classes"
-CODES_FOLDER = "./src/classes/codes"
+FILE_NAME = "./frame6.as"
+SCRIPT_FOLDER = "./classes"
+CODES_FOLDER = "./classes/codes"
 SCRIPT_MAIN = "Main.as"
 SCRIPT_OVERWRITES = "Overwrites.as"
 

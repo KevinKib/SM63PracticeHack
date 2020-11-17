@@ -526,7 +526,12 @@ class Utils {
         _root.lvl8keyE = bool;
     }
 
-
+    public function setCollisionVisible(bool) {
+        _root.collision.back = true;
+        _root.collision.front = true;
+        _root.collision.plats = true;
+        _root.collision.hurt = true;
+    }
 
     /// --- GETTERS --- ///
 
