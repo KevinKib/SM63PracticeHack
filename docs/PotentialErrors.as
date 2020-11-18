@@ -1,0 +1,2 @@
+- Declaring variables inside a loop, such as `for (var i = 0; i < 6; i++)` does not work.
+  - Instead, separate the definition and the loop into two lines: `var i = 0; for (i = 0; i < 6; i++)`.
