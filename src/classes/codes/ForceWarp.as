@@ -1,4 +1,5 @@
-_root.codeManager.add(new Code('forcewarp fw', function(command) {
+_root.codeManager.add(new Code('forcewarp fw', 'Warps the player to a certain location ignoring BQ settings.', 'forcewarp / fw NAME PLAYER_X PLAYER_Y [CAMERA_X] [CAMERA_Y]', function(command) {
+    // This command should be removed and implemented as a parameter of the warp command.
 
     _root.betaQuest.stop();
 
