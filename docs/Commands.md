@@ -69,7 +69,7 @@ A savestate saves in-game data, such as the amount of health and water, current 
 
 * **COMMAND_NAME**: Name / handle of the command for which the help is needed.
 
-If COMMAND_NAME is empty, then a list of every command is showed on the screen.
+If COMMAND_NAME is empty, then a list of every command is shown on the screen.
 
 ***
 </details>
