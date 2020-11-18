@@ -34,6 +34,20 @@ A savestate saves in-game data, such as the amount of health and water, current 
 ### Tools
 
 <details>
+<summary>help</summary>
+
+> Displays help on screen for a certain command.
+
+**Syntax :** help [COMMAND_NAME]
+
+* **COMMAND_NAME**: Name / handle of the command for which the help is needed.
+
+If COMMAND_NAME is empty, then a list of every command is showed on the screen.
+
+***
+</details>
+
+<details>
 <summary>timer</summary>
 
 > Manages the state of the timer.

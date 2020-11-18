@@ -44,6 +44,13 @@ class Code {
     public function execute(command) {
         // _root.textManager.send('message', 'test2 : '+command[0]+' '+command[1]);
         this.callback(command);
+    
+    
+    }
+
+    // Returns the name of the command, which is the first handle that's defined for it.
+    public function getName() {
+        return this.indexList[0];
     }
 
     // Returns the description of the command.
@@ -55,4 +62,6 @@ class Code {
     public function getSyntax() {
         return this.syntax;
     }
+
+    
 }

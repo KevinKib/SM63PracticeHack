@@ -73,6 +73,7 @@ class CodeManager {
         var index = this.checkIfCommandMatches(command);
 
         if (index != -1) {
+            _root.textManager.send('message', '');
             var splitCmd = command.split(' ');
             this.codeList[index].execute(splitCmd);
 
@@ -122,6 +123,19 @@ class CodeManager {
     // Executes the last command that was executed by the player.
     public function executeLastCode() {
         this.execute(this.lastCode);
+    }
+
+    // Returns a string containing a list of all the codes.
+    public function getAllCodes() {
+        var i = 0;
+        var str = "";
+        for (i = 0; i < this.codeList.length; i++) {
+            str = str + this.codeList[i].getName();
+            if (i != this.codeList.length - 1) {
+                str = str + " - ";
+            }
+        }
+        return str;
     }
 
     // Defines the code that happens on each frame.

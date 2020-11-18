@@ -11,6 +11,6 @@ _root.codeManager.add(new Code('help', 'Displays help on screen for a certain co
         _root.codeManager.readDescription(unsplitCommand);
     }
     else {
-        _root.utils.displaySignMessage('test coucou', 5000);
+        _root.utils.displaySignMessage(_root.codeManager.getAllCodes());
     }
 }));
