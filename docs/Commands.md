@@ -574,7 +574,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Resets the room.
 
-**Syntax :** resetroom / rr [p/pos/position|<blank>]
+**Syntax :** resetroom / rr [p | pos | position | <blank>]
 
 * **p:** If p/pos/position is entered after resetroom/rr, the player will remain in the same position while the room resets.
 
