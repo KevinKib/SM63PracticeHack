@@ -1,5 +1,7 @@
 This page documentates every existing command, and how to use them.
 
+The documentation syntax follows [these guidelines](https://developers.google.com/style/code-syntax).
+
 ### Savestates
 
 <details>
@@ -9,9 +11,9 @@ This page documentates every existing command, and how to use them.
 
 A savestate saves in-game data, such as the amount of health and water, current held stars and star coins, nozzles currently available, currently held nozzle, etc.
 
-**Syntax :** savestate / ss [name]
+**Syntax :** savestate / ss NAME
 
-* **name** : Name of the savestate.
+* **NAME** : Name of the savestate.
 
 ***
 </details>
@@ -21,10 +23,37 @@ A savestate saves in-game data, such as the amount of health and water, current 
 
 > Loads a previously created savestate.
 
-**Syntax :** loadstate / ls [name]
+**Syntax :** loadstate / ls NAME
 
-* **name** : Name of the savestate.
+* **NAME** : Name of the savestate.
 
+***
+</details>
+
+<details>
+<summary>hotkey</summary>
+
+> Binds a certain command to a key.
+
+**Syntax :** hotkey / htk KEY COMMAND
+
+* **KEY**: Any key of the keyboard that will be binded to the command.
+
+* **COMMAND**: Any command, which will be executed whenever the key is pressed.
+
+***
+</details>
+
+<details>
+<summary>clearhotkey</summary>
+
+> Clears a bind that to a hotkey that was precedently set.
+
+**Syntax :** clearhotkey / clhtk KEY
+
+* **KEY**: Any key of the keyboard that will be cleared
+
+***
 </details>
 
 ***
@@ -32,11 +61,25 @@ A savestate saves in-game data, such as the amount of health and water, current 
 ### Tools
 
 <details>
+<summary>help</summary>
+
+> Displays help on screen for a certain command.
+
+**Syntax :** help [COMMAND_NAME]
+
+* **COMMAND_NAME**: Name / handle of the command for which the help is needed.
+
+If COMMAND_NAME is empty, then a list of every command is shown on the screen.
+
+***
+</details>
+
+<details>
 <summary>timer</summary>
 
 > Manages the state of the timer.
 
-**Syntax :** timer / t [start|stop|reset]
+**Syntax :** timer / t {start|stop|reset}
 
 * **start**: Starts the timer.
 
@@ -53,9 +96,9 @@ A savestate saves in-game data, such as the amount of health and water, current 
 
 > Warps the player to a specific section.
 
-**Syntax :** warp / w [name] [playerX] [playerY] [cameraX] [cameraY]
+**Syntax :** warp / w NAME PLAYER_X PLAYER_Y [CAMERA_X] [CAMERA_Y]
 
-* **name**: Name of that specific section. A list of the sections is available [here](https://docs.google.com/spreadsheets/d/1FLYArXZ4g_c7-L8tu4j_GyHaQ-BDFCvdqIluxmHcKkU/edit#gid=559521057).
+* **NAME**: Name of that specific section. A list of the sections is available [here](https://docs.google.com/spreadsheets/d/1FLYArXZ4g_c7-L8tu4j_GyHaQ-BDFCvdqIluxmHcKkU/edit#gid=559521057).
 
 * **coordinates**: Coordinates of the starting location of the player (4 parameters).
 
@@ -67,19 +110,28 @@ A savestate saves in-game data, such as the amount of health and water, current 
 
 > Starts an individual level.
 
-**Syntax :** individuallevel / il [world] [type]
+**Syntax :** individuallevel / il WORLD TYPE
 
-* **world**: Name of the world in which the individual level will be played. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk - b1reds - b2reds - b3reds
+* **WORLD**: Name of the world in which the individual level will be played. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk - b1reds - b2reds - b3reds
 
-* **type**: The type of individual level that will be performed.
+* **TYPE**: The type of individual level that will be performed.
 Can be either:
-- **100 / all** : Starts a world from scratch. Collect every star and star coin from the world.
-- **allstars** : Collect every star from the world.
-- **allstarcoins** : Collect every star coin from the world.
-- **star** : Collect one specific from the world. Number of the star has to be precised right after. Example : "il bob star 4"
-- **starcoin** : Collect one specific star coin from the world. Number of the star has to be precised right after. Example : "il ssl starcoin 2"
-- **nms** : Collect a certain amount of stars and star coins from the world. Example : "il ssl nms 2 1" means that you need to collect 2 stars and 1 star coin in SSL for the timer to end.
+  - **100 / all** : Starts a world from scratch. Collect every star and star coin from the world.
+  - **allstars** : Collect every star from the world.
+  - **allstarcoins** : Collect every star coin from the world.
+  - **star** : Collect one specific from the world. Number of the star has to be precised right after. Example : "il bob star 4"
+  - **starcoin** : Collect one specific star coin from the world. Number of the star has to be precised right after. Example : "il ssl starcoin 2"
+  - **nms** : Collect a certain amount of stars and star coins from the world. Example : "il ssl nms 2 1" means that you need to collect 2 stars and 1 star coin in SSL for the timer to end.
 
+***
+</details>
+
+<details>
+<summary>restartcoins</summary>
+
+> Resets the coins position on the next loading zone.
+
+**Syntax :** resetcoins / restartcoins
 
 </details>
 
@@ -92,21 +144,19 @@ Can be either:
 
 > Allows to switch characters.
 
-**Syntax** : char [mario|luigi|toggle]
+**Syntax** : char {mario|luigi|toggle}
 
 The "toggle" option switches to Luigi if Mario is the current character, and vice-versa.
 
 ***
 </details>
 
-
-
 <details>
 <summary>lives</summary>
 
 > Sets a certain number of lives to the life counter.
 
-**Syntax** : lives [number|infinite]
+**Syntax** : lives {NUMBER|infinite}
 
 Writing 'lives infinite' will prevent Mario from ever game-overing.
 
@@ -118,7 +168,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Sets a certain amount of health to the player. Health count goes from 0 to 8.
 
-**Syntax :** health [refill|empty|death|number]
+**Syntax :** health {refill|empty|death|NUMBER}
 
 * **refill**: Heals the player, to the value 8.
 
@@ -126,7 +176,17 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 * **death**: Kills the player by setting health to the value 0
 
-* **number**: Any number between 0 and 8.
+* **NUMBER**: Any number between 0 and 8.
+
+***
+</details>
+
+<details>
+<summary>kill</summary>
+
+> Kills the player.
+
+**Syntax :** kill
 
 ***
 </details>
@@ -136,7 +196,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Sets a certain amount of water to the player. Water count goes from 0 to 10000.
 
-**Syntax :** water [refill|half|empty|number]
+**Syntax :** water {refill|half|empty|NUMBER}
 
 * **refill**: Fills the water, to the value 10000.
 
@@ -144,7 +204,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 * **empty**: Empties the water, to the value 0.
 
-* **number**: Any number between 0 and 10000.
+* **NUMBER**: Any number between 0 and 10000.
 
 ***
 </details>
@@ -154,7 +214,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Manages the current nozzles that the player has access to.
 
-**Syntax :** fludd [all|H|R|T|none]
+**Syntax :** fludd {all|H|R|T|none}
 
 * **all**: Gives all nozzles to the player.
 
@@ -174,13 +234,11 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Sets the saved nozzles in a specific world.
 
-**Syntax :** nozzle [world] [nozzle] [bool]
+**Syntax :** nozzle WORLD NOZZLE {true|false}
 
-* **world**: Name of the world. Can be chosen between these : all - bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
+* **WORLD**: Name of the world. Can be chosen between these : all - bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
 
-* **nozzle**: Name of the nozzle that will be changed. Can be either : all, h, r, t, none.
-
-* **bool**: Future state of the chosen nozzles. Can be either true or false.
+* **NOZZLE**: Name of the nozzle that will be changed. Can be either : all, h, r, t, none.
 
 ***
 </details>
@@ -190,15 +248,66 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Sets the state of the caps the player currently has.
 
-**Syntax :** cap [type|none] [boolean] [time]
+**Syntax :** cap TYPE {true|false} TIME
 
-* **type**: Cap type. Can be either : invisible - invincible - metal - wing.
+* **TYPE**: Cap type. Can be either : invisible - invincible - metal - wing - none.
 
 * **none**: This option resets all player caps.
 
-* **boolean**: True or false.
-
 * **time**: Decides for how long the cap will be enabled.
+
+</details>
+
+<details>
+<summary>silver</summary>
+
+> Sets the silver star count.
+
+**Syntax :** silvers / silver NUMBER
+
+* **NUMBER**: Any number.
+
+</details>
+
+<details>
+<summary>coin</summary>
+
+> Sets the coin count.
+
+**Syntax :** coins / coin NUMBER
+
+* **NUMBER**: Any number.
+
+</details>
+
+<details>
+<summary>redcoin</summary>
+
+> Sets the red coin count.
+
+**Syntax :** reds / red / redcoins / redcoin NUMBER
+
+* **NUMBER**: Any number.
+
+***
+</details>
+
+<details>
+<summary>fakebowser</summary>
+
+> Enables or disables Fake Bowser.
+
+**Syntax :** fakebowser / fb {on|off}
+
+***
+</details>
+
+<details>
+<summary>cutscenes</summary>
+
+> Enables or disables cutscenes.
+
+**Syntax :** cutscenes / cts {on|off}
 
 </details>
 
@@ -211,7 +320,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Setups a file setting.
 
-**Syntax :** file / f [complete|essentials|empty]
+**Syntax :** file / f {complete|essentials|empty}
 
 * **complete**: Setups a 100% file.
 
@@ -227,7 +336,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Manages the state of a specific star.
 
-**Syntax :** star / s [number] [boolean]
+**Syntax :** star / s NUMBER [true|false]
 
 * **number**: Identifier of the star, between 1 and 64.
 
@@ -242,9 +351,9 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Manages the state of a specific star coin.
 
-**Syntax :** starcoin / sc [number] [boolean]
+**Syntax :** starcoin / sc NUMBER [true|false]
 
-* **number**: Identifier of the star coin, between 1 and 64.
+* **NUMBER**: Identifier of the star coin, between 1 and 64.
 
 * **boolean**: Either true or false, to set the state of the star coin, or nothing to toggle its state.
 
@@ -257,9 +366,9 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Manages the state of a specific bowser key.
 
-**Syntax:** bowserkey / bk [number] [boolean]
+**Syntax:** bowserkey / bk NUMBER [true|false]
 
-* **number**: Identifier of the bowser key, between 1 and 3.
+* **NUMBER**: Identifier of the bowser key, between 1 and 3.
 
 * **boolean**: Either true or false, to set the state of the bowser key, or nothing to toggle its state.
 
@@ -271,13 +380,13 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Sets the state of the stars in a specific world.
 
-**Syntax :** worldstar / ws [world] [bool] [number]
+**Syntax :** worldstar / ws WORLD {true|false} [NUMBER]
 
-* **world**: Name of the world. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
+* **WORLD**: Name of the world. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
 
 * **bool**: Future state of the chosen stars. Can be either true or false.
 
-* **number** (Falcultative) Number of one specific star that can be chosen. For example, "ws bob true 1" gives the first star of BoB, which is the king bob-omb star.
+* **NUMBER** (Falcultative) Number of one specific star that can be chosen. For example, "ws bob true 1" gives the first star of BoB, which is the king bob-omb star.
 
 ***
 </details>
@@ -288,13 +397,13 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Sets the state of the star coins in a specific world.
 
-**Syntax :** worldstarcoin / wsc
+**Syntax :** worldstarcoin / wsc WORLD {true|false} [NUMBER]
 
-* **world**: Name of the world. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
+* **WORLD**: Name of the world. Can be chosen between these : bob - sl - ssl - hmc - bm - wdw - lll - ttm - ttc - rr - sotm - jrb - tidal - sots - ff - thwc - coe - mm - gos - eotmk
 
 * **bool**: Future state of the chosen star coins. Can be either true or false.
 
-* **number** (Falcultative) Number of one specific star coin that can be chosen. Refer to worldstar to see an example of use.
+* **NUMBER** (Falcultative) Number of one specific star coin that can be chosen. Refer to worldstar to see an example of use.
 
 </details>
 
@@ -305,11 +414,11 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 <details>
 <summary>gravity</summary>
 
-> Enables or disables noclip (ignoring collision)
+> Modifies the gravity of the current room.
 
-**Syntax :** gravity / grav [number]
+**Syntax :** gravity / grav NUMBER
 
-* **number:** Gravity value (1 is default, 0.8 is space 1-2, and 0.75 is space 3, true bowser, and GoS).
+* **NUMBER:** Gravity value (1 is default, 0.8 is space 1-2, and 0.75 is space 3, true bowser, and GoS).
 
 ***
 </details>
@@ -319,7 +428,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Enables or disables noclip (ignoring collision)
 
-**Syntax :** noclip / nc [on|off]
+**Syntax :** noclip / nc {on|off}
 
 **Note :** Currently, this applies to both the player AND objects, so enemies that use collision will through the ground.
 
@@ -334,7 +443,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Enables or disables camera edge locking - meaning when the player reaches the edge of the stage, the camera will stop panning.
 
-**Syntax :** camlock / cl [on|off]
+**Syntax :** camlock / cl {on|off}
 
 ***
 </details>
@@ -344,7 +453,7 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Shows or hides warps (displayed as a black rectangle).
 
-**Syntax :** showwarps / sw [on|off]
+**Syntax :** showwarps / sw {on|off}
 
 ***
 </details>
@@ -354,9 +463,9 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Zooms to a certain value.
 
-**Syntax :** zoom [number]
+**Syntax :** zoom NUMBER
 
-* **number:** Zoom value (default zoom range is 50-200, with 50 being the furthest outward zoom possible, and 200 being the furthest inward zoom possible).
+* **NUMBER:** Zoom value (default zoom range is 50-200, with 50 being the furthest outward zoom possible, and 200 being the furthest inward zoom possible).
 
 ***
 </details>
@@ -366,11 +475,43 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 > Enables or disables the default zoom locking - meaning the player can only zoom in/out to a certain distance.
 
-**Syntax :** zoomlock / zl [on|off]
+**Syntax :** zoomlock / zl {on|off}
 
 </details>
 
 ***
+
+### Beta Quest
+
+<details>
+<summary>betaquest</summary>
+
+> Manages the Beta Quest hack.
+
+**Syntax** : betaquest / bq {start [SEED]|stop|seed}
+
+- **start** [SEED] : Starts a new seed of Beta Quest. A seed can be specified as a number; if no seed is specified, a random seed is taken.
+
+- **stop** : Stops the current seed of Beta Quest.
+
+- **seed** : Displays the current Beta Quest seed.
+
+***
+</details>
+
+<details>
+<summary>forcewarp</summary>
+
+> Warps the player to a certain location without taking in account if Beta Quest is started or not.
+
+**Syntax** : forcewarp / fw NAME PLAYER_X PLAYER_Y [CAMERA_X] [CAMERA_Y]
+
+* **NAME**: Name of that specific section. A list of the sections is available [here](https://docs.google.com/spreadsheets/d/1FLYArXZ4g_c7-L8tu4j_GyHaQ-BDFCvdqIluxmHcKkU/edit#gid=559521057).
+
+* **coordinates**: Coordinates of the starting location of the player (4 parameters).
+
+***
+</details>
 
 ### Other
 
@@ -400,6 +541,20 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 > Returns the current position of the player.
 
 **Syntax :** position / pos
+
+***
+</details>
+
+<details>
+<summary>setposition</summary>
+
+> Sets the player to a certain coordinate.
+
+**Syntax :** setposition / setpos PLAYER_X PLAYER_Y
+
+* **PLAYER_X :** Integer that represents the X coordinate of the player.
+
+* **PLAYER_Y :** Integer that represents the Y coordinate of the player.
 
 ***
 </details>

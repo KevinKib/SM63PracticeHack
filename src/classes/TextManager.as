@@ -71,6 +71,7 @@ class TextManager {
 
             if (this.messageDelay == 0) {
                 this.write(this.getRow('message'), "");
+                this.write(this.getRow('debug'), "");
             }
         }
     }

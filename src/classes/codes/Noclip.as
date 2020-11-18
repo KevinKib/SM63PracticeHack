@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('noclip nc', function(command) {
+_root.codeManager.add(new Code('noclip nc', 'Enables or disables noclip (ignoring collision)', 'noclip / nc {on|off}', function(command) {
     if (command[1] == 'on') {
         tempCourseScale = _root.coursescale2;
         if (isNaN(_root.coursescale2))

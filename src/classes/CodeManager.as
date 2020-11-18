@@ -66,21 +66,19 @@ class CodeManager {
         this.codeList.push(code);
     }
 
+    
     // Executes a specific code.
+    // @param command String.
     public function execute(command) {
-        var isCommandExecuted = false;
-        var i = 0;
-        for (i = 0; i < this.codeList.length; i = i + 1) {
-            isCommandExecuted = this.codeList[i].execute(command);
-            if (isCommandExecuted) {
-                break;
-            }
-        }
+        var index = this.checkIfCommandMatches(command);
 
-        if (isCommandExecuted) {
+        if (index != -1) {
+            _root.textManager.send('message', '');
+            var splitCmd = command.split(' ');
+            this.codeList[index].execute(splitCmd);
+
             // To avoid infinite loops/recursion, we prevent setting the last code
             // if the last command executed was 'last'.
-            var splitCmd = command.split(' ');
             if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
                 this.lastCode = command;
             }
@@ -92,9 +90,52 @@ class CodeManager {
         _root.utils.setPause(false);
     }
 
+    // Displays the description of a command on screen.
+    // @param command String.
+    public function readDescription(command) {
+        var index = this.checkIfCommandMatches(command);
+
+        if (index != -1) {
+            _root.textManager.send('message', this.codeList[index].getDescription());
+            _root.textManager.send('debug', this.codeList[index].getSyntax());
+        }
+        else {
+            _root.textManager.send('message', 'Wrong command as help');
+        }
+    }
+
+    // Checks if the command entered by the user exists.
+    // @param command String.
+    // @return Integer; -1 if the command doesn't exist, otherwise, index of the command in the codeList array.
+    private function checkIfCommandMatches(command) {
+        var correctIndex = -1;
+        var i = 0;
+        for (i = 0; i < this.codeList.length; i = i + 1) {
+            if (this.codeList[i].isMatching(command)) {
+                correctIndex = i;
+                break;
+            }
+        }
+
+        return correctIndex;
+    }
+
     // Executes the last command that was executed by the player.
     public function executeLastCode() {
         this.execute(this.lastCode);
+    }
+
+    // Returns a string containing a list of all the codes.
+    public function getAllCodes() {
+        var i = 0;
+        var str = "";
+        for (i = 0; i < this.codeList.length; i++) {
+            str = str + this.codeList[i].getName();
+            if (i != this.codeList.length - 1) {
+                str = str + " - ";
+            }
+        }
+        return str;
     }
 
     // Defines the code that happens on each frame.
