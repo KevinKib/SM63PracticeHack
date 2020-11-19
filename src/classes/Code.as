@@ -4,33 +4,64 @@ class Code {
     // Identifier of the code
     private var indexList;
 
-    // Function sent as a callback that will be executed
-    private var func;
+    // Overall description of the command.
+    private var description;
+
+    // Syntax of the command.
+    private var syntax;
+
+    // Function sent as a callback that will be executed by the CodeManager
+    private var callback;
 
     // Constructor
-    public function Code(index, func) {
+    public function Code(index, description, syntax, callback) {
         this.indexList = index.split(' ');
-        this.func = func;
+        this.description = description;
+        this.syntax = syntax;
+        this.callback = callback;
     }
 
-    // Executes the code, if the index is valid.
-    public function execute(command) {
-
+    // Checks if the command entered by the user matches with this one.
+    // @param command String.
+    public function isMatching(command) {
+        var isValid = false;
         var i = 0;
         var splitCommand = command.split(' ');
 
         for (i = 0; i < this.indexList.length; i++) {
             if (this.indexList[i] == splitCommand[0]) {
-                this.func(splitCommand);
+                isValid = true;
                 break;
             }
         }
+
+        return isValid;
     }
 
-    // Executes the code, no matter what.
-    // (Should not be working)
-    private function executeImmediate() {
-        this.func();
+
+    // Executes the command.
+    // @param command Array of strings.
+    public function execute(command) {
+        // _root.textManager.send('message', 'test2 : '+command[0]+' '+command[1]);
+        this.callback(command);
+    
+    
     }
 
+    // Returns the name of the command, which is the first handle that's defined for it.
+    public function getName() {
+        return this.indexList[0];
+    }
+
+    // Returns the description of the command.
+    public function getDescription() {
+        return this.description;
+    }
+
+    // Returns the syntax of the command.
+    public function getSyntax() {
+        return this.syntax;
+    }
+
+    
 }

@@ -8,7 +8,7 @@ FFDec allows developers to directly edit scripts within the software, and then c
 - First, it is recommended to use another IDE (such as Visual Studio Code) to write code, and then copy-paste that code into FFDec.
 - Then, in order to separate files, a Python script was written. This script links all classes & code files together in a frame6.as file, that is also copied into the clipboard. Then, we can paste in FFDec and compile the .swf.
 
-## Python script usage
+# Python script usage
 
 Run the command `make frame6` from the root folder.
 

@@ -1,16 +1,16 @@
-// Class that communicates with the IG variables
+// Class that communicates with the in-game variables
 class Utils {
 
     private var latestWarpPosition;
     private var worldList;
     private var flags;
     private var cutscenes;
-
     private var waterInterval;
     private var infiniteWater;
     private var healthInterval;
     private var infiniteHealth;
 
+    private var isSignMessageDisplayed;
 
     // Constructor of the Utils class.
     public function Utils() {
@@ -19,11 +19,14 @@ class Utils {
         this.flags = new Array();
         this.flags.push(false, false);
         this.cutscenes = false;
+        this.camLock = true;
 
         this.waterInterval = null;
         this.infiniteWater = false;
         this.healthInterval = null;
         this.infiniteHealth = false;
+
+        this.isSignMessageDisplayed = false;
 
         this.initWorlds();
     }
@@ -33,11 +36,15 @@ class Utils {
         this.worldList.push(new World(1, 'bob', 'Bom-Omb Battlefield', "C-2", [-174.1, 9.35], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6], []), new World(2, 'sl', "Snowman's Land", "C-2-2", [-265, 58.05], [6, 7, 8, 9, 10], [7, 8, 9, 10, 11, 12], []), new World(3, 'hmc', "Hazy Maze Cave", "C-7", [-434.45, 58.3], [11, 12, 13, 14, 15], [13, 14, 15, 16, 17, 18], []), new World(4, 'bm', "Boo's Mansion", "C-8", [332.05, -0.15], [16, 17, 18, 19, 20], [19, 20, 21, 22, 23, 24], []), new World(5, 'lll', "Lethal Lava Land", "C-10", [-339.65, 8.15], [21, 22, 23, 24, 25], [25, 26, 27, 28, 29, 30], []), new World(6, 'ttm', "Tall Tall Mountain", "C-10", [136.05, 6.75], [26, 27, 28, 29, 30], [31, 32, 33, 34, 35, 36], []), new World(7, 'rr', "Rainbow Ride", "C-12", [-675.45, -74.9], [31, 32, 33, 34, 35], [37, 38, 39, 40, 41, 42], []), new World(8, 'bt3', "Bowser Trap 3", "C-13", [1123.9, -159.05], [], [52, 53], ['bt3']), new World(9, 'ssl', "Shifting Sand Land", "C-3", [155.3, 9.35], [55, 56, 57], [43, 44, 45], []), new World(10, 'wdw', "Wet Dry World", "C-8", [551.6, -10.3], [58, 59, 60], [46, 47, 48], []), new World(11, 'ttc', "Tick Tock Clock", "C-12", [149.5, 0.65], [61, 62, 63], [49, 50, 51], []), new World(0, 'sotm', "Secret of the Mushroom", "C-1", [0, -232], [44], [59], []), new World(0, 'jrb', "Jolly Roger Bay", "C-4H", [-633.6, -429.9], [46], [], []), new World(0, 'tidal', "Tidal Isles", "C-3-2", [128.2, 10.15], [45], [60], []), new World(0, 'sots', "Secret of the Sky", "C-7", [-623, 58.5], [48], [58], []), new World(0, 'ff', "Frosty Fludd", "C-7", [277.45, 58.45], [47], [63], []), new World(0, 'thwc', "Thwomp's Castle", "C-8", [939.05, -373.75], [49], [], []), new World(0, 'coe', "Cave of Empuzzlement", "C-10", [311.05, 7.35], [52], [], []), new World(0, 'mm', "Magma Maze", "C-10", [-442.55, -724.45], [53], [55], []), new World(0, 'gos', "Galaxy of Stars", "C-12", [481.3, -74.45], [54], [], []), new World(0, 'bt1', "Bowser 1", "C-5", [-316.85, 7.25], [], [], []), new World(0, 'bt2', "Bowser 2", "C-7", [619.85, 57.35], [], [], []), new World(0, 'b1reds', "Bowser 1 Reds", "C-5", [-316.85, 7.25], [40], [56], []), new World(0, 'b2reds', "Bowser 2 Reds", "C-7", [619.85, 57.35], [42], [57], []), new World(0, 'b3reds', "Bowser 3 Reds", "C-13", [971.85, -159.2], [37], [52, 53], []), new World(0, 'space', "Space", "8-12", [0, 0], [], [54], ['space']), new World(0, 'escape', "Escape", "8-16", [0, 0], [36], [], []), new World(0, 'endgame', "Any% Endgame", "C-13", [1123.9, -159.05], [36], [], []), new World(0, 'eotmk', "Edge of the Mushroom Kingdom", "Castle", [2163.9, -233.25], [64], [64], []));
     }
 
-
+    // Defines actions that are executed on each frame.
+    public function onEachFrame() {
+        // Treats sign messages manually triggered on screen.
+        if (this.isSignMessageDisplayed && _root.KeyZ()) {
+            this.removeSignMessage();
+        }
+    }
 
     /// --- SETTERS --- ///
-
-
 
     // Sets stars of a certain world in a certain state.
     public function setWorldStars(name, bool, number) {
@@ -120,6 +127,18 @@ class Utils {
         // _root.Course.Char._y = y - (_root.Course.Char._y - _root.Course.FrontGFX._y);
 
         this.warp(this.getLevelName(), x, y, x, y);
+    }
+
+    // Resets the room, keeping Mario in the same place if stay = true.
+    public function resetRoom(stay) {
+        if (stay)
+        {
+            this.warp(this.getLevelName(), this.getPosition()[0], this.getPosition()[1], this.getPosition()[0], this.getPosition()[1], false);
+        }
+        else
+        {
+            this.warp(this.getLevelName());
+        }
     }
 
     // Sets the state of every star coin.
@@ -526,6 +545,7 @@ class Utils {
         _root.lvl8keyE = bool;
     }
 
+    // Shows or hides the collision rectangles.
     public function setCollisionVisible(bool) {
         _root.collision.back = bool;
         _root.collision.front = bool;
@@ -533,9 +553,29 @@ class Utils {
         _root.collision.hurt = bool;
     }
 
+	// Sets whether the camera is edge locked or not.
+	public function setCamLock(bool) {
+        this.camLock = bool;
+    }
+
+    // Sets whether the game is paused or not.
+    public function setPause(bool) {
+        return _root.PauseGame = bool;
+    }
+
+    // Displays a sign message on the screen.
+    public function displaySignMessage(message) {
+        _root.PlayMessage(message);
+        this.isSignMessageDisplayed = true;
+    }
+
+    // Removes the sign message displayed on the screen.
+    public function removeSignMessage(message) {
+        _root.StopMessage();
+        this.isSignMessageDisplayed = false;
+    }
+
     /// --- GETTERS --- ///
-
-
 
     // Returns a specific world using its name.
     public function getWorld(name) {
@@ -723,4 +763,8 @@ class Utils {
         return !_root.PauseGame;
     }
 
+	 // Returns true if the camera is edge locked or not.
+    public function isCamLocked() {
+        return this.camLock;
+    }
 }

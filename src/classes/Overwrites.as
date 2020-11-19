@@ -1,4 +1,4 @@
-// This code overwrites the functions written in frame3_3, as editing the file is impossible in FFDec
+// This code overwrites the functions written in frame3_3
 _root.gotoCourseSelect = function(level) {
     _root.Playinglevel = level;
     _root.RemoveCourse();
