@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('char', function(command) {
+_root.codeManager.add(new Code('char', 'Allows to switch characters.', 'char {mario|luigi|toggle}', function(command) {
 
     switch (command[1]) {
         case 'mario':

@@ -6,6 +6,7 @@ class Event {
         _root.timer.onEachFrame();
         _root.codeManager.onEachFrame();
         _root.textManager.onEachFrame();
+        _root.utils.onEachFrame();
 
         if (_root.timer.isDisplayed()) {
             _root.textManager.send('timer', _root.timer.getDisplay());

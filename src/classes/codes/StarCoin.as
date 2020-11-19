@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('starcoin sc', function(command) {
+_root.codeManager.add(new Code('starcoin sc', 'Manages the state of a specific star coin.', 'starcoin / sc NUMBER [true|false]', function(command) {
 
     if (isNaN(Number(command[1])) == false) {
         if (command[2] == 'true') {

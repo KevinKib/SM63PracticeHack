@@ -6,7 +6,6 @@ class CodeManager {
     private var input;
     private var currentCode;
     private var lastCode;
-
     private var il;
 
     // Constructor.
@@ -27,7 +26,7 @@ class CodeManager {
         var allowedKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_:/.,\\\'%;*+\" [](){}=$";
         var keyListener = new Object();
         keyListener.onKeyDown = function() {
-            if (_root.codeManager.delay > 0) {
+            if (_root.codeManager.getDelay() > 0) {
                 if (_root.codeManager.getInput()) {
                     if (allowedKeys.indexOf(chr(Key.getAscii())) != -1) {
                         _root.codeManager.setCurrentCode(_root.codeManager.getCurrentCode() + chr(Key.getAscii()));
@@ -67,29 +66,76 @@ class CodeManager {
         this.codeList.push(code);
     }
 
+    
     // Executes a specific code.
+    // @param command String.
     public function execute(command) {
-        //_root.textManager.send('message', '');
-        //_root.textManager.send('message', command);
+        var index = this.checkIfCommandMatches(command);
+
+        if (index != -1) {
+            _root.textManager.send('message', '');
+            var splitCmd = command.split(' ');
+            this.codeList[index].execute(splitCmd);
+
+            // To avoid infinite loops/recursion, we prevent setting the last code
+            // if the last command executed was 'last'.
+            if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
+                this.lastCode = command;
+            }
+        }
+        else {
+            _root.textManager.send('message', 'The command entered is invalid.');
+        }
+
+        _root.utils.setPause(false);
+    }
+
+    // Displays the description of a command on screen.
+    // @param command String.
+    public function readDescription(command) {
+        var index = this.checkIfCommandMatches(command);
+
+        if (index != -1) {
+            _root.textManager.send('message', this.codeList[index].getDescription());
+            _root.textManager.send('debug', this.codeList[index].getSyntax());
+        }
+        else {
+            _root.textManager.send('message', 'Wrong command as help');
+        }
+    }
+
+    // Checks if the command entered by the user exists.
+    // @param command String.
+    // @return Integer; -1 if the command doesn't exist, otherwise, index of the command in the codeList array.
+    private function checkIfCommandMatches(command) {
+        var correctIndex = -1;
         var i = 0;
         for (i = 0; i < this.codeList.length; i = i + 1) {
-            this.codeList[i].execute(command);
+            if (this.codeList[i].isMatching(command)) {
+                correctIndex = i;
+                break;
+            }
         }
-        // To avoid infinite loops/recursion, we prevent setting the last code
-        // if the last command executed was 'last'.
-        // Doesn't work if the 'last' command gets an argument.
 
-        var splitCmd = command.split(' ');
-
-        if (splitCmd[0] != 'last' && splitCmd[0] != 'l') {
-            this.lastCode = command;
-        }
-        _root.PauseGame = false;
+        return correctIndex;
     }
 
     // Executes the last command that was executed by the player.
     public function executeLastCode() {
         this.execute(this.lastCode);
+    }
+
+    // Returns a string containing a list of all the codes.
+    public function getAllCodes() {
+        var i = 0;
+        var str = "";
+        for (i = 0; i < this.codeList.length; i++) {
+            str = str + this.codeList[i].getName();
+            if (i != this.codeList.length - 1) {
+                str = str + " - ";
+            }
+        }
+        return str;
     }
 
     // Defines the code that happens on each frame.
@@ -99,18 +145,17 @@ class CodeManager {
         if (_root.KeySlash()) {
             this.resetDelay();
             _root.textManager.send('message', 'Enter your command!');
-            _root.PauseGame = true;
+            _root.utils.setPause(true);
         } else if (this.delay > 0) {
             this.reduceDelay();
             if (this.delay <= 0) {
                 this.currentCode = "";
-                // Delay equals 0, we cancel the PauseGame effect.
                 _root.textManager.send('message', "");
-                _root.PauseGame = false;
+                // Delay equals 0, we un-pause the game.
+                _root.utils.setPause(false);
             }
         }
     }
-
 
     // Getters & setters
 

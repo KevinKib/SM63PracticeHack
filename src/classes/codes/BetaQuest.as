@@ -1,4 +1,4 @@
-_root.codeManager.add(new Code('betaquest bq', function(command) {
+_root.codeManager.add(new Code('betaquest bq', 'Manages the Beta Quest hack.', 'betaquest / bq {start [SEED]|stop|seed}', function(command) {
     if (command[1] == 'stop') {
         _root.betaQuest.stop();
         _root.textManager.send('message', 'BetaQuest was stopped.');
