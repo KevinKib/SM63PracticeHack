@@ -309,6 +309,29 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 **Syntax :** showcollision / shc [on|off]
 
+***
+</details>
+
+<details>
+<summary>addwatchvar</summary>
+
+> Adds a variable to the memory watch.
+
+**Syntax :** addwatchvar / awv [name]
+
+* **name**: Name of the variable to watch for.
+
+***
+</details>
+<details>
+<summary>removewatchvar</summary>
+
+> Removes a variable from the watch.
+
+**Syntax :** removewatchvar / rwv [name]
+
+* **name**: Name of the variable to remove from the watch.
+
 </details>
 
 ***
