@@ -14,6 +14,9 @@ class Event {
             _root.textManager.send('segment_timer', "");
         }
 
+        if (_root.memoryWatch.isDisplayed()) {
+           _root.textManager.send('watch', _root.memoryWatch.getWatch());
+        }
 
         // KoopaShell
         if (_root.KeySlash()) {

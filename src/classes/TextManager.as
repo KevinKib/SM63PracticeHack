@@ -1,53 +1,35 @@
 // Class that manages everything related to displayed text.
 class TextManager {
 
-    // Could be coded significantly better using an array.
-    private var row1;
-    private var row2;
-    private var row3;
-    private var row4;
-    private var row5;
-    private var row6;
+    private var rows = new Array();
 
     // Manages the life cycle of a message.
     private var messageDelay;
 
     // Constructor
     public function TextManager() {
-        this.row1 = "";
-        this.row2 = "";
-        this.row3 = "";
-        this.row4 = "";
-        this.row5 = "";
-        this.row6 = "";
+        var i = 0;
+        for(i = 0; i < 6; i++)
+        {
+            this.rows[i] = "";
+        }
 
         this.messageDelay = 0;
     }
 
     // Writes a message on the console.
     private function write(row, text) {
-        switch (row) {
-            case 1:
-                this.row1 = text;
-                break;
-            case 2:
-                this.row2 = text;
-                break;
-            case 3:
-                this.row3 = text;
-                break;
-            case 4:
-                this.row4 = text;
-                break;
-            case 5:
-                this.row5 = text;
-                break;
-            case 6:
-                this.row6 = text;
-                break;
-        }
+        this.rows[row] = text;
 
-        _root.TextHint = this.row1 + "\n" + this.row2 + "\n" + this.row3 + "\n" + this.row4 + "\n" + this.row5 + "\n" + this.row6;
+        //_root.TextHint = this.row1 + "\n" + this.row2 + "\n" + this.row3 + "\n" + this.row4 + "\n" + this.row5 + "\n" + this.row6;
+
+        _root.TextHint = "";
+        var j = 0;
+        for(j = 0; j < 6; j++)
+        {
+            _root.TextHint = _root.TextHint + this.rows[j] + "\n";
+        }
+        
     }
 
     // Sends a message to the console
@@ -59,7 +41,7 @@ class TextManager {
             this.messageDelay = this.getMessageLength();
         }
 
-        if (row != 0) {
+        if (row != undefined) {
             this.write(row, text);
         }
     }
@@ -77,22 +59,25 @@ class TextManager {
 
     // Returns the row where a specific type of text has to be displayed.
     private function getRow(type) {
-        var row = 0;
+        var row;
 
         switch (type) {
             case 'code':
-                row = 1;
+                row = 0;
                 break;
             case 'message':
-                row = 2;
+                row = 1;
                 break;
             case 'debug':
-                row = 3;
+                row = 2;
                 break;
             case 'timer':
-                row = 4;
+                row = 3;
                 break;
             case 'segment_timer':
+                row = 4;
+                break;
+            case 'watch':
                 row = 5;
                 break;
         }
