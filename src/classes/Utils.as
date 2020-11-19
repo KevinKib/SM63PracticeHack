@@ -547,8 +547,8 @@ class Utils {
 
     // Shows or hides the collision rectangles.
     public function setCollisionVisible(bool) {
-        _root.collision.back = bool;
-        _root.collision.front = bool;
+        //_root.collision.back = bool;
+        //_root.collision.front = bool;
         _root.collision.plats = bool;
         _root.collision.hurt = bool;
     }
