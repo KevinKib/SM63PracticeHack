@@ -409,6 +409,19 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 
 ***
 
+### Display
+
+<details>
+<summary>showcollision</summary>
+
+> Makes collision visible as bright boxes.
+
+**Syntax :** showcollision / shc [on|off]
+If neither on or off are specified, the collision is toggled.
+
+</details>
+
+***
 ### Movement
 
 <details>
