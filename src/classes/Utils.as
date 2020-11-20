@@ -570,6 +570,18 @@ class Utils {
         return _root.PauseGame = bool;
     }
 
+    // Sets Mario's current animation.
+    public function setAnimation(animation) {
+        if (animation == '' || animation == undefined) {
+            _root.Course.Char.attack = false;
+            _root.Course.Char.attackFrame = '';
+        }
+        else {
+            _root.Course.Char.attack = true;
+            _root.Course.Char.attackFrame = animation;
+        }
+    }
+
     // Displays a sign message on the screen.
     public function displaySignMessage(message) {
         _root.PlayMessage(message);
