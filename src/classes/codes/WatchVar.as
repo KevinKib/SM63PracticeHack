@@ -1,10 +1,10 @@
-_root.codeManager.add(new Code('addwatchvar awv', function(command) {
+_root.codeManager.add(new Code('addwatch watch aw', function(command) {
     _root.memoryWatch.addWatch(command[1]);
 
     _root.textManager.send('message', 'Var '+command[1]+' added to watch.');
 }));
 
-_root.codeManager.add(new Code('removewatchvar rwv', function(command) {
+_root.codeManager.add(new Code('removewatch rw', function(command) {
     if (_root.memoryWatch.removeWatch(command[1]))
     {
         _root.textManager.send('message', 'Var '+command[1]+' removed from watch.');
