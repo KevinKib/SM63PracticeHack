@@ -447,6 +447,17 @@ If neither on or off are specified, the collision is toggled.
 
 </details>
 
+<details>
+<summary>animation</summary>
+
+> Sets Mario's current animation.
+
+**Syntax :** animation NEW_ANIMATION
+
+* **NEW_ANIMATION :** New animation Mario will load. If this is empty, Mario resets to the default state (useful for not being stuck in BetaQuest).
+
+</details>
+
 ***
 
 ### Display
