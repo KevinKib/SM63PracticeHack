@@ -318,7 +318,7 @@ CharCode = function() {
     _root.CameraZoom2 = _root.CameraZoom2 + Math.round(_root.CameraZoom - _root.CameraZoom2) / 20;
     _root.coursescale2 = _root.groundFriction(_root.coursescale2, 3, 1.01);
     _root.coursescale = _root.coursescale2 + _root.CameraZoom2;
-    if (_root.Camspeed > 1) {
+    if (_root.Camspeed > 1 && _root.utils.isCamLocked()) {
         if (_root.Course.CamEdge.hitTest(_root.screensizeX / 2, _root.screensizeY - Math.min(camYspeed, 0) + 1, true)) {
             camYspeed = Math.max(-1, camYspeed);
         }
