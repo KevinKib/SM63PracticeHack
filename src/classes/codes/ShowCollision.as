@@ -5,5 +5,8 @@ _root.codeManager.add(new Code('showcollision shc', 'Makes collision visible as 
     } else if (command[1] == 'off') {
         _root.utils.setCollisionVisible(false);
         _root.textManager.send('message', 'Collision has been hidden.');
+    } else if (command[1] == undefined) {
+        _root.utils.setCollisionVisible(undefined);
+        _root.textManager.send('message', 'Collision has been toggled.');
     }
 }));

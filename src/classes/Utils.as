@@ -11,6 +11,7 @@ class Utils {
     private var infiniteHealth;
 
     private var isSignMessageDisplayed;
+    private var isCollisionVisible;
 
     // Constructor of the Utils class.
     public function Utils() {
@@ -27,6 +28,7 @@ class Utils {
         this.infiniteHealth = false;
 
         this.isSignMessageDisplayed = false;
+        this.isCollisionVisible = false;
 
         this.initWorlds();
     }
@@ -547,6 +549,11 @@ class Utils {
 
     // Shows or hides the collision rectangles.
     public function setCollisionVisible(bool) {
+        if (bool == undefined) {
+            bool = !this.isCollisionVisible;
+        }
+        this.isCollisionVisible = bool;
+
         //_root.collision.back = bool;
         //_root.collision.front = bool;
         _root.collision.plats = bool;
