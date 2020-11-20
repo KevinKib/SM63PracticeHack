@@ -473,25 +473,25 @@ If neither on or off are specified, the collision is toggled.
 </details>
 
 <details>
-<summary>addwatchvar</summary>
+<summary>addwatch</summary>
 
 > Adds a variable to the memory watch.
 
-**Syntax :** addwatchvar / awv [name]
+**Syntax :** addwatch / watch / aw [name]
 
-* **name**: Name of the variable to watch for.
+* **NAME**: Name of the variable to watch for.
 
 ***
 </details>
 
 <details>
-<summary>removewatchvar</summary>
+<summary>removewatch</summary>
 
 > Removes a variable from the watch.
 
-**Syntax :** removewatchvar / rwv [name]
+**Syntax :** removewatch / rw [name]
 
-* **name**: Name of the variable to remove from the watch.
+* **NAME**: Name of the variable to remove from the watch.
 
 ***
 </details>
