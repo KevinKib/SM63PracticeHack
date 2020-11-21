@@ -21,7 +21,7 @@ class WorldTTM {
     }
 
     public function getWarps() {
-        var dict = new Dictionary();
+        var dict = new Object();
         dict["ttm"] = "6-1";
         dict["ttm1"] = "6-1";
         dict["ttm2"] = "6-2";

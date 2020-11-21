@@ -124,14 +124,28 @@ class Utils {
             isCommand = true;
         }
 
+        title = this.getWarpAlias(title);
+
+        _root.textManager.send('debug', 'test : '+this.worldList[0] + ' : '+this.worldList[0].getName() + ' : ' + this.worldList[0].getWarps() + ' : ' + this.worldList[0].getWarps()['bob']);
+
         setTimeout(function() {
             _root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
         }, this.getWarpTimeout());
 
     }
 
-    public function getWarpHandle(title) {
+    public function getWarpAlias(alias) {
+        var i = 0;
 
+        for (i = 0; i < this.worldList.length; i++) {
+            var warp = this.worldList[i].getWarps()[alias];
+            
+            if (!(warp == undefined || warp == '')) {
+                return warp;
+            }
+        }
+
+        return alias;
     }
 
     // Resets the stats of the coins. Makes all collected coins re-appear.

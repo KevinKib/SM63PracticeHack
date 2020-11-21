@@ -21,7 +21,7 @@ class WorldSSL {
     }
 
     public function getWarps() {
-        var dict = new Dictionary();
+        var dict = new Object();
         dict["ssl"] = "M1-1";
         dict["ssl1"] = "M1-1";
         dict["ssl2"] = "M1-2";

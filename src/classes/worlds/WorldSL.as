@@ -21,7 +21,7 @@ class WorldSL {
     }
 
     public function getWarps() {
-        var dict = new Dictionary();
+        var dict = new Object();
         dict["sl"] = "2-1";
         dict["sl1"] = "2-1";
         dict["sl2"] = "2-2";

@@ -21,7 +21,7 @@ class WorldHMC {
     }
 
     public function getWarps() {
-        var dict = new Dictionary();
+        var dict = new Object();
         dict["hmc"] = "3-1";
         dict["hmc1"] = "3-1";
         dict["hmc2"] = "3-2";
