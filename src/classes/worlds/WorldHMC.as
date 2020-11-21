@@ -1,4 +1,4 @@
-class WorldHMC extends World {
+class WorldHMC {
 
     public function getIndex() {
         return 3;

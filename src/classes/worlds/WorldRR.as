@@ -1,4 +1,4 @@
-class WorldRR extends World {
+class WorldRR {
 
     public function getIndex() {
         return 7;

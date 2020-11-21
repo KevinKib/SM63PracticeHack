@@ -1,4 +1,4 @@
-class WorldTTC extends World {
+class WorldTTC {
 
     public function getIndex() {
         return 11;

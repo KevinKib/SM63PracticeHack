@@ -1,4 +1,4 @@
-class WorldBM extends World {
+class WorldBM {
 
     public function getIndex() {
         return 4;

@@ -1,4 +1,4 @@
-class WorldSL extends World {
+class WorldSL {
 
     public function getIndex() {
         return 2;

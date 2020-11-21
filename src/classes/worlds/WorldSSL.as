@@ -1,4 +1,4 @@
-class WorldSSL extends World {
+class WorldSSL {
 
     public function getIndex() {
         return 9;

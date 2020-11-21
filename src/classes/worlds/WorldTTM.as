@@ -1,4 +1,4 @@
-class WorldTTM extends World {
+class WorldTTM {
 
     public function getIndex() {
         return 6;
