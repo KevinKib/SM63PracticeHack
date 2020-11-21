@@ -16,6 +16,10 @@ class WorldSL extends World {
         return "C-2-2";
     }
 
+    public function getCoordinates() {
+        return [-265, 58.05];
+    }
+
     public function getWarps() {
         var dict = new Dictionary();
         dict["sl"] = "2-1";
@@ -35,10 +39,6 @@ class WorldSL extends World {
 
     public function getStarCoins() {
         return [7, 8, 9, 10, 11, 12];
-    }
-
-    public function getCoordinates() {
-        return [-265, 58.05];
     }
 
     public function getFlags() {

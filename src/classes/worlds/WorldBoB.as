@@ -16,6 +16,10 @@ class WorldBoB extends World {
         return "C-2";
     }
 
+    public function getCoordinates() {
+        return [-174.1, 9.35];
+    }
+
     public function getWarps() {
         var dict = new Dictionary();
         dict["bob"] = "1-1";
@@ -34,10 +38,6 @@ class WorldBoB extends World {
 
     public function getStarCoins() {
         return [1, 2, 3, 4, 5, 6];
-    }
-
-    public function getCoordinates() {
-        return [-174.1, 9.35];
     }
 
     public function getFlags() {
