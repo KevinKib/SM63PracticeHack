@@ -33,6 +33,10 @@ class World {
         return this.fullName;
     }
 
+    public function getStartingLevel() {
+        return this.startingLevel;
+    }
+
     public function getStars() {
         return this.stars.slice();
     }
@@ -47,9 +51,5 @@ class World {
 
     public function getFlags() {
         return this.flags.slice();
-    }
-
-    public function getStartingLevel() {
-        return this.startingLevel;
     }
 }
