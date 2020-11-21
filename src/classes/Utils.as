@@ -89,6 +89,13 @@ class Utils {
             isCommand = true;
         }
 
+        if (_root.betaQuest.isStarted() && this.isAnimationExitPainting()) {
+            this.setAnimation('');
+            setTimeout(function() {
+                _root.textManager.send('debug', 'Attempted to unstuck Mario.');
+            }, this.getAfterWarpTimeout());
+        }
+
         setTimeout(function() {
             _root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
         }, this.getWarpTimeout());
@@ -580,6 +587,11 @@ class Utils {
             _root.Course.Char.attack = true;
             _root.Course.Char.attackFrame = animation;
         }
+    }
+
+    // Return true if the ExitPainting animation is currently running for Mario.
+    public function isAnimationExitPainting() {
+        return (_root.Course.Char.attack == true) && (_root.Course.Char.attackFrame == 'ExitPainting');
     }
 
     // Displays a sign message on the screen.
