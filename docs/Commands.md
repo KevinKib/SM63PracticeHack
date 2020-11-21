@@ -462,6 +462,30 @@ If neither on or off are specified, the collision is toggled.
 </details>
 
 <details>
+<summary>addwatch</summary>
+
+> Adds a variable to the memory watch.
+
+**Syntax :** addwatch / watch / aw [name]
+
+* **NAME**: Name of the variable to watch for.
+
+***
+</details>
+
+<details>
+<summary>removewatch</summary>
+
+> Removes a variable from the watch.
+
+**Syntax :** removewatch / rw [name]
+
+* **NAME**: Name of the variable to remove from the watch.
+
+***
+</details>
+
+<details>
 <summary>showwarps</summary>
 
 > Shows or hides warps (displayed as a black rectangle).

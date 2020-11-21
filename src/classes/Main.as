@@ -8,3 +8,4 @@ _root.betaQuest = new BetaQuest();
 _root.event = new Event();
 _root.saveStateManager = new SaveStateManager();
 _root.hotkeyManager = new HotkeyManager();
+_root.memoryWatch = new MemoryWatch();
