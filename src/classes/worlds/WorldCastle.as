@@ -1,4 +1,4 @@
-class WorldCastle extends World {
+class WorldCastle {
 
     public function getIndex() {
         return 0;

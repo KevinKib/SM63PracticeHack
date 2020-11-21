@@ -45,7 +45,8 @@ class Utils {
             new WorldRR(),
             new WorldSSL(),
             new WorldWDW(),
-            new WorldTTC()
+            new WorldTTC(),
+            new WorldCastle(),
         );
     }
 
@@ -124,9 +125,7 @@ class Utils {
             isCommand = true;
         }
 
-        title = this.getWarpAlias(title);
-
-        _root.textManager.send('debug', 'test : '+this.worldList[0] + ' : '+this.worldList[0].getName() + ' : ' + this.worldList[0].getWarps() + ' : ' + this.worldList[0].getWarps()['bob']);
+        title = this.getWarpFromAlias(title);
 
         setTimeout(function() {
             _root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
@@ -134,7 +133,8 @@ class Utils {
 
     }
 
-    public function getWarpAlias(alias) {
+    // Interprets a sent alias and returns a warp that the game understands.
+    public function getWarpFromAlias(alias) {
         var i = 0;
 
         for (i = 0; i < this.worldList.length; i++) {

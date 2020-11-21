@@ -39,7 +39,6 @@ for worlds_name in worlds_list:
         clipboard_text += worlds_text
         compiled_script.write(worlds_text)
         worlds_number += 1
-print(str(worlds_number) + " worlds have been added.")
 
 # scripts
 for script_name in script_list:
@@ -61,6 +60,7 @@ for codes_name in codes_list:
         compiled_script.write(codes_text)
         codes_number += 1
 
+print(str(worlds_number) + " worlds have been added.")
 print(str(codes_number) + " codes have been added.")
 
 compiled_script.close()
