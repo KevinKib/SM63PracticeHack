@@ -47,11 +47,13 @@ class Utils {
             new WorldWDW(),
             new WorldTTC(),
             new WorldCastle(),
-            new WorldBowser3(),
             new WorldTutorial1(),
             new WorldTutorial2(),
             new WorldBowser1(),
-            new WorldBowser2()
+            new WorldBowser2(),
+            new WorldBowser3(),
+            new WorldSpace(),
+            new WorldEscape()
         );
     }
 
