@@ -230,7 +230,7 @@ class BetaQuest {
     }
 
     // Activates Beta Quest.
-    public function start(seed) {
+    public function start(seed, resetFile) {
         if (seed != undefined && !isNaN(Number(seed))) {
             this.setSeed(seed);
         } else {
@@ -239,7 +239,10 @@ class BetaQuest {
 
         this.started = true;
         this.generateWarpList();
-        // _root.utils.setFileSetting('empty');
+
+        if (resetFile == true) {
+            _root.utils.setFileSetting('empty');
+        }
 
         _root.utils.warp('C-1');
         _root.timer.reset();
