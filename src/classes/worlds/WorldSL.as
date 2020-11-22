@@ -29,6 +29,7 @@ class WorldSL {
         dict["sl4"] = "2-4";
         dict["sl5"] = "2-2A";
         dict["sl6"] = "2-5";
+        dict["slsecret"] = "2-5";
 
         return dict;
     }

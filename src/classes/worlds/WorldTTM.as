@@ -29,6 +29,7 @@ class WorldTTM {
         dict["ttm4"] = "6-4";
         dict["ttm5"] = "6-5";
         dict["ttm6"] = "6-6";
+        dict["ttmsecret"] = "6-6";
         dict["ttm7"] = "6-1-2";
 
         return dict;

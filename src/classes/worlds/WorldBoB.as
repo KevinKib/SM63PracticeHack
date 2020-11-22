@@ -28,6 +28,7 @@ class WorldBoB implements World {
         dict["bob3"] = "1-3";
         dict["bob4"] = "1-4";
         dict["bob5"] = "1-5";
+        dict["bobsecret"] = "1-5";
 
         return dict;
     }

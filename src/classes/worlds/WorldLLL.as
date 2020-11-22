@@ -32,6 +32,7 @@ class WorldLLL {
         dict["lll7"] = "5-7";
         dict["lll8"] = "5-8";
         dict["lll9"] = "5-9";
+        dict["lllsecret"] = "5-9";
 
         return dict;
     }

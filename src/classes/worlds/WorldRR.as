@@ -29,6 +29,7 @@ class WorldRR {
         dict["rr4"] = "7-4";
         dict["rr5"] = "7-5";
         dict["rr6"] = "7-6";
+        dict["rrsecret"] = "7-6";
 
         return dict;
     }

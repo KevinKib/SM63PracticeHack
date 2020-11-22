@@ -34,6 +34,7 @@ class WorldBM {
         dict["bm9"] = "4-9";
         dict["bm10"] = "4-10";
         dict["bm11"] = "4-11";
+        dict["bmsecret"] = "4-11";
 
         return dict;
     }

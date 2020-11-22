@@ -31,6 +31,7 @@ class WorldHMC {
         dict["hmc6"] = "3-6";
         dict["hmc7"] = "3-7";
         dict["hmc8"] = "3-8";
+        dict["hmcsecret"] = "3-8";
 
         return dict;
     }
