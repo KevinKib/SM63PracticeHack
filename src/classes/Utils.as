@@ -138,10 +138,12 @@ class Utils {
         var i = 0;
 
         for (i = 0; i < this.worldList.length; i++) {
-            var warp = this.worldList[i].getWarps()[alias];
+            if (this.worldList[i].hasWarps()) {
+                var warp = this.worldList[i].getWarps()[alias];
             
-            if (!(warp == undefined || warp == '')) {
-                return warp;
+                if (!(warp == undefined || warp == '')) {
+                    return warp;
+                }
             }
         }
 
