@@ -359,6 +359,18 @@ class Utils {
         _root.Fluddpow = value;
     }
 
+    // Sets Mario's current facing direction.
+    public function setDirection(direction) {
+        switch(direction) {
+            case 'left':
+                _root.Course.Char._xscale = 100;
+                break;
+            case 'right':
+                _root.Course.Char._xscale = -100;
+                break;
+        }
+    }
+
     // Sets the saved nozzles for a chosen world.
     public function setWorldNozzle(world, nozzle, boolText) {
 
