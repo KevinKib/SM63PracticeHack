@@ -46,4 +46,12 @@ class WorldBowser1 {
         return [];
     }
 
+    public function isIL() {
+        return true;
+    }
+
+    public function hasWarps() {
+        return true;
+    }
+
 }

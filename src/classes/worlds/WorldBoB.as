@@ -1,4 +1,4 @@
-class WorldBoB {
+class WorldBoB implements World {
 
     public function getIndex() {
         return 1;
@@ -42,6 +42,14 @@ class WorldBoB {
 
     public function getFlags() {
         return [];
+    }
+
+    public function isIL() {
+        return true;
+    }
+
+    public function hasWarps() {
+        return true;
     }
 
 }

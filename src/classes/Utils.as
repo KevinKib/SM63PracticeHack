@@ -60,7 +60,6 @@ class Utils {
     
 
     /*
-    new World(8, 'bt3', "Bowser Trap 3", "C-13", [1123.9, -159.05], [], [52, 53], ['bt3']), 
     new World(0, 'sotm', "Secret of the Mushroom", "C-1", [0, -232], [44], [59], []), 
     new World(0, 'jrb', "Jolly Roger Bay", "C-4H", [-633.6, -429.9], [46], [], []), 
     new World(0, 'tidal', "Tidal Isles", "C-3-2", [128.2, 10.15], [45], [60], []), 
@@ -70,8 +69,6 @@ class Utils {
     new World(0, 'coe', "Cave of Empuzzlement", "C-10", [311.05, 7.35], [52], [], []), 
     new World(0, 'mm', "Magma Maze", "C-10", [-442.55, -724.45], [53], [55], []), 
     new World(0, 'gos', "Galaxy of Stars", "C-12", [481.3, -74.45], [54], [], []), 
-    new World(0, 'bt1', "Bowser 1", "C-5", [-316.85, 7.25], [], [], []), 
-    new World(0, 'bt2', "Bowser 2", "C-7", [619.85, 57.35], [], [], []), 
     new World(0, 'b1reds', "Bowser 1 Reds", "C-5", [-316.85, 7.25], [40], [56], []),
     new World(0, 'b2reds', "Bowser 2 Reds", "C-7", [619.85, 57.35], [42], [57], []), 
     new World(0, 'b3reds', "Bowser 3 Reds", "C-13", [971.85, -159.2], [37], [52, 53], []), 

@@ -45,4 +45,12 @@ class WorldSpace {
         return ['space'];
     }
 
+    public function isIL() {
+        return true;
+    }
+
+    public function hasWarps() {
+        return true;
+    }
+
 }

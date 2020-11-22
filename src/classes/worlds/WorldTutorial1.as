@@ -43,4 +43,12 @@ class WorldTutorial1 {
         return [];
     }
 
+    public function isIL() {
+        return false;
+    }
+
+    public function hasWarps() {
+        return true;
+    }
+
 }

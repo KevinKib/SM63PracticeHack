@@ -46,4 +46,12 @@ class WorldTTM {
         return [];
     }
 
+    public function isIL() {
+        return true;
+    }
+
+    public function hasWarps() {
+        return true;
+    }
+
 }
