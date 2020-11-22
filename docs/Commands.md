@@ -447,6 +447,17 @@ If neither on or off are specified, the collision is toggled.
 
 </details>
 
+<details>
+<summary>animation</summary>
+
+> Sets Mario's current animation.
+
+**Syntax :** animation NEW_ANIMATION
+
+* **NEW_ANIMATION :** New animation Mario will load. If this is empty, Mario resets to the default state (useful for not being stuck in BetaQuest).
+
+</details>
+
 ***
 
 ### Display
@@ -529,13 +540,15 @@ If neither on or off are specified, the collision is toggled.
 
 > Manages the Beta Quest hack.
 
-**Syntax** : betaquest / bq {start [SEED]|stop|seed}
+**Syntax** : betaquest / bq {start [SEED]|stop|seed} [-r / -reset]
 
 - **start** [SEED] : Starts a new seed of Beta Quest. A seed can be specified as a number; if no seed is specified, a random seed is taken.
 
 - **stop** : Stops the current seed of Beta Quest.
 
 - **seed** : Displays the current Beta Quest seed.
+
+- **-reset / -r**: Resets the current file whenever betaquest is started.
 
 ***
 </details>

@@ -125,6 +125,13 @@ class Utils {
             isCommand = true;
         }
 
+        if (_root.betaQuest.isStarted() && this.isAnimationExitPainting()) {
+            this.setAnimation('');
+            setTimeout(function() {
+                _root.textManager.send('debug', 'Attempted to unstuck Mario.');
+            }, this.getAfterWarpTimeout());
+        }
+
         title = this.getWarpFromAlias(title);
 
         setTimeout(function() {
@@ -350,6 +357,18 @@ class Utils {
            }
          */
         _root.Fluddpow = value;
+    }
+
+    // Sets Mario's current facing direction.
+    public function setDirection(direction) {
+        switch(direction) {
+            case 'left':
+                _root.Course.Char._xscale = 100;
+                break;
+            case 'right':
+                _root.Course.Char._xscale = -100;
+                break;
+        }
     }
 
     // Sets the saved nozzles for a chosen world.
@@ -597,6 +616,37 @@ class Utils {
         _root.SilverStars = value;
     }
 
+    // Sets up either a 100% file, an empty file or a minimal file
+    // with every storyline star.
+    public function setFileSetting(setting) {
+        switch(setting) {
+            case 'complete':
+                _root.utils.setStars(true);
+                _root.utils.setStarCoins(true);
+                _root.utils.setBowserKeys(true);
+                _root.utils.setFluddArray(true);
+                break;
+            case 'essentials':
+                _root.utils.setStars(false);
+                _root.utils.setStarCoins(false);
+                _root.utils.setBowserKeys(true);
+                _root.utils.setFluddArray(false);
+                _root.Star[39] = true;
+                _root.Star[41] = true;
+                _root.Star[50] = true;
+                _root.Star[51] = true;
+                _root.Star[36] = true;
+                _root.CalculateStars();
+                break;
+            case 'empty':
+                _root.utils.setStars(false);
+                _root.utils.setStarCoins(false);
+                _root.utils.setBowserKeys(false);
+                _root.utils.setFluddArray(false);
+                break;
+        }
+    }
+
     // Sets whether Fake Bowser has been completed or not.
     public function setFakeBowserCompleted(bool) {
         _root.lvl8keyE = bool;
@@ -623,6 +673,23 @@ class Utils {
     // Sets whether the game is paused or not.
     public function setPause(bool) {
         return _root.PauseGame = bool;
+    }
+
+    // Sets Mario's current animation.
+    public function setAnimation(animation) {
+        if (animation == '' || animation == undefined) {
+            _root.Course.Char.attack = false;
+            _root.Course.Char.attackFrame = '';
+        }
+        else {
+            _root.Course.Char.attack = true;
+            _root.Course.Char.attackFrame = animation;
+        }
+    }
+
+    // Return true if the ExitPainting animation is currently running for Mario.
+    public function isAnimationExitPainting() {
+        return (_root.Course.Char.attack == true) && (_root.Course.Char.attackFrame == 'ExitPainting');
     }
 
     // Displays a sign message on the screen.

@@ -87,11 +87,8 @@ class Event {
 
     // Triggers code that happens when the true bowser fight is loaded.
     public function onTrueBowserStart() {
-    /*
-       if (_root.codeManager.getIL().isGoing() === true) {
-       _root.codeManager.getIL().onStarCollected();
-       }
-     */
+        _root.utils.setFluddPow("");
+        _root.utils.setDirection('right');
     }
 
     // Triggers code that happens when the true bowser fight is terminated.
