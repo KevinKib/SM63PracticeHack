@@ -1,40 +1,40 @@
-class WorldEotMK {
+class WorldGreenShine {
 
     public function getIndex() {
         return 0;
     }
 
     public function getName() {
-        return 'eotmk';
+        return 'green';
     }
 
     public function getFullName() {
-        return 'Edge of the Mushroom Kingdom';
+        return 'Green Shine';
     }
 
     public function getStartingLevel() {
-        return 'Castle';
+        return 'C-O';
     }
 
     public function getCoordinates() {
-        return [2163.9, -233.25];
+        return [1009, -41.1];
     }
 
     public function getWarps() {
         var dict = new Object();
-        dict["eotmk"] = "K-1";
-        dict["eotmkr1"] = "K-1";
-        dict["eotmkr2"] = "K-2";
+        dict["green"] = "9-07";
+        dict["garden"] = "9-07";
+        dict["peachgarden"] = "9-07";
 
         return dict;
     }
 
     public function getStars() {
-        return [64];
+        return [50];
     }
 
     public function getStarCoins() {
-        return [64];
+        return [];
     }
 
     public function getFlags() {
@@ -46,7 +46,7 @@ class WorldEotMK {
     }
 
     public function hasWarps() {
-        return false;
+        return true;
     }
 
 }

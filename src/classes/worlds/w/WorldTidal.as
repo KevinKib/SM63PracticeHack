@@ -21,7 +21,10 @@ class WorldTidal {
     }
 
     public function getWarps() {
-        return null;
+        var dict = new Object();
+        dict["tidal"] = "9-02";
+
+        return dict;
     }
 
     public function getStars() {
@@ -41,7 +44,7 @@ class WorldTidal {
     }
 
     public function hasWarps() {
-        return false;
+        return true;
     }
 
 }

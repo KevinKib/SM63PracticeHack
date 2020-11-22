@@ -21,7 +21,12 @@ class WorldJRB {
     }
 
     public function getWarps() {
-        return null;
+        var dict = new Object();
+        dict["jrb"] = "9-03";
+        dict["jrbr1"] = "9-03";
+        dict["jrbr2"] = "9-03-D";
+
+        return dict;
     }
 
     public function getStars() {
@@ -41,7 +46,7 @@ class WorldJRB {
     }
 
     public function hasWarps() {
-        return false;
+        return true;
     }
 
 }

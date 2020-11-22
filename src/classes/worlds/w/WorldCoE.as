@@ -21,7 +21,10 @@ class WorldCoE {
     }
 
     public function getWarps() {
-        return null;
+        var dict = new Object();
+        dict["coe"] = "9-03-2";
+
+        return dict;
     }
 
     public function getStars() {
@@ -41,7 +44,7 @@ class WorldCoE {
     }
 
     public function hasWarps() {
-        return false;
+        return true;
     }
 
 }

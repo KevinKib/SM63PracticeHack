@@ -21,7 +21,10 @@ class WorldFF {
     }
 
     public function getWarps() {
-        return null;
+        var dict = new Object();
+        dict["ff"] = "9-04";
+
+        return dict;
     }
 
     public function getStars() {
@@ -41,7 +44,7 @@ class WorldFF {
     }
 
     public function hasWarps() {
-        return false;
+        return true;
     }
 
 }

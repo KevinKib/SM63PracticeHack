@@ -21,7 +21,15 @@ class WorldMM {
     }
 
     public function getWarps() {
-        return null;
+        var dict = new Object();
+        dict["mm"] = "9-10";
+        dict["mmr1"] = "9-10";
+        dict["mmr2"] = "9-10-2";
+        dict["magma"] = "9-10";
+        dict["magmar1"] = "9-10";
+        dict["magmar2"] = "9-10-2";
+
+        return dict;
     }
 
     public function getStars() {
@@ -41,7 +49,7 @@ class WorldMM {
     }
 
     public function hasWarps() {
-        return false;
+        return true;
     }
 
 }
