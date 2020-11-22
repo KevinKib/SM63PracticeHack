@@ -53,7 +53,24 @@ class Utils {
             new WorldBowser2(),
             new WorldBowser3(),
             new WorldSpace(),
-            new WorldEscape()
+            new WorldEscape(),
+            new WorldB1Reds(),
+            new WorldB2Reds(),
+            new WorldB3Reds(),
+            new WorldCoE(),
+            new WorldEndgame(),
+            new WorldEotMK(),
+            new WorldFF(),
+            new WorldGoS(),
+            new WorldGreenShine(),
+            new WorldJRB(),
+            new WorldLevel1(),
+            new WorldMM(),
+            new WorldRedShine(),
+            new WorldSotM(),
+            new WorldSotS(),
+            new WorldThwC(),
+            new WorldTidal()
         );
     }
 
