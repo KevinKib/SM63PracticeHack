@@ -131,6 +131,7 @@ class Utils {
                 _root.textManager.send('debug', 'Attempted to unstuck Mario.');
             }, this.getAfterWarpTimeout());
         }
+        
         title = this.getWarpFromAlias(title);
 
         setTimeout(function() {

@@ -160,6 +160,10 @@ class BetaQuest {
                 x = 0;
                 y = -702.8;
                 break;
+            case "2-5":
+                x = 140;
+                y = -680.75;
+                break;
             case "8-10":
                 x = -290;
                 y = 0;
@@ -181,6 +185,10 @@ class BetaQuest {
                 x = -1465;
                 y = -320;
                 break;
+            case "M3-3":
+                x = -1055.4;
+                y = -119.75;
+                break;
             case "4-5":
                 x = -1300;
                 y = 52.4;
@@ -193,6 +201,10 @@ class BetaQuest {
                 x = 1115;
                 y = 127;
                 break;
+            case "8-16":
+                x = 0;
+                y = -350;
+                break;
             case "9-11":
                 x = -560;
                 y = -160;
@@ -200,6 +212,10 @@ class BetaQuest {
             case "9-03-2":
                 x = -270;
                 y = -990;
+                break;
+            case "magmar3":
+                x = 700;
+                y = -1500;
                 break;
             default:
                 break;

@@ -25,6 +25,7 @@ class WorldMM {
         dict["mm"] = "9-10";
         dict["mmr1"] = "9-10";
         dict["mmr2"] = "9-10-2";
+        dict["mmr3"] = "magmar3";
         dict["magma"] = "9-10";
         dict["magmar1"] = "9-10";
         dict["magmar2"] = "9-10-2";
