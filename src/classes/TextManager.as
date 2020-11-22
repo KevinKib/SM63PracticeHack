@@ -20,9 +20,7 @@ class TextManager {
     // Writes a message on the console.
     private function write(row, text) {
         this.rows[row] = text;
-
-        //_root.TextHint = this.row1 + "\n" + this.row2 + "\n" + this.row3 + "\n" + this.row4 + "\n" + this.row5 + "\n" + this.row6;
-
+        
         _root.TextHint = "";
         var j = 0;
         for(j = 0; j < 6; j++)
