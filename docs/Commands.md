@@ -477,9 +477,11 @@ If neither on or off are specified, the collision is toggled.
 
 > Adds a variable to the memory watch.
 
-**Syntax :** addwatch / watch / aw [name]
+**Syntax :** addwatch / watch / aw NAME [DEC.PLACES]
 
 * **NAME**: Name of the variable to watch for.
+
+* **DEC.PLACES**: Number of decimal places to display.
 
 ***
 </details>
@@ -489,9 +491,11 @@ If neither on or off are specified, the collision is toggled.
 
 > Removes a variable from the watch.
 
-**Syntax :** removewatch / rw [name]
+**Syntax :** removewatch / rw {NAME|ID}
 
 * **NAME**: Name of the variable to remove from the watch.
+
+* **ID**: ID of the variable to remove from the watch.
 
 ***
 </details>

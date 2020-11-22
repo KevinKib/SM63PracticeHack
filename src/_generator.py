@@ -9,6 +9,7 @@ import pyperclip
 FILE_NAME = "./src/frame6.as"
 SCRIPT_FOLDER = "./src/classes"
 CODES_FOLDER = "./src/classes/codes"
+WORLDS_FOLDER = "./src/classes/worlds"
 SCRIPT_MAIN = "Main.as"
 SCRIPT_OVERWRITES = "Overwrites.as"
 
@@ -27,6 +28,17 @@ script_list.insert(0, script_list.pop(script_list.index(SCRIPT_OVERWRITES)))
 script_list.append(script_list.pop(script_list.index(SCRIPT_MAIN)))
 
 # generate frame6
+
+# worlds
+worlds_number = 0
+worlds_list = os.listdir(WORLDS_FOLDER)
+for worlds_name in worlds_list:
+    if worlds_name.endswith(".as"):
+        worlds_file = open(WORLDS_FOLDER + "/" + worlds_name, "r")
+        worlds_text = worlds_file.read() + "\n"
+        clipboard_text += worlds_text
+        compiled_script.write(worlds_text)
+        worlds_number += 1
 
 # scripts
 for script_name in script_list:
@@ -48,6 +60,7 @@ for codes_name in codes_list:
         compiled_script.write(codes_text)
         codes_number += 1
 
+print(str(worlds_number) + " worlds have been added.")
 print(str(codes_number) + " codes have been added.")
 
 compiled_script.close()

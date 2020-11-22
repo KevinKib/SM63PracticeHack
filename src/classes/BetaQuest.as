@@ -155,6 +155,11 @@ class BetaQuest {
                 x = -674;
                 y = -60;
                 break;
+            case "betacastle":
+                level = "C-1";
+                x = 0;
+                y = -702.8;
+                break;
             case "8-10":
                 x = -290;
                 y = 0;
