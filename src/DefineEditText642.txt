@@ -1,0 +1,18 @@
+[
+xmin -40
+ymin -40
+xmax 7277
+ymax 8000
+multiline 1
+readonly 1
+html 1
+font 433
+height 220
+color #ffffffff
+align left
+leftmargin 0
+rightmargin 0
+indent 0
+leading 40
+variablename _root.TextHint
+]<p align="left"><font face="Arial" size="11" color="#ffffff" letterSpacing="0.000000" kerning="1">(Hint: Try pressing Left and Right Rapidly)</font></p><p align="left"></p>
