@@ -239,6 +239,8 @@ class BetaQuest {
 
         this.started = true;
         this.generateWarpList();
+        // _root.utils.setFileSetting('empty');
+
         _root.utils.warp('C-1');
         _root.timer.reset();
         _root.timer.start();

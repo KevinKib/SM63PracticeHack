@@ -131,7 +131,7 @@ class Utils {
                 _root.textManager.send('debug', 'Attempted to unstuck Mario.');
             }, this.getAfterWarpTimeout());
         }
-        
+
         title = this.getWarpFromAlias(title);
 
         setTimeout(function() {
@@ -602,6 +602,37 @@ class Utils {
     // Sets the player's silver stars count to a certain value.
     public function setSilverStarsCount(value) {
         _root.SilverStars = value;
+    }
+
+    // Sets up either a 100% file, an empty file or a minimal file
+    // with every storyline star.
+    public function setFileSetting(setting) {
+        switch(setting) {
+            case 'complete':
+                _root.utils.setStars(true);
+                _root.utils.setStarCoins(true);
+                _root.utils.setBowserKeys(true);
+                _root.utils.setFluddArray(true);
+                break;
+            case 'essentials':
+                _root.utils.setStars(false);
+                _root.utils.setStarCoins(false);
+                _root.utils.setBowserKeys(true);
+                _root.utils.setFluddArray(false);
+                _root.Star[39] = true;
+                _root.Star[41] = true;
+                _root.Star[50] = true;
+                _root.Star[51] = true;
+                _root.Star[36] = true;
+                _root.CalculateStars();
+                break;
+            case 'empty':
+                _root.utils.setStars(false);
+                _root.utils.setStarCoins(false);
+                _root.utils.setBowserKeys(false);
+                _root.utils.setFluddArray(false);
+                break;
+        }
     }
 
     // Sets whether Fake Bowser has been completed or not.
