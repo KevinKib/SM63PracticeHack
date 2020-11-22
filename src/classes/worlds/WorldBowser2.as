@@ -1,4 +1,4 @@
-class WorldBowser1 {
+class WorldBowser2 {
 
     public function getIndex() {
         return 0;

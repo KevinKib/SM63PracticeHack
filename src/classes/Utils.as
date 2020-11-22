@@ -57,27 +57,6 @@ class Utils {
         );
     }
 
-    
-
-    /*
-    new World(0, 'sotm', "Secret of the Mushroom", "C-1", [0, -232], [44], [59], []), 
-    new World(0, 'jrb', "Jolly Roger Bay", "C-4H", [-633.6, -429.9], [46], [], []), 
-    new World(0, 'tidal', "Tidal Isles", "C-3-2", [128.2, 10.15], [45], [60], []), 
-    new World(0, 'sots', "Secret of the Sky", "C-7", [-623, 58.5], [48], [58], []), 
-    new World(0, 'ff', "Frosty Fludd", "C-7", [277.45, 58.45], [47], [63], []), 
-    new World(0, 'thwc', "Thwomp's Castle", "C-8", [939.05, -373.75], [49], [], []), 
-    new World(0, 'coe', "Cave of Empuzzlement", "C-10", [311.05, 7.35], [52], [], []), 
-    new World(0, 'mm', "Magma Maze", "C-10", [-442.55, -724.45], [53], [55], []), 
-    new World(0, 'gos', "Galaxy of Stars", "C-12", [481.3, -74.45], [54], [], []), 
-    new World(0, 'b1reds', "Bowser 1 Reds", "C-5", [-316.85, 7.25], [40], [56], []),
-    new World(0, 'b2reds', "Bowser 2 Reds", "C-7", [619.85, 57.35], [42], [57], []), 
-    new World(0, 'b3reds', "Bowser 3 Reds", "C-13", [971.85, -159.2], [37], [52, 53], []), 
-    new World(0, 'space', "Space", "8-12", [0, 0], [], [54], ['space']), 
-    new World(0, 'escape', "Escape", "8-16", [0, 0], [36], [], []), 
-    new World(0, 'endgame', "Any% Endgame", "C-13", [1123.9, -159.05], [36], [], []), 
-    new World(0, 'eotmk', "Edge of the Mushroom Kingdom", "Castle", [2163.9, -233.25], [64], [64], []));
-    */
-
     // Defines actions that are executed on each frame.
     public function onEachFrame() {
         // Treats sign messages manually triggered on screen.
