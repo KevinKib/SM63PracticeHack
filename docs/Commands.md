@@ -106,6 +106,19 @@ If COMMAND_NAME is empty, then a list of every command is shown on the screen.
 </details>
 
 <details>
+<summary>warplist</summary>
+
+> Displays a complete list of the warps, per section.
+
+**Syntax :** warplist / wl [WORLD_NAME]
+
+* **WORLD_NAME**: Name of the world of which the warplist will be displayed.
+* If no world is specified, a list of the different worlds is shown on screen.
+
+***
+</details>
+
+<details>
 <summary>individuallevel</summary>
 
 > Starts an individual level.

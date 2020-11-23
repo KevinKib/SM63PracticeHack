@@ -711,16 +711,17 @@ class Utils {
         var world;
         var i = 0;
         for (i = 0; i < _root.utils.worldList.length; i++) {
-            if (i == 0) {
-                _root.textManager.send('debug', this.worldList[i]);
-            }
-
             if (this.worldList[i].getName() == name) {
                 world = this.worldList[i];
                 break;
             }
         }
         return world;
+    }
+
+    // Returns a complete list of the worlds.
+    public function getWorldList() {
+        return this.worldList;
     }
 
     // Returns the state of a star.
