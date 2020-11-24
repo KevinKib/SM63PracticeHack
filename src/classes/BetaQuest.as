@@ -193,6 +193,10 @@ class BetaQuest {
                 x = -1300;
                 y = 52.4;
                 break;
+            case "8-E2-2":
+                x = 0;
+                y = -200;
+                break;
             case "8-E5-1":
                 x = -1693;
                 y = -60;

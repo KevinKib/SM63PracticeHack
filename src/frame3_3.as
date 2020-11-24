@@ -470,7 +470,13 @@ _root.ReturnToCastle = function() {
 			if (_root.LastItemGot !== "BowserKey1" && _root.LastItemGot !== "BowserKey2") {
 				_root.StartChar(_root.PaintingPosition[_root.Playinglevel][0], _root.PaintingPosition[_root.Playinglevel][1], _root.PaintingPosition[_root.Playinglevel][2], _root.PaintingPosition[_root.Playinglevel][1], _root.PaintingPosition[_root.Playinglevel][2], 200, _root.CurrentPlayer, "", "StarIn");
 			} else if (_root.LastItemGot == "BowserKey1") {
-				_root.StartChar("C-5", -450, 50, -450, 50, 200, _root.CurrentPlayer, "", "StarIn");
+                // if (!_root.betaQuest.isStarted()) {
+                    _root.StartChar("C-5", -450, 50, -450, 50, 200, _root.CurrentPlayer, "", "StarIn");
+                // }
+                // else {
+                //     //_root.StartChar("8-E3-1", 0, 0, 0, 0, 200, _root.CurrentPlayer, "", "StarIn");
+                //     _root.utils.warp("8-E3-1", 0, 0, 0, 0, false);
+                // }
 			} else if (_root.LastItemGot == "BowserKey2") {
 				_root.StartChar("C-7", 0, 0, 0, 0, 0, _root.CurrentPlayer, "", "StarIn");
 			}
