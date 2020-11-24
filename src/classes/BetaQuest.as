@@ -280,4 +280,13 @@ class BetaQuest {
         return this.started;
     }
 
+    // Triggers code that happens when Mario warps back to the castle after having collected a star.
+    public function onCastleWarpAfterStarCollection() {
+        if (this.started) {
+            // _root.utils.setAnimation('');
+            _root.newstar = false;
+            _root.utils.updateStars();
+        }
+    }
+
 }
