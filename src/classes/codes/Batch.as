@@ -14,7 +14,7 @@ _root.codeManager.add(new Code('runbatch rb', 'Runs a batch of commands from a .
         {
             _root.codeManager.execute(commandArray[i]);
         }
-        _root.textManager.send('message', 'Batch \"'+command[1]+'\" run successfully.');
+        _root.textManager.send('message', 'Batch \"'+command[1]+'\" has been run.');
     }
 }));
 
@@ -32,4 +32,5 @@ _root.codeManager.add(new Code('savebatch sb', 'Saves a batch of commands to a .
 
     file.data.commands = unsplitCommand;
     file.flush();
+    _root.textManager.send('message', 'Batch \"'+command[1]+'\" has been saved.');
 }));
