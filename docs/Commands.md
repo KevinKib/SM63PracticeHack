@@ -141,7 +141,7 @@ Can be either:
 
 > Runs a batch of commands from a .sol file.
 
-**Syntax :** runbatch / rb FILE
+**Syntax :** runbatch / rb / loadbatch / lb FILE
 
 **FILE**: Name of the .sol file to run commands from.
 

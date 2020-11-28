@@ -1,5 +1,5 @@
-_root.codeManager.add(new Code('runbatch rb', 'Runs a batch of commands from a .sol file.', 'runbatch / rb FILE', function(command) {
-    var file = SharedObject.getLocal(command[1], '/batch');
+_root.codeManager.add(new Code('runbatch rb loadbatch lb', 'Runs a batch of commands from a .sol file.', 'runbatch / rb / loadbatch / lb FILE', function(command) {
+    var file = SharedObject.getLocal(command[1]);
     var contents = file.data.commands;
     if (file.data.commands == undefined)
     {
@@ -19,7 +19,7 @@ _root.codeManager.add(new Code('runbatch rb', 'Runs a batch of commands from a .
 }));
 
 _root.codeManager.add(new Code('savebatch sb', 'Saves a batch of commands to a .sol file.', 'savebatch / sb FILE COMMANDS', function(command) {
-    var file = SharedObject.getLocal(command[1], '/batch');
+    var file = SharedObject.getLocal(command[1]);
 
     var newArray = command.slice();
 
