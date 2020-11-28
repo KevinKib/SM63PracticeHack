@@ -133,6 +133,32 @@ Can be either:
 
 **Syntax :** resetcoins / restartcoins
 
+***
+</details>
+
+<details>
+<summary>runbatch</summary>
+
+> Runs a batch of commands from a .sol file.
+
+**Syntax :** runbatch / rb FILE
+
+**FILE**: Name of the .sol file to run commands from.
+
+***
+</details>
+
+<details>
+<summary>savebatch</summary>
+
+> Saves a batch of commands to a .sol file.
+
+**Syntax :** savebatch / sb FILE COMMANDS
+
+**FILE**: Name of the .sol file to save commands to.
+
+**COMMANDS**: Commands to save, separated by slashes (e.g. *grav 0/nc on/fludd all*).
+
 </details>
 
 ***
@@ -144,7 +170,7 @@ Can be either:
 
 > Allows to switch characters.
 
-**Syntax** : char {mario|luigi|toggle}
+**Syntax :** char {mario|luigi|toggle}
 
 The "toggle" option switches to Luigi if Mario is the current character, and vice-versa.
 
@@ -156,7 +182,7 @@ The "toggle" option switches to Luigi if Mario is the current character, and vic
 
 > Sets a certain number of lives to the life counter.
 
-**Syntax** : lives {NUMBER|infinite}
+**Syntax :** lives {NUMBER|infinite}
 
 Writing 'lives infinite' will prevent Mario from ever game-overing.
 
@@ -408,20 +434,6 @@ Writing 'lives infinite' will prevent Mario from ever game-overing.
 </details>
 
 ***
-
-### Display
-
-<details>
-<summary>showcollision</summary>
-
-> Makes collision visible as bright boxes.
-
-**Syntax :** showcollision / shc [on|off]
-If neither on or off are specified, the collision is toggled.
-
-</details>
-
-***
 ### Movement
 
 <details>
@@ -511,6 +523,18 @@ If neither on or off are specified, the collision is toggled.
 </details>
 
 <details>
+<summary>showcollision</summary>
+
+> Makes collision visible as bright boxes.
+
+**Syntax :** showcollision / shc [on|off]
+If neither on or off are specified, the collision is toggled.
+
+***
+
+</details>
+
+<details>
 <summary>zoom</summary>
 
 > Zooms to a certain value.
@@ -540,7 +564,7 @@ If neither on or off are specified, the collision is toggled.
 
 > Manages the Beta Quest hack.
 
-**Syntax** : betaquest / bq {start [SEED]|stop|seed} [-r / -reset]
+**Syntax :** betaquest / bq {start [SEED]|stop|seed} [-r / -reset]
 
 - **start** [SEED] : Starts a new seed of Beta Quest. A seed can be specified as a number; if no seed is specified, a random seed is taken.
 
@@ -558,7 +582,7 @@ If neither on or off are specified, the collision is toggled.
 
 > Warps the player to a certain location without taking in account if Beta Quest is started or not.
 
-**Syntax** : forcewarp / fw NAME PLAYER_X PLAYER_Y [CAMERA_X] [CAMERA_Y]
+**Syntax :** forcewarp / fw NAME PLAYER_X PLAYER_Y [CAMERA_X] [CAMERA_Y]
 
 * **NAME**: Name of that specific section. A list of the sections is available [here](https://docs.google.com/spreadsheets/d/1FLYArXZ4g_c7-L8tu4j_GyHaQ-BDFCvdqIluxmHcKkU/edit#gid=559521057).
 
