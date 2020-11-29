@@ -1,7 +1,7 @@
 [
 xmin -40
 ymin -40
-xmax 7277
+xmax 8900
 ymax 8000
 multiline 1
 readonly 1
