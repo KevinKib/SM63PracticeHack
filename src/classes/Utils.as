@@ -120,7 +120,10 @@ class Utils {
     }
 
     // Warps the player to a certain course.
+    // Returns the location Mario warped to. Returns undefined if this location doesn't exist.
     public function warp(title, playerX, playerY, cameraX, cameraY, isCommand) {
+        var warpedLocation = undefined;
+
         if (isCommand == undefined) {
             isCommand = true;
         }
@@ -134,10 +137,14 @@ class Utils {
 
         title = this.getWarpFromAlias(title);
 
-        setTimeout(function() {
-            _root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
-        }, this.getWarpTimeout());
+        if (title != undefined) {
+            warpedLocation = title;
+            setTimeout(function() {
+                _root.changecourse("StarIn", title, cameraX, cameraY, playerX, playerY, undefined, isCommand);
+            }, this.getWarpTimeout());
+        }
 
+        return warpedLocation;
     }
 
     // Interprets a sent alias and returns a warp that the game understands.
@@ -146,15 +153,26 @@ class Utils {
 
         for (i = 0; i < this.worldList.length; i++) {
             if (this.worldList[i].hasWarps()) {
-                var warp = this.worldList[i].getWarps()[alias];
+                var worldWarps = this.worldList[i].getWarps();
+                var warp = worldWarps[alias];
             
                 if (!(warp == undefined || warp == '')) {
                     return warp;
                 }
+                else {
+                    // We check if the associative array contains the actual warp name
+                    // and return it if we find it
+                    var elem;
+                    for (elem in worldWarps) {
+                        if (alias == worldWarps[elem]) {
+                            return alias;
+                        }
+                    }
+                }
             }
         }
 
-        return alias;
+        return undefined;
     }
 
     // Resets the stats of the coins. Makes all collected coins re-appear.
@@ -716,16 +734,17 @@ class Utils {
         var world;
         var i = 0;
         for (i = 0; i < _root.utils.worldList.length; i++) {
-            if (i == 0) {
-                _root.textManager.send('debug', this.worldList[i]);
-            }
-
             if (this.worldList[i].getName() == name) {
                 world = this.worldList[i];
                 break;
             }
         }
         return world;
+    }
+
+    // Returns a complete list of the worlds.
+    public function getWorldList() {
+        return this.worldList;
     }
 
     // Returns the state of a star.

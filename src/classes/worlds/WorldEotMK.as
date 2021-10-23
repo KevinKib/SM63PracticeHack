@@ -25,6 +25,7 @@ class WorldEotMK {
         dict["eotmk"] = "K-1";
         dict["eotmkr1"] = "K-1";
         dict["eotmkr2"] = "K-2";
+        dict["eotmkr3"] = "K-3";
 
         return dict;
     }
