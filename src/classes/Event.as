@@ -45,6 +45,11 @@ class Event {
         }
     }
 
+    // Triggers code that happens when Mario warps back to the castle after having collected a star.
+    public function onCastleWarpAfterStarCollection() {
+        _root.betaQuest.onCastleWarpAfterStarCollection();
+    }
+
     // Triggers code that happens when the star coin is collected.
     public function onStarCoinCollected() {
         if (_root.codeManager.getIL().isGoing() === true) {

@@ -722,6 +722,11 @@ class Utils {
         this.isSignMessageDisplayed = false;
     }
 
+    // Updates the star count.
+    public function updateStars() {
+        _root.CalculateStars();
+    }
+
     /// --- GETTERS --- ///
 
     // Returns a specific world using its name.

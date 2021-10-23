@@ -193,6 +193,10 @@ class BetaQuest {
                 x = -1300;
                 y = 52.4;
                 break;
+            case "8-E2-2":
+                x = 0;
+                y = -200;
+                break;
             case "8-E5-1":
                 x = -1693;
                 y = -60;
@@ -278,6 +282,15 @@ class BetaQuest {
     // Returns if BetaQuest has been started.
     public function isStarted() {
         return this.started;
+    }
+
+    // Triggers code that happens when Mario warps back to the castle after having collected a star.
+    public function onCastleWarpAfterStarCollection() {
+        if (this.started) {
+            // _root.utils.setAnimation('');
+            _root.newstar = false;
+            _root.utils.updateStars();
+        }
     }
 
 }
